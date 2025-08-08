@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Web - Gerenciamento de Clientes</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="modern-header">
+        <div class="header-content">
+            <div class="d-flex align-items-center">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <div class="hamburger" id="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+                <a href="/dashboard.html" class="header-brand">Stock Web</a>
+            </div>
+            
+            <div class="header-user">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <button class="btn-secondary-modern btn-sm" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="modern-sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li class="nav-item">
+                    <a href="/dashboard.html" class="nav-link">
+                        <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                        Painel
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/inventory.html" class="nav-link">
+                        <i data-lucide="package" class="nav-icon"></i>
+                        Estoque
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/sales.html" class="nav-link">
+                        <i data-lucide="shopping-cart" class="nav-icon"></i>
+                        Vendas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/customers.html" class="nav-link active">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        Clientes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/suppliers.html" class="nav-link">
+                        <i data-lucide="truck" class="nav-icon"></i>
+                        Fornecedores
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/categories.html" class="nav-link">
+                        <i data-lucide="folder" class="nav-icon"></i>
+                        Categorias
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/users.html" class="nav-link">
+                        <i data-lucide="user-cog" class="nav-icon"></i>
+                        Usuários
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/reports.html" class="nav-link">
+                        <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                        Relatórios
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Gerenciamento de Clientes</h1>
+                <p class="page-subtitle">Controle completo dos seus clientes</p>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="modern-card mb-4">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="search-container">
+                                <i data-lucide="search" class="search-icon"></i>
+                                <input type="text" class="search-input" id="searchCustomers" placeholder="Pesquisar clientes...">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-end gap-3">
+                                <button class="btn-secondary-modern" id="refreshCustomers">
+                                    <i data-lucide="refresh-cw"></i>
+                                    Atualizar
+                                </button>
+                                <button class="btn-primary-modern" id="addCustomerBtn">
+                                    <i data-lucide="plus"></i>
+                                    Adicionar Cliente
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customers Table -->
+            <div class="modern-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="card-title">Clientes</h2>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-muted" id="customersCount">0 clientes</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="overflow-x: auto;">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Telefone</th>
+                                    <th>Cidade</th>
+                                    <th>Estado</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customersTable">
+                                <tr>
+                                    <td colspan="7" class="text-center" style="padding: 3rem; color: var(--gray-500);">
+                                        <i data-lucide="loader" style="width: 2rem; height: 2rem; animation: spin 1s linear infinite;"></i>
+                                        <br><br>Carregando clientes...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div class="modal-backdrop" id="modalBackdrop" style="display: none;">
+        <div class="modal-improved" id="addCustomerModal">
+            <div class="modal-header-improved">
+                <h2>
+                    <i data-lucide="user-plus"></i>
+                    <span id="modalTitle">Adicionar Novo Cliente</span>
+                </h2>
+                <button class="btn-secondary-modern btn-sm" id="closeModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body-improved">
+                <form id="addCustomerForm">
+                    <div class="form-sections" style="padding: 1.5rem;">
+
+                        <!-- Informações Pessoais -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="user" class="section-icon"></i>
+                                <h3>Informações Pessoais</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group">
+                                    <div class="form-field">
+                                        <label>Nome <span class="required">*</span></label>
+                                        <input type="text" id="customerFirstName" required placeholder="Ex: João">
+                                        <div class="help-text">
+                                            <i data-lucide="info" style="width: 0.75rem; height: 0.75rem;"></i>
+                                            Nome completo do cliente
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Sobrenome <span class="required">*</span></label>
+                                        <input type="text" id="customerLastName" required placeholder="Ex: Silva">
+                                        <div class="help-text">Sobrenome do cliente</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contato -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="phone" class="section-icon"></i>
+                                <h3>Informações de Contato</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group">
+                                    <div class="form-field">
+                                        <label>Email</label>
+                                        <div class="input-with-icon">
+                                            <i data-lucide="mail" class="input-icon"></i>
+                                            <input type="email" id="customerEmail" placeholder="email@exemplo.com">
+                                        </div>
+                                        <div class="help-text">Email para comunicação e notificações</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Telefone</label>
+                                        <div class="input-with-icon">
+                                            <i data-lucide="phone" class="input-icon"></i>
+                                            <input type="tel" id="customerPhone" placeholder="(11) 99999-9999">
+                                        </div>
+                                        <div class="help-text">Número para contato direto</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Endereço -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="map-pin" class="section-icon"></i>
+                                <h3>Endereço</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group single">
+                                    <div class="form-field">
+                                        <label>Endereço Completo</label>
+                                        <input type="text" id="customerAddress" placeholder="Rua, número, bairro">
+                                        <div class="help-text">Endereço completo para entrega ou correspondência</div>
+                                    </div>
+                                </div>
+
+                                <div class="field-group">
+                                    <div class="form-field">
+                                        <label>Cidade</label>
+                                        <input type="text" id="customerCity" placeholder="São Paulo">
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Estado</label>
+                                        <input type="text" id="customerState" placeholder="SP">
+                                    </div>
+                                </div>
+
+                                <div class="field-group">
+                                    <div class="form-field">
+                                        <label>CEP</label>
+                                        <input type="text" id="customerZipCode" placeholder="00000-000">
+                                    </div>
+                                    <div class="form-field">
+                                        <label>País</label>
+                                        <input type="text" id="customerCountry" value="Brasil">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer-improved">
+                <div class="form-progress">
+                    <span>Progresso do formulário</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="customerFormProgress"></div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn-secondary-modern" id="cancelBtn">
+                        <i data-lucide="x"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn-primary-modern" id="saveCustomerBtn">
+                        <i data-lucide="save"></i>
+                        <span class="btn-text">Salvar Cliente</span>
+                        <span class="spinner" id="saveSpinner" style="display: none;"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Melhorias para modal de clientes */
+        .modal-improved {
+            width: 100%;
+            max-width: 800px;
+            max-height: 95vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header-improved {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .modal-header-improved h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-900);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-body-improved {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        .form-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-section {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            background: var(--gray-50);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .section-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: var(--primary-600);
+        }
+
+        .section-body {
+            padding: 1.5rem;
+        }
+
+        .field-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .field-group.single {
+            grid-template-columns: 1fr;
+        }
+
+        .form-field {
+            position: relative;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .form-field .required {
+            color: var(--error-500);
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon input {
+            padding-left: 2.5rem;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1rem;
+            height: 1rem;
+            color: var(--gray-400);
+        }
+
+        .modal-footer-improved {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--gray-200);
+            background: var(--gray-50);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .form-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .progress-bar {
+            width: 120px;
+            height: 4px;
+            background: var(--gray-200);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-500);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            .modal-improved {
+                max-width: 95vw;
+                margin: 1rem;
+            }
+
+            .field-group {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-header-improved,
+            .modal-footer-improved {
+                padding: 1rem 1.5rem;
+            }
+
+            .section-body {
+                padding: 1rem;
+            }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-edit {
+            background: var(--primary-100);
+            color: var(--primary-600);
+        }
+
+        .btn-edit:hover {
+            background: var(--primary-200);
+        }
+
+        .btn-delete {
+            background: #fef2f2;
+            color: var(--error-500);
+        }
+
+        .btn-delete:hover {
+            background: #fee2e2;
+        }
+    </style>
+
+    <script src="js/theme-system.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/customers.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Funcionalidade de progresso para clientes
+        document.addEventListener('DOMContentLoaded', function() {
+            setupCustomerModalFunctionality();
+        });
+
+        function setupCustomerModalFunctionality() {
+            const requiredFields = ['customerFirstName', 'customerLastName'];
+            const optionalFields = ['customerEmail', 'customerPhone', 'customerAddress', 'customerCity'];
+            const progressBar = document.getElementById('customerFormProgress');
+
+            function updateCustomerProgress() {
+                if (!progressBar) return;
+
+                const requiredFilled = requiredFields.filter(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    return field && field.value.trim() !== '';
+                }).length;
+
+                const optionalFilled = optionalFields.filter(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    return field && field.value.trim() !== '';
+                }).length;
+
+                // 70% para campos obrigatórios, 30% para opcionais
+                const requiredProgress = (requiredFilled / requiredFields.length) * 70;
+                const optionalProgress = (optionalFilled / optionalFields.length) * 30;
+                const totalProgress = requiredProgress + optionalProgress;
+
+                progressBar.style.width = totalProgress + '%';
+            }
+
+            [...requiredFields, ...optionalFields].forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('input', updateCustomerProgress);
+                    field.addEventListener('change', updateCustomerProgress);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

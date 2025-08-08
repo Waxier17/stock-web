@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Web - Relatórios e Análises</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="modern-header">
+        <div class="header-content">
+            <div class="d-flex align-items-center">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <div class="hamburger" id="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+                <a href="/dashboard.html" class="header-brand">Stock Web</a>
+            </div>
+            
+            <div class="header-user">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <button class="btn-secondary-modern btn-sm" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="modern-sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li class="nav-item">
+                    <a href="/dashboard.html" class="nav-link">
+                        <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                        Painel
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/inventory.html" class="nav-link">
+                        <i data-lucide="package" class="nav-icon"></i>
+                        Estoque
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/sales.html" class="nav-link">
+                        <i data-lucide="shopping-cart" class="nav-icon"></i>
+                        Vendas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/customers.html" class="nav-link">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        Clientes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/suppliers.html" class="nav-link">
+                        <i data-lucide="truck" class="nav-icon"></i>
+                        Fornecedores
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/categories.html" class="nav-link">
+                        <i data-lucide="folder" class="nav-icon"></i>
+                        Categorias
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/users.html" class="nav-link">
+                        <i data-lucide="user-cog" class="nav-icon"></i>
+                        Usuários
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/reports.html" class="nav-link active">
+                        <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                        Relatórios
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Relatórios e Análises</h1>
+                <p class="page-subtitle">Insights detalhados do seu negócio</p>
+            </div>
+
+            <!-- Report Generator -->
+            <div class="modern-card mb-4 report-generator page-section">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="card-title">Gerador de Relatórios</h2>
+                        <p class="card-subtitle">Configure e gere relatórios personalizados</p>
+                    </div>
+                    <button class="btn-primary-modern" id="generateReportBtn">
+                        <i data-lucide="play"></i>
+                        Gerar Relatório
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label-modern">Tipo de Relatório</label>
+                            <select class="form-select-modern" id="reportType">
+                                <option value="">Selecione o tipo</option>
+                                <option value="sales">Relatório de Vendas</option>
+                                <option value="inventory">Relatório de Estoque</option>
+                                <option value="customers">Relatório de Clientes</option>
+                                <option value="suppliers">Relatório de Fornecedores</option>
+                                <option value="financial">Relatório Financeiro</option>
+                                <option value="products">Relatório de Produtos</option>
+                                <option value="profit">Relatório de Lucro</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-modern">Período</label>
+                            <select class="form-select-modern" id="reportPeriod">
+                                <option value="today">Hoje</option>
+                                <option value="week">Esta Semana</option>
+                                <option value="month" selected>Este Mês</option>
+                                <option value="quarter">Este Trimestre</option>
+                                <option value="year">Este Ano</option>
+                                <option value="custom">Período Personalizado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label-modern">Formato</label>
+                            <select class="form-select-modern" id="reportFormat">
+                                <option value="view">Visualizar na Tela</option>
+                                <option value="pdf">Exportar PDF</option>
+                                <option value="excel">Exportar Excel</option>
+                                <option value="csv">Exportar CSV</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mt-2" id="customDateRange" style="display: none;">
+                        <div class="col-md-6">
+                            <label class="form-label-modern">Data Inicial</label>
+                            <input type="date" class="form-input-modern" id="startDate">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-modern">Data Final</label>
+                            <input type="date" class="form-input-modern" id="endDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Reports -->
+            <div class="modern-card mb-4 quick-reports-section page-section">
+                <div class="card-header">
+                    <h2 class="card-title">Relatórios Rápidos</h2>
+                    <p class="card-subtitle">Acesso direto aos relatórios mais utilizados</p>
+                </div>
+                <div class="card-body">
+                    <div class="quick-reports-grid">
+                                <div class="quick-report-card" onclick="generateQuickReport('sales-today')">
+                                    <div class="quick-report-icon">
+                                        <i data-lucide="trending-up"></i>
+                                    </div>
+                                    <h3>Vendas de Hoje</h3>
+                                    <p>Resumo das vendas realizadas hoje</p>
+                                    <div class="quick-report-value" id="todaySalesValue">--</div>
+                                </div>
+
+                                <div class="quick-report-card" onclick="generateQuickReport('inventory-low')">
+                                    <div class="quick-report-icon warning">
+                                        <i data-lucide="alert-triangle"></i>
+                                    </div>
+                                    <h3>Estoque Baixo</h3>
+                                    <p>Produtos com estoque abaixo do mínimo</p>
+                                    <div class="quick-report-value" id="lowStockValue">--</div>
+                                </div>
+
+                                <div class="quick-report-card" onclick="generateQuickReport('profit-analysis')">
+                                    <div class="quick-report-icon success">
+                                        <i data-lucide="dollar-sign"></i>
+                                    </div>
+                                    <h3>Análise de Lucro</h3>
+                                    <p>Margem de lucro do mês atual</p>
+                                    <div class="quick-report-value" id="monthlyProfitValue">--</div>
+                                </div>
+
+                                <div class="quick-report-card" onclick="generateQuickReport('monthly-summary')">
+                                    <div class="quick-report-icon info">
+                                        <i data-lucide="calendar"></i>
+                                    </div>
+                                    <h3>Resumo Mensal</h3>
+                                    <p>Análise completa do mês atual</p>
+                                    <div class="quick-report-value">MENSAL</div>
+                                </div>
+                            </div>
+                </div>
+            </div>
+
+            <!-- Generated Report Display -->
+            <div class="modern-card" id="reportDisplayCard" style="display: none;">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="card-title" id="reportTitle">Resultado do Relatório</h2>
+                        <p class="card-subtitle" id="reportSubtitle">Dados gerados em tempo real</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn-secondary-modern btn-sm" id="printReportBtn">
+                            <i data-lucide="printer"></i>
+                            Imprimir
+                        </button>
+                        <button class="btn-primary-modern btn-sm" id="exportReportBtn">
+                            <i data-lucide="download"></i>
+                            Exportar
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="reportContent">
+                        <!-- Report content will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        /* Simple report styles aligned with other pages */
+
+        /* Quick Reports Grid */
+        .quick-reports-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-report-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quick-report-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-600);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .quick-report-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-300);
+        }
+
+        .quick-report-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .quick-report-icon {
+            width: 3rem;
+            height: 3rem;
+            background: var(--primary-100);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--primary-600);
+        }
+
+        .quick-report-icon.warning {
+            background: var(--warning-100);
+            color: var(--warning-600);
+        }
+
+        .quick-report-icon.success {
+            background: var(--success-100);
+            color: var(--success-600);
+        }
+
+        .quick-report-icon.info {
+            background: var(--info-100);
+            color: var(--info-600);
+        }
+
+        .quick-report-card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-report-card p {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-report-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-600);
+            margin-top: auto;
+        }
+
+        /* Melhorias para organização geral */
+        .report-generator {
+            background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+
+        .report-generator .card-header {
+            background: var(--primary-50);
+            border-bottom: 1px solid var(--primary-200);
+        }
+
+        .quick-reports-section {
+            margin: 2rem 0;
+        }
+
+        .page-section {
+            margin-bottom: 2.5rem;
+        }
+
+        /* Report Display */
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .report-table th,
+        .report-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .report-table th {
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .report-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-item {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-600);
+        }
+
+        .summary-label {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Dark theme support */
+        [data-theme="dark"] .report-generator {
+            background: var(--gray-800);
+            border-color: var(--gray-700);
+        }
+
+        [data-theme="dark"] .quick-report-card {
+            background: var(--gray-800);
+            border-color: var(--gray-700);
+        }
+
+        [data-theme="dark"] .quick-report-card h3 {
+            color: var(--gray-200);
+        }
+
+        [data-theme="dark"] .quick-report-card p {
+            color: var(--gray-400);
+        }
+
+        [data-theme="dark"] .summary-item {
+            background: var(--gray-800);
+            border-color: var(--gray-700);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .quick-reports-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .quick-reports-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .report-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .quick-report-card {
+                padding: 1rem;
+            }
+            
+            .quick-report-card h3 {
+                font-size: 1rem;
+            }
+            
+            .quick-report-value {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            initializeReports();
+            setupEventListeners();
+            loadQuickStats();
+        });
+
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            // Update user avatar
+            const user = localStorage.getItem('user');
+            if (user) {
+                const userData = JSON.parse(user);
+                const userAvatar = document.getElementById('userAvatar');
+                userAvatar.textContent = userData.username ? userData.username.charAt(0).toUpperCase() : 'U';
+            }
+        }
+
+        function initializeReports() {
+            document.querySelector('.main-content').classList.add('fade-in');
+
+            // Update active nav item
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelector('a[href="/reports.html"]').classList.add('active');
+
+            // Check URL params for quick report type
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('type');
+            if (type) {
+                generateQuickReport(type);
+            }
+        }
+
+        function setupEventListeners() {
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const hamburger = document.getElementById('hamburger');
+            const sidebar = document.getElementById('sidebar');
+
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                hamburger.classList.toggle('active');
+            });
+
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                if (confirm('Tem certeza que deseja sair?')) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/login.html';
+                }
+            });
+
+            // Period change
+            document.getElementById('reportPeriod').addEventListener('change', function() {
+                const customDateRange = document.getElementById('customDateRange');
+
+                if (this.value === 'custom') {
+                    customDateRange.style.display = 'block';
+                } else {
+                    customDateRange.style.display = 'none';
+                }
+            });
+
+            // Generate report button
+            document.getElementById('generateReportBtn').addEventListener('click', generateReport);
+
+            // Print and export buttons (check if elements exist first)
+            const printBtn = document.getElementById('printReportBtn');
+            const exportBtn = document.getElementById('exportReportBtn');
+
+            if (printBtn) printBtn.addEventListener('click', printReport);
+            if (exportBtn) exportBtn.addEventListener('click', exportReport);
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                        sidebar.classList.remove('show');
+                        hamburger.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        // Helper functions for formatting
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(amount || 0);
+        }
+
+        function formatDateTime(dateString) {
+            if (!dateString) return '--';
+            return new Date(dateString).toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            // Create toast notification
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            toast.style.top = '20px';
+            toast.style.right = '20px';
+            toast.style.zIndex = '9999';
+            toast.style.minWidth = '300px';
+
+            const iconMap = {
+                'success': 'check-circle',
+                'error': 'alert-circle',
+                'warning': 'alert-triangle',
+                'info': 'info'
+            };
+
+            toast.innerHTML = `
+                <i data-lucide="${iconMap[type] || 'info'}" style="width: 1rem; height: 1rem; margin-right: 0.5rem;"></i>
+                ${message}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+            `;
+
+            document.body.appendChild(toast);
+            lucide.createIcons();
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 5000);
+        }
+
+        // Helper function for API requests with fallback
+        async function makeApiRequest(url) {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                return Array.isArray(data) ? data : [];
+            } catch (error) {
+                console.error(`API request failed for ${url}:`, error);
+                return [];
+            }
+        }
+
+        async function loadQuickStats() {
+            try {
+                // Load today's sales
+                const sales = await makeApiRequest('/api/sales');
+
+                const today = new Date().toDateString();
+                const todaySales = sales.filter(sale => {
+                    const saleDate = new Date(sale.created_at || sale.date);
+                    return saleDate.toDateString() === today;
+                });
+
+                const todayTotal = todaySales.reduce((sum, sale) => sum + (sale.final_amount || 0), 0);
+                document.getElementById('todaySalesValue').textContent = formatCurrency(todayTotal);
+
+                // Load low stock count
+                const products = await makeApiRequest('/api/inventory/products');
+
+                const lowStock = products.filter(p => {
+                    const stock = p.stock_quantity || p.stock || 0;
+                    const minStock = p.min_stock_level || p.minStock || 10;
+                    return stock <= minStock;
+                });
+
+                document.getElementById('lowStockValue').textContent = lowStock.length;
+
+                // Load monthly profit margin
+                try {
+                    const { startDate, endDate } = getDateRangeForPeriod('month');
+                    const token = localStorage.getItem('token');
+                    const response = await fetch(`/api/reports/profit?start_date=${startDate}&end_date=${endDate}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const profitData = await response.json();
+                        const profitMargin = profitData.summary.profit_margin || 0;
+                        document.getElementById('monthlyProfitValue').textContent = `${profitMargin.toFixed(1)}%`;
+                    } else {
+                        document.getElementById('monthlyProfitValue').textContent = '0.0%';
+                    }
+                } catch (error) {
+                    console.error('Error loading profit stats:', error);
+                    document.getElementById('monthlyProfitValue').textContent = '0.0%';
+                }
+
+            } catch (error) {
+                console.error('Error loading quick stats:', error);
+                // Set fallback values
+                document.getElementById('todaySalesValue').textContent = 'R$ 0,00';
+                document.getElementById('lowStockValue').textContent = '0';
+                document.getElementById('monthlyProfitValue').textContent = '0.0%';
+            }
+        }
+
+        function updateAdditionalFilters(reportType) {
+            const filtersContainer = document.getElementById('additionalFilters');
+            filtersContainer.innerHTML = '';
+
+            switch(reportType) {
+                case 'sales':
+                    filtersContainer.innerHTML = `
+                        <select class="form-select-modern" style="width: auto;">
+                            <option value="">Todos os clientes</option>
+                        </select>
+                        <select class="form-select-modern" style="width: auto;">
+                            <option value="">Todos os produtos</option>
+                        </select>
+                    `;
+                    break;
+                case 'inventory':
+                    filtersContainer.innerHTML = `
+                        <select class="form-select-modern" style="width: auto;">
+                            <option value="">Todas as categorias</option>
+                        </select>
+                        <select class="form-select-modern" style="width: auto;">
+                            <option value="">Todos os fornecedores</option>
+                        </select>
+                    `;
+                    break;
+            }
+        }
+
+        async function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const reportPeriod = document.getElementById('reportPeriod').value;
+            const reportFormat = document.getElementById('reportFormat').value;
+
+            if (!reportType) {
+                App.showToast('Selecione o tipo de relatório', 'warning');
+                return;
+            }
+
+            try {
+                // Show loading
+                const reportCard = document.getElementById('reportDisplayCard');
+                const reportContent = document.getElementById('reportContent');
+
+                reportCard.style.display = 'block';
+                reportContent.innerHTML = `
+                    <div class="text-center" style="padding: 3rem;">
+                        <i data-lucide="loader" style="width: 2rem; height: 2rem; animation: spin 1s linear infinite;"></i>
+                        <br><br>Gerando relatório...
+                    </div>
+                `;
+                lucide.createIcons();
+
+                // Generate report based on type
+                let reportData;
+                switch(reportType) {
+                    case 'sales':
+                        reportData = await generateSalesReport(reportPeriod);
+                        break;
+                    case 'inventory':
+                        reportData = await generateInventoryReport();
+                        break;
+                    case 'customers':
+                        reportData = await generateCustomersReport();
+                        break;
+                    case 'suppliers':
+                        reportData = await generateSuppliersReport();
+                        break;
+                    case 'financial':
+                        reportData = await generateFinancialReport(reportPeriod);
+                        break;
+                    case 'products':
+                        reportData = await generateProductsReport();
+                        break;
+                    case 'profit':
+                        reportData = await generateProfitReport(reportPeriod);
+                        break;
+                    default:
+                        throw new Error('Tipo de relatório não implementado');
+                }
+
+                if (!reportData || !reportData.data) {
+                    throw new Error('Dados do relatório não encontrados');
+                }
+
+                displayReport(reportData, reportType);
+
+            } catch (error) {
+                console.error('Error generating report:', error);
+
+                // Show error in report content
+                const reportContent = document.getElementById('reportContent');
+                reportContent.innerHTML = `
+                    <div class="text-center" style="padding: 3rem; color: var(--error-500);">
+                        <i data-lucide="alert-circle" style="width: 2rem; height: 2rem;"></i>
+                        <br><br>
+                        <strong>Erro ao gerar relatório</strong><br>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+                lucide.createIcons();
+
+                App.showToast('Erro ao gerar relatório: ' + error.message, 'error');
+            }
+        }
+
+        async function generateSalesReport(period) {
+            const sales = await makeApiRequest('/api/sales');
+
+            // Filter by period
+            const filteredSales = filterSalesByPeriod(sales, period);
+
+            const totalRevenue = filteredSales.reduce((sum, sale) => sum + (sale.final_amount || 0), 0);
+            const totalTransactions = filteredSales.length;
+            const averageTicket = totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
+
+            return {
+                title: 'Relatório de Vendas',
+                subtitle: `Período: ${getPeriodLabel(period)}`,
+                summary: [
+                    { label: 'Total de Vendas', value: formatCurrency(totalRevenue) },
+                    { label: 'Número de Transações', value: totalTransactions },
+                    { label: 'Ticket Médio', value: formatCurrency(averageTicket) }
+                ],
+                data: filteredSales,
+                columns: ['ID', 'Data', 'Cliente', 'Total', 'Método de Pagamento']
+            };
+        }
+
+        async function generateInventoryReport() {
+            const products = await makeApiRequest('/api/inventory/products');
+
+            const totalProducts = products.length;
+            const totalValue = products.reduce((sum, p) => sum + ((p.price || 0) * (p.stock_quantity || p.stock || 0)), 0);
+            const lowStockItems = products.filter(p => {
+                const stock = p.stock_quantity || p.stock || 0;
+                const minStock = p.min_stock_level || p.minStock || 10;
+                return stock <= minStock;
+            }).length;
+
+            return {
+                title: 'Relatório de Estoque',
+                subtitle: 'Situação atual do estoque',
+                summary: [
+                    { label: 'Total de Produtos', value: totalProducts },
+                    { label: 'Valor Total em Estoque', value: formatCurrency(totalValue) },
+                    { label: 'Produtos com Estoque Baixo', value: lowStockItems }
+                ],
+                data: products,
+                columns: ['ID', 'Nome', 'Categoria', 'Estoque', 'Preço', 'Valor Total']
+            };
+        }
+
+        async function generateCustomersReport() {
+            const customers = await makeApiRequest('/api/customers');
+
+            return {
+                title: 'Relatório de Clientes',
+                subtitle: 'Lista completa de clientes cadastrados',
+                summary: [
+                    { label: 'Total de Clientes', value: customers.length },
+                    { label: 'Clientes Ativos', value: customers.length }
+                ],
+                data: customers,
+                columns: ['ID', 'Nome', 'Email', 'Telefone', 'Data de Cadastro']
+            };
+        }
+
+        async function generateSuppliersReport() {
+            const suppliers = await makeApiRequest('/api/suppliers');
+
+            return {
+                title: 'Relatório de Fornecedores',
+                subtitle: 'Lista completa de fornecedores cadastrados',
+                summary: [
+                    { label: 'Total de Fornecedores', value: suppliers.length },
+                    { label: 'Fornecedores Ativos', value: suppliers.length }
+                ],
+                data: suppliers,
+                columns: ['ID', 'Nome', 'Email', 'Telefone', 'Data de Cadastro']
+            };
+        }
+
+        async function generateFinancialReport(period) {
+            const sales = await makeApiRequest('/api/sales');
+
+            const filteredSales = filterSalesByPeriod(sales, period);
+
+            const totalRevenue = filteredSales.reduce((sum, sale) => sum + (sale.final_amount || 0), 0);
+            const totalCost = filteredSales.reduce((sum, sale) => sum + (sale.total_amount - sale.final_amount || 0), 0);
+            const profit = totalRevenue - totalCost;
+
+            return {
+                title: 'Relatório Financeiro',
+                subtitle: `Período: ${getPeriodLabel(period)}`,
+                summary: [
+                    { label: 'Receita Total', value: formatCurrency(totalRevenue) },
+                    { label: 'Descontos Dados', value: formatCurrency(totalCost) },
+                    { label: 'Lucro Líquido', value: formatCurrency(profit) }
+                ],
+                data: filteredSales,
+                columns: ['ID', 'Data', 'Cliente', 'Receita', 'Desconto', 'Total']
+            };
+        }
+
+        async function generateProductsReport() {
+            const products = await makeApiRequest('/api/inventory/products');
+
+            const activeProducts = products.filter(p => (p.stock_quantity || p.stock || 0) > 0);
+            const totalValue = products.reduce((sum, p) => sum + ((p.price || 0) * (p.stock_quantity || p.stock || 0)), 0);
+
+            return {
+                title: 'Relatório de Produtos',
+                subtitle: 'Análise detalhada do catálogo de produtos',
+                summary: [
+                    { label: 'Total de Produtos', value: products.length },
+                    { label: 'Produtos em Estoque', value: activeProducts.length },
+                    { label: 'Valor Total do Catálogo', value: formatCurrency(totalValue) }
+                ],
+                data: products,
+                columns: ['ID', 'Nome', 'Categoria', 'Preço', 'Estoque', 'Valor Total']
+            };
+        }
+
+        async function generateProfitReport(period) {
+            // Get date range for the period
+            const { startDate, endDate } = getDateRangeForPeriod(period);
+            
+            console.log('Generating profit report for period:', period, 'dates:', startDate, endDate);
+            
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(`/api/reports/profit?start_date=${startDate}&end_date=${endDate}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Profit report API error:', response.status, errorText);
+                    throw new Error(`Erro na API: ${response.status} - ${errorText}`);
+                }
+
+                const data = await response.json();
+                console.log('Profit report data received:', data);
+                
+                // Ensure data structure is correct
+                if (!data.summary) {
+                    throw new Error('Dados de resumo não encontrados na resposta');
+                }
+                
+                return {
+                    title: 'Relatório de Lucro',
+                    subtitle: `Período: ${getPeriodLabel(period)} (${startDate} até ${endDate})`,
+                    summary: [
+                        { label: 'Receita Total', value: formatCurrency(data.summary.total_revenue || 0) },
+                        { label: 'Custo Total', value: formatCurrency(data.summary.total_cost || 0) },
+                        { label: 'Lucro Total', value: formatCurrency(data.summary.total_profit || 0) },
+                        { label: 'Margem de Lucro', value: `${(data.summary.profit_margin || 0).toFixed(2)}%` },
+                        { label: 'Vendas Analisadas', value: data.summary.total_sales || 0 },
+                        { label: 'Lucro Médio por Venda', value: formatCurrency(data.summary.average_profit_per_sale || 0) }
+                    ],
+                    data: data.sales || [],
+                    columns: ['ID Venda', 'Data', 'Cliente', 'Receita', 'Custo', 'Lucro', 'Margem %']
+                };
+            } catch (error) {
+                console.error('Error fetching profit report:', error);
+                showToast('Erro ao gerar relatório de lucro: ' + error.message, 'error');
+                
+                // Return fallback data with error message
+                return {
+                    title: 'Relatório de Lucro (Erro)',
+                    subtitle: `Período: ${getPeriodLabel(period)} - Erro: ${error.message}`,
+                    summary: [
+                        { label: 'Receita Total', value: formatCurrency(0) },
+                        { label: 'Custo Total', value: formatCurrency(0) },
+                        { label: 'Lucro Total', value: formatCurrency(0) },
+                        { label: 'Margem de Lucro', value: '0.00%' },
+                        { label: 'Vendas Analisadas', value: 0 },
+                        { label: 'Lucro Médio por Venda', value: formatCurrency(0) }
+                    ],
+                    data: [],
+                    columns: ['ID Venda', 'Data', 'Cliente', 'Receita', 'Custo', 'Lucro', 'Margem %']
+                };
+            }
+        }
+
+        function displayReport(reportData, type) {
+            document.getElementById('reportTitle').textContent = reportData.title;
+            document.getElementById('reportSubtitle').textContent = reportData.subtitle;
+            
+            const reportContent = document.getElementById('reportContent');
+            
+            // Display summary
+            let summaryHtml = '<div class="report-summary">';
+            reportData.summary.forEach(item => {
+                summaryHtml += `
+                    <div class="summary-item">
+                        <div class="summary-value">${item.value}</div>
+                        <div class="summary-label">${item.label}</div>
+                    </div>
+                `;
+            });
+            summaryHtml += '</div>';
+
+            // Display data table
+            let tableHtml = '<table class="report-table"><thead><tr>';
+            reportData.columns.forEach(column => {
+                tableHtml += `<th>${column}</th>`;
+            });
+            tableHtml += '</tr></thead><tbody>';
+
+            reportData.data.slice(0, 100).forEach(item => { // Limit to 100 rows for performance
+                tableHtml += '<tr>';
+                switch(type) {
+                    case 'sales':
+                        tableHtml += `
+                            <td>#${item.id}</td>
+                            <td>${formatDateTime(item.created_at || item.date)}</td>
+                            <td>${item.customerName || 'Cliente não informado'}</td>
+                            <td>${formatCurrency(item.final_amount || 0)}</td>
+                            <td>${item.payment_method || 'Não informado'}</td>
+                        `;
+                        break;
+                    case 'inventory':
+                    case 'products':
+                        const stock = item.stock_quantity || item.stock || 0;
+                        const totalValue = (item.price || 0) * stock;
+                        tableHtml += `
+                            <td>#${item.id}</td>
+                            <td>${item.name}</td>
+                            <td>${item.category_name || 'Sem categoria'}</td>
+                            <td>${type === 'products' ? formatCurrency(item.price || 0) : stock}</td>
+                            <td>${type === 'products' ? stock : formatCurrency(item.price || 0)}</td>
+                            <td>${formatCurrency(totalValue)}</td>
+                        `;
+                        break;
+                    case 'customers':
+                        tableHtml += `
+                            <td>#${item.id}</td>
+                            <td>${item.name || `${item.first_name || ''} ${item.last_name || ''}`.trim()}</td>
+                            <td>${item.email || 'Não informado'}</td>
+                            <td>${item.phone || 'Não informado'}</td>
+                            <td>${formatDateTime(item.created_at)}</td>
+                        `;
+                        break;
+                    case 'suppliers':
+                        tableHtml += `
+                            <td>#${item.id}</td>
+                            <td>${item.name || item.company_name || 'Sem nome'}</td>
+                            <td>${item.email || 'Não informado'}</td>
+                            <td>${item.phone || 'Não informado'}</td>
+                            <td>${formatDateTime(item.created_at)}</td>
+                        `;
+                        break;
+                    case 'financial':
+                        const discount = (item.total_amount || 0) - (item.final_amount || 0);
+                        tableHtml += `
+                            <td>#${item.id}</td>
+                            <td>${formatDateTime(item.created_at || item.date)}</td>
+                            <td>${item.customerName || 'Cliente não informado'}</td>
+                            <td>${formatCurrency(item.total_amount || 0)}</td>
+                            <td>${formatCurrency(discount)}</td>
+                            <td>${formatCurrency(item.final_amount || 0)}</td>
+                        `;
+                        break;
+                    case 'profit':
+                        tableHtml += `
+                            <td>#${item.sale_id}</td>
+                            <td>${formatDateTime(item.created_at)}</td>
+                            <td>${item.customer_name || 'Cliente não informado'}</td>
+                            <td>${formatCurrency(item.sale_total || 0)}</td>
+                            <td>${formatCurrency(item.total_cost || 0)}</td>
+                            <td>${formatCurrency(item.total_profit || 0)}</td>
+                            <td>${(item.profit_margin || 0).toFixed(2)}%</td>
+                        `;
+                        break;
+                }
+                tableHtml += '</tr>';
+            });
+            
+            tableHtml += '</tbody></table>';
+
+            if (reportData.data.length > 100) {
+                tableHtml += `<p class="text-center mt-3"><em>Mostrando os primeiros 100 registros de ${reportData.data.length} total.</em></p>`;
+            }
+
+            reportContent.innerHTML = summaryHtml + tableHtml;
+        }
+
+        async function generateQuickReport(type) {
+            // Implementation for quick reports
+            switch(type) {
+                case 'sales-today':
+                    document.getElementById('reportType').value = 'sales';
+                    document.getElementById('reportPeriod').value = 'today';
+                    break;
+                case 'inventory-low':
+                    document.getElementById('reportType').value = 'inventory';
+                    break;
+                case 'profit-analysis':
+                    document.getElementById('reportType').value = 'profit';
+                    document.getElementById('reportPeriod').value = 'month';
+                    break;
+                case 'top-products':
+                    showToast('Relatório de produtos mais vendidos em desenvolvimento', 'info');
+                    return;
+                case 'monthly-summary':
+                    document.getElementById('reportType').value = 'sales';
+                    document.getElementById('reportPeriod').value = 'month';
+                    break;
+                default:
+                    if (type === 'sales' || type === 'inventory' || type === 'customers' || type === 'profit') {
+                        document.getElementById('reportType').value = type;
+                    }
+                    break;
+            }
+            
+            generateReport();
+        }
+
+        function filterSalesByPeriod(sales, period) {
+            // Ensure sales is an array
+            if (!Array.isArray(sales)) {
+                console.warn('filterSalesByPeriod: sales is not an array, returning empty array');
+                return [];
+            }
+
+            const now = new Date();
+            let startDate;
+
+            switch(period) {
+                case 'today':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                case 'week':
+                    startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    break;
+                case 'month':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    break;
+                case 'quarter':
+                    const quarterStart = Math.floor(now.getMonth() / 3) * 3;
+                    startDate = new Date(now.getFullYear(), quarterStart, 1);
+                    break;
+                case 'year':
+                    startDate = new Date(now.getFullYear(), 0, 1);
+                    break;
+                default:
+                    return sales;
+            }
+
+            return sales.filter(sale => {
+                const saleDate = new Date(sale.created_at || sale.date);
+                return saleDate >= startDate;
+            });
+        }
+
+        function getPeriodLabel(period) {
+            const labels = {
+                'today': 'Hoje',
+                'week': 'Esta Semana',
+                'month': 'Este Mês',
+                'quarter': 'Este Trimestre',
+                'year': 'Este Ano'
+            };
+            return labels[period] || 'Personalizado';
+        }
+
+        function getDateRangeForPeriod(period) {
+            const now = new Date();
+            let startDate, endDate;
+
+            switch(period) {
+                case 'today':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+                    break;
+                case 'week':
+                    startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    endDate = now;
+                    break;
+                case 'month':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    endDate = now;
+                    break;
+                case 'quarter':
+                    const quarterStart = Math.floor(now.getMonth() / 3) * 3;
+                    startDate = new Date(now.getFullYear(), quarterStart, 1);
+                    endDate = now;
+                    break;
+                case 'year':
+                    startDate = new Date(now.getFullYear(), 0, 1);
+                    endDate = now;
+                    break;
+                case 'custom':
+                    const startInput = document.getElementById('startDate');
+                    const endInput = document.getElementById('endDate');
+                    startDate = startInput?.value ? new Date(startInput.value) : new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                    endDate = endInput?.value ? new Date(endInput.value) : now;
+                    break;
+                default:
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    endDate = now;
+                    break;
+            }
+
+            return {
+                startDate: startDate.toISOString().split('T')[0],
+                endDate: endDate.toISOString().split('T')[0]
+            };
+        }
+
+        function printReport() {
+            const reportContent = document.getElementById('reportContent').innerHTML;
+            const reportTitle = document.getElementById('reportTitle').textContent;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>${reportTitle}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                            th { background-color: #f5f5f5; }
+                            .report-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 20px 0; }
+                            .summary-item { border: 1px solid #ddd; padding: 15px; text-align: center; }
+                            .summary-value { font-size: 1.5rem; font-weight: bold; color: #3b82f6; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>${reportTitle}</h1>
+                        ${reportContent}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function exportReport() {
+            App.showToast('Funcionalidade de exportação em desenvolvimento', 'info');
+        }
+    </script>
+
+    <script src="js/main.js"></script>
+    <script src="js/theme-system.js"></script>
+</body>
+</html>
