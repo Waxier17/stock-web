@@ -66,44 +66,42 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <ToastProvider>
-          <Router>
-            <Routes>
-              {/* Rota pública - Login */}
-              <Route
-                path="/login"
-                element={
-                  <PublicRoute>
-                    <Login />
-                  </PublicRoute>
-                }
-              />
+        <Router>
+          <Routes>
+            {/* Rota pública - Login */}
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              }
+            />
 
-              {/* Rotas protegidas */}
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <Layout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route index element={<Navigate to="/dashboard" />} />
-                <Route path="dashboard" element={<Dashboard />} />
-                <Route path="inventory" element={<Inventory />} />
-                <Route path="sales" element={<Sales />} />
-                <Route path="customers" element={<Customers />} />
-                <Route path="suppliers" element={<Suppliers />} />
-                <Route path="categories" element={<Categories />} />
-                <Route path="users" element={<Users />} />
-                <Route path="reports" element={<Reports />} />
-              </Route>
+            {/* Rotas protegidas */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Layout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Navigate to="/dashboard" />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="inventory" element={<Inventory />} />
+              <Route path="sales" element={<Sales />} />
+              <Route path="customers" element={<Customers />} />
+              <Route path="suppliers" element={<Suppliers />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="users" element={<Users />} />
+              <Route path="reports" element={<Reports />} />
+            </Route>
 
-              {/* Rota de fallback */}
-              <Route path="*" element={<Navigate to="/dashboard" />} />
-            </Routes>
-          </Router>
-        </ToastProvider>
+            {/* Rota de fallback */}
+            <Route path="*" element={<Navigate to="/dashboard" />} />
+          </Routes>
+        </Router>
       </AuthProvider>
     </ThemeProvider>
   );
