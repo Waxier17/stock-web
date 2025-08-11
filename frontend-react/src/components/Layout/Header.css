@@ -1,0 +1,215 @@
+.modern-header {
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-md) var(--space-lg);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+  width: 100%;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.header-brand {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  text-decoration: none;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-brand:hover {
+  text-decoration: none;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  padding: var(--space-sm);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: background-color 0.3s ease;
+  color: var(--gray-600);
+}
+
+.mobile-menu-toggle:hover {
+  background-color: var(--gray-100);
+}
+
+.btn-secondary-modern {
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  min-height: 40px;
+}
+
+.btn-secondary-modern:hover {
+  background: var(--gray-200);
+  border-color: var(--gray-400);
+  text-decoration: none;
+  color: var(--gray-700);
+}
+
+.btn-primary-modern {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  min-height: 40px;
+}
+
+.btn-primary-modern:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  color: white;
+}
+
+.btn-sm {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-sm);
+  min-height: 32px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  max-width: 400px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.modal-body {
+  padding: var(--space-lg);
+}
+
+.modal-body p {
+  margin: 0;
+  color: var(--gray-600);
+}
+
+.modal-footer {
+  border-top: 1px solid var(--gray-200);
+  padding: var(--space-lg);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-md);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .header-content {
+    padding: 0;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: var(--space-md);
+  }
+}
