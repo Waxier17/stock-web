@@ -78,10 +78,19 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
 
   // Focus no primeiro input quando modal abre
   useEffect(() => {
-    if (customerSelectRef.current) {
+    if (customerSelectRef.current && currentStep === 0) {
       setTimeout(() => customerSelectRef.current.focus(), 100);
     }
-  }, []);
+  }, [currentStep]);
+
+  // Resetar search quando mudar de step
+  useEffect(() => {
+    if (currentStep !== 1) {
+      setProductSearch('');
+      setSelectedProduct('');
+      setSelectedQuantity(1);
+    }
+  }, [currentStep]);
 
   // Preencher formulário quando venda for fornecida (modo edição)
   useEffect(() => {
