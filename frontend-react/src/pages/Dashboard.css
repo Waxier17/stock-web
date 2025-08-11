@@ -2,7 +2,8 @@
   min-height: calc(100vh - 73px);
 }
 
-.dashboard-loading {
+.dashboard-loading,
+.dashboard-welcome {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,6 +11,22 @@
   height: 400px;
   color: var(--gray-500);
   gap: var(--space-md);
+}
+
+.dashboard-welcome {
+  text-align: center;
+  color: var(--gray-700);
+}
+
+.dashboard-welcome h1 {
+  color: var(--gray-900);
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--space-md);
+}
+
+.dashboard-welcome p {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-xl);
 }
 
 /* Cards de estatísticas */
