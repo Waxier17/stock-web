@@ -146,6 +146,17 @@
   color: var(--color-success);
 }
 
+.step-button.disabled {
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.step-button.disabled:hover {
+  background: none;
+  color: var(--color-text-disabled);
+}
+
 .step-icon {
   display: flex;
   align-items: center;
