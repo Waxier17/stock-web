@@ -341,19 +341,29 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
 
   const FormField = ({ name, label, required = false, icon: Icon, help, children, ...props }) => {
     const fieldValidation = validation[name];
-    const hasError = fieldValidation && !fieldValidation.isValid;
+    const hasError = fieldValidation && !fieldValidation.isValid && (formData[name] !== '' || name === 'items');
     const hasSuccess = fieldValidation && fieldValidation.isValid;
 
     return (
       <div className={`form-field ${hasError ? 'error' : ''} ${hasSuccess ? 'success' : ''}`}>
         <label>
           {Icon && <Icon size={14} />}
-          {label}
+          <span>{label}</span>
           {required && <span className="required">*</span>}
         </label>
-        {children}
-        {hasError && <span className="field-message error">{fieldValidation.message}</span>}
-        {help && !hasError && <span className="field-help">{help}</span>}
+        <div className="input-wrapper">
+          {children}
+          {hasError && <FiAlertCircle className="field-icon error" size={16} />}
+          {hasSuccess && <FiCheck className="field-icon success" size={16} />}
+        </div>
+        {hasError && <span className="field-message error">
+          <FiAlertCircle size={12} />
+          {fieldValidation.message}
+        </span>}
+        {help && !hasError && <span className="field-help">
+          <FiInfo size={12} />
+          {help}
+        </span>}
       </div>
     );
   };
