@@ -717,6 +717,14 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
   return (
     <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && onCancel()}>
       <div className="sale-modal-enhanced">
+        {loading && (
+          <div className="modal-loading-overlay">
+            <div className="modal-loading-content">
+              <div className="spinner"></div>
+              <span>Processando venda...</span>
+            </div>
+          </div>
+        )}
         {/* Header */}
         <div className="modal-header">
           <div className="header-content">
