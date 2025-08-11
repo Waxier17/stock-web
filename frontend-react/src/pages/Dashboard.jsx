@@ -85,6 +85,24 @@ function Dashboard() {
 
     } catch (error) {
       console.error('Erro ao carregar dados do dashboard:', error);
+
+      // Se o erro for de autenticação, não mostrar erro - o usuário será redirecionado
+      if (error.message.includes('autenticado') || error.message.includes('login')) {
+        console.log('Authentication error, user will be redirected to login');
+        return;
+      }
+
+      // Definir valores padrão para evitar quebra da interface
+      setStats({
+        totalProducts: 0,
+        totalSales: 0,
+        lowStockItems: 0,
+        totalCustomers: 0
+      });
+      setRecentSales([]);
+      setLowStockAlerts([]);
+
+      showError(`Erro ao carregar dados do painel: ${error.message}`);
     } finally {
       setLoading(false);
       setRefreshing(false);
