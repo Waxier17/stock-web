@@ -74,6 +74,13 @@ export function AuthProvider({ children }) {
 
   // Função para fazer requisições autenticadas
   const makeAuthenticatedRequest = async (url, options = {}) => {
+    // Verificar se há token
+    if (!token) {
+      console.error('No token available for request to:', url);
+      logout();
+      throw new Error('Não autenticado. Faça login primeiro.');
+    }
+
     const defaultOptions = {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -83,21 +90,39 @@ export function AuthProvider({ children }) {
     };
 
     try {
+      console.log(`Making request to: ${url}`);
       const response = await fetch(url, { ...options, ...defaultOptions });
-      
+
+      console.log(`Response status: ${response.status} for ${url}`);
+
       if (response.status === 401) {
         // Token expirado ou inválido
+        console.warn('Token expired or invalid, logging out');
         logout();
         throw new Error('Sessão expirada. Faça login novamente.');
       }
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Erro na requisição');
+        let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        try {
+          const error = await response.json();
+          errorMessage = error.message || error.error || errorMessage;
+        } catch (parseError) {
+          console.warn('Could not parse error response:', parseError);
+        }
+        throw new Error(errorMessage);
       }
 
       return response.json();
     } catch (error) {
+      console.error(`Request failed for ${url}:`, error);
+
+      // Se o erro for de rede, tentar diagnosticar
+      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+        console.error('Network error - possible proxy issue or backend down');
+        throw new Error('Erro de conexão. Verifique se o servidor está funcionando.');
+      }
+
       throw error;
     }
   };
