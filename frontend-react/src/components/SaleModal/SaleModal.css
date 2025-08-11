@@ -395,6 +395,21 @@
   align-items: end;
 }
 
+.product-select {
+  min-width: 200px;
+}
+
+.quantity-input {
+  min-width: 80px;
+  max-width: 100px;
+  text-align: center;
+}
+
+.add-product-btn {
+  white-space: nowrap;
+  min-width: 120px;
+}
+
 /* Items List */
 .items-list {
   margin-top: var(--space-lg);
