@@ -28,6 +28,7 @@ import './SaleModal.css';
 
 function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
   const { isDarkMode } = useTheme();
+  const toast = useToast();
   const customerSelectRef = useRef(null);
   
   const [formData, setFormData] = useState({
