@@ -1,14 +1,14 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTheme } from '../../contexts/ThemeContext';
-import { 
-  FiHome, 
-  FiPackage, 
-  FiShoppingCart, 
-  FiUsers, 
-  FiTruck, 
-  FiTag, 
-  FiUser, 
-  FiBarChart3,
+import {
+  FiHome,
+  FiPackage,
+  FiShoppingCart,
+  FiUsers,
+  FiTruck,
+  FiTag,
+  FiUser,
+  FiBarChart2,
   FiX,
   FiChevronLeft
 } from 'react-icons/fi';
