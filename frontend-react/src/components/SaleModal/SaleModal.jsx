@@ -198,9 +198,9 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
     const currentStock = product.stock_quantity || product.stock || 0;
     const existingItem = formData.items.find(item => item.product_id === product.id);
     const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
-    
+
     if (currentQuantityInCart + selectedQuantity > currentStock) {
-      alert(`Estoque insuficiente. Disponível: ${currentStock - currentQuantityInCart} unidades`);
+      toast.warning(`Estoque insuficiente. Disponível: ${currentStock - currentQuantityInCart} unidades`);
       return;
     }
 
