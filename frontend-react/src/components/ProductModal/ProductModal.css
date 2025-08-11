@@ -236,11 +236,35 @@
   padding: var(--space-md);
   border: 2px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-background);
+  background: var(--color-background-secondary);
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
   transition: all var(--transition-normal);
   resize: vertical;
+  box-sizing: border-box;
+}
+
+/* Light theme specific fixes */
+.light-theme .form-field input,
+.light-theme .form-field select,
+.light-theme .form-field textarea {
+  background: #FFFFFF;
+  border-color: #E2E8F0;
+  color: #0F172A;
+}
+
+.light-theme .form-field input::placeholder,
+.light-theme .form-field textarea::placeholder {
+  color: #64748B;
+}
+
+/* Dark theme specific fixes */
+.dark-theme .form-field input,
+.dark-theme .form-field select,
+.dark-theme .form-field textarea {
+  background: var(--color-background);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
 .form-field input:focus,
