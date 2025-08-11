@@ -428,29 +428,32 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
                   <select
                     value={selectedProduct}
                     onChange={(e) => setSelectedProduct(e.target.value)}
+                    className="product-select"
                   >
                     <option value="">Selecione um produto</option>
-                    {filteredProducts.map(product => (
+                    {(filteredProducts || []).map(product => (
                       <option key={product.id} value={product.id}>
-                        {product.name} - {formatCurrency(product.price)} 
+                        {product.name} - {formatCurrency(product.price)}
                         (Estoque: {product.stock_quantity || product.stock || 0})
                       </option>
                     ))}
                   </select>
-                  
+
                   <input
                     type="number"
                     min="1"
+                    max="999"
                     value={selectedQuantity}
-                    onChange={(e) => setSelectedQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                    onChange={(e) => setSelectedQuantity(Math.max(1, Math.min(999, parseInt(e.target.value) || 1)))}
                     placeholder="Qtd"
+                    className="quantity-input"
                   />
-                  
+
                   <button
                     type="button"
-                    className="btn btn-primary"
+                    className="btn btn-primary add-product-btn"
                     onClick={addProduct}
-                    disabled={!selectedProduct}
+                    disabled={!selectedProduct || selectedQuantity < 1}
                   >
                     <FiPlus size={16} />
                     Adicionar
