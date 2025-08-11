@@ -38,6 +38,8 @@ function Dashboard() {
       const isRefresh = !loading;
       if (isRefresh) setRefreshing(true);
 
+      console.log('Loading dashboard data...');
+
       // Carregar dados em paralelo
       const [products, sales, customers] = await Promise.all([
         makeAuthenticatedRequest('/api/inventory/products'),
