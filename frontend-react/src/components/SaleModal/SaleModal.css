@@ -701,6 +701,30 @@
   border-width: 2px;
 }
 
+.modal-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.modal-loading-content {
+  background: var(--color-background-secondary);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  box-shadow: var(--shadow-xl);
+}
+
 /* Action Buttons */
 .btn-icon {
   display: flex;
