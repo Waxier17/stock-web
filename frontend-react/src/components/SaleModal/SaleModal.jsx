@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useToast } from '../../contexts/ToastContext';
 import {
   FiShoppingCart,
   FiX,
@@ -19,7 +20,9 @@ import {
   FiSearch,
   FiInfo,
   FiTrendingUp,
-  FiEdit3
+  FiEdit3,
+  FiEye,
+  FiCheckCircle
 } from 'react-icons/fi';
 import './SaleModal.css';
 
