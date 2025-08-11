@@ -154,6 +154,22 @@ function Dashboard() {
     );
   }
 
+  // Se não estiver autenticado, mostrar mensagem de boas-vindas
+  if (!isAuthenticated) {
+    return (
+      <div className="dashboard-welcome">
+        <h1>Bem-vindo ao Stock Web</h1>
+        <p>Faça login para acessar o painel de controle</p>
+        <button
+          className="btn-primary-modern"
+          onClick={() => window.location.href = '/login'}
+        >
+          Fazer Login
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="dashboard-page fade-in">
       <div className="page-header">
