@@ -36,7 +36,23 @@ function ProtectedRoute({ children }) {
 
 // Componente para redirecionar usuários autenticados
 function PublicRoute({ children }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '1.2rem',
+        color: '#6b7280'
+      }}>
+        Carregando...
+      </div>
+    );
+  }
+
   return !isAuthenticated ? children : <Navigate to="/dashboard" />;
 }
 
