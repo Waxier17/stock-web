@@ -106,7 +106,7 @@ function Dashboard() {
       
     } catch (error) {
       console.error('Dashboard data error:', error);
-      console.error('Erro ao carregar dados do dashboard');
+      toast.error('Erro ao carregar dados do dashboard');
     } finally {
       setLoading(false);
     }
