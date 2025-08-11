@@ -24,14 +24,16 @@ function ProtectedRoute({ children }) {
         alignItems: 'center',
         height: '100vh',
         fontSize: '1.2rem',
-        color: '#6b7280'
+        color: '#6b7280',
+        opacity: 0,
+        animation: 'fadeIn 0.3s ease-in-out 0.2s forwards'
       }}>
         Carregando...
       </div>
     );
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 }
 
 // Componente para redirecionar usuários autenticados
