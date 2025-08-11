@@ -12,17 +12,24 @@ export function useTheme() {
 
 export function ThemeProvider({ children }) {
   const [isDarkMode, setIsDarkMode] = useState(true); // Dark mode por padrão
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Verificar se existe preferência salva no localStorage
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setIsDarkMode(savedTheme === 'dark');
-    } else {
-      // Se não há preferência salva, usar dark mode como padrão
+    try {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        setIsDarkMode(savedTheme === 'dark');
+      } else {
+        // Se não há preferência salva, usar dark mode como padrão
+        setIsDarkMode(true);
+        localStorage.setItem('theme', 'dark');
+      }
+    } catch (error) {
+      console.warn('Error accessing localStorage:', error);
       setIsDarkMode(true);
-      localStorage.setItem('theme', 'dark');
     }
+    setIsLoaded(true);
   }, []);
 
   // Aplicar tema ao documento
