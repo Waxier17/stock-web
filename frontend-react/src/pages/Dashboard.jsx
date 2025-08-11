@@ -1,389 +1,373 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import { useToast } from '../contexts/ToastContext';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from 'chart.js';
+import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import { 
-  Package, 
-  TrendingUp, 
-  AlertTriangle, 
-  Users,
-  Plus,
-  ShoppingCart,
-  UserPlus,
-  Truck,
-  FolderPlus,
-  UserCog,
-  BarChart3,
-  RefreshCw,
-  Loader,
-  CheckCircle,
-  AlertCircle
-} from 'lucide-react';
+  FiPackage, 
+  FiShoppingCart, 
+  FiUsers, 
+  FiDollarSign,
+  FiTrendingUp,
+  FiTrendingDown,
+  FiRefreshCw,
+  FiEye
+} from 'react-icons/fi';
 import './Dashboard.css';
 
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
+
 function Dashboard() {
-  const { user, token, isAuthenticated, makeAuthenticatedRequest } = useAuth();
-  const [stats, setStats] = useState({
-    totalProducts: 0,
-    totalSales: 0,
-    lowStockItems: 0,
-    totalCustomers: 0
-  });
-  const [recentSales, setRecentSales] = useState([]);
-  const [lowStockAlerts, setLowStockAlerts] = useState([]);
+  const { isAuthenticated, token, makeAuthenticatedRequest } = useAuth();
+  const { isDarkMode, colors } = useTheme();
+  const toast = useToast();
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+  const [dashboardData, setDashboardData] = useState({
+    metrics: {
+      totalProducts: 0,
+      monthlySales: 0,
+      activeCustomers: 0,
+      totalStockValue: 0
+    },
+    salesChart: {
+      labels: [],
+      data: []
+    },
+    categoryChart: {
+      labels: [],
+      data: []
+    },
+    recentSales: []
+  });
 
-  // Função para buscar dados do dashboard
+  // Load dashboard data
   const loadDashboardData = async () => {
+    if (!isAuthenticated || !token) {
+      setLoading(false);
+      return;
+    }
+
     try {
-      const isRefresh = !loading;
-      if (isRefresh) setRefreshing(true);
+      setLoading(true);
 
-      console.log('Loading dashboard data...');
+      // Simulated data for demonstration
+      // In a real app, this would come from your API
+      const mockData = {
+        metrics: {
+          totalProducts: 127,
+          monthlySales: 25890,
+          activeCustomers: 342,
+          totalStockValue: 186450
+        },
+        salesChart: {
+          labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+          data: [12500, 19000, 15000, 22000, 18500, 25000, 28000, 24000, 30000, 27000, 31000, 35000]
+        },
+        categoryChart: {
+          labels: ['Eletrônicos', 'Roupas', 'Casa & Jardim', 'Esportes', 'Livros'],
+          data: [35, 25, 20, 15, 5]
+        },
+        recentSales: [
+          { id: 1, customer: 'João Silva', amount: 1250.00, date: '2024-01-15', items: 3 },
+          { id: 2, customer: 'Maria Santos', amount: 850.50, date: '2024-01-15', items: 2 },
+          { id: 3, customer: 'Pedro Costa', amount: 2100.00, date: '2024-01-14', items: 5 },
+          { id: 4, customer: 'Ana Lima', amount: 675.75, date: '2024-01-14', items: 1 },
+          { id: 5, customer: 'Carlos Oliveira', amount: 1450.25, date: '2024-01-13', items: 4 }
+        ]
+      };
 
-      // Carregar dados em paralelo
-      const [products, sales, customers] = await Promise.all([
-        makeAuthenticatedRequest('/api/inventory/products'),
-        makeAuthenticatedRequest('/api/sales'),
-        makeAuthenticatedRequest('/api/customers')
-      ]);
-
-      // Calcular estatísticas
-      const lowStock = products.filter(p => {
-        const stock = p.stock_quantity || p.stock || 0;
-        const minStock = p.min_stock_level || p.minStock || 10;
-        return stock <= minStock;
-      });
-
-      // Vendas do mês atual
-      const currentMonth = new Date().getMonth();
-      const currentYear = new Date().getFullYear();
-      const monthlySales = sales.filter(sale => {
-        const saleDate = new Date(sale.created_at || sale.date);
-        return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear;
-      });
-
-      const totalValue = monthlySales.reduce((sum, sale) => 
-        sum + (sale.final_amount || sale.totalAmount || 0), 0
-      );
-
-      setStats({
-        totalProducts: products.length,
-        totalSales: totalValue,
-        lowStockItems: lowStock.length,
-        totalCustomers: customers.length
-      });
-
-      // Vendas recentes (últimas 5)
-      const recentSalesData = sales
-        .sort((a, b) => new Date(b.created_at || b.date) - new Date(a.created_at || a.date))
-        .slice(0, 5);
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      setRecentSales(recentSalesData);
-
-      // Alertas de estoque baixo (primeiros 5)
-      setLowStockAlerts(lowStock.slice(0, 5));
-
+      setDashboardData(mockData);
+      
     } catch (error) {
-      console.error('Erro ao carregar dados do dashboard:', error);
-
-      // Se o erro for de autenticação, não mostrar erro - o usuário será redirecionado
-      if (error.message.includes('autenticado') || error.message.includes('login')) {
-        console.log('Authentication error, user will be redirected to login');
-        return;
-      }
-
-      // Definir valores padrão para evitar quebra da interface
-      setStats({
-        totalProducts: 0,
-        totalSales: 0,
-        lowStockItems: 0,
-        totalCustomers: 0
-      });
-      setRecentSales([]);
-      setLowStockAlerts([]);
-
-      showError(`Erro ao carregar dados do painel: ${error.message}`);
+      console.error('Dashboard data error:', error);
+      toast.error('Erro ao carregar dados do dashboard');
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   };
 
   useEffect(() => {
-    // Só carregar dados se estiver autenticado
-    if (isAuthenticated && token) {
-      loadDashboardData();
-    } else {
-      console.log('User not authenticated, skipping data load');
-      setLoading(false);
-    }
+    loadDashboardData();
   }, [isAuthenticated, token]);
 
-  const getGreeting = () => {
-    const currentHour = new Date().getHours();
-    let greeting = 'Boa noite';
-    
-    if (currentHour < 12) greeting = 'Bom dia';
-    else if (currentHour < 18) greeting = 'Boa tarde';
-    
-    return `${greeting}, ${user?.username || 'Usuário'}!`;
+  // Chart configurations
+  const chartTheme = {
+    backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+    textColor: isDarkMode ? '#F1F5F9' : '#0F172A',
+    gridColor: isDarkMode ? '#334155' : '#E2E8F0',
+    primaryColor: colors?.primary || '#3B82F6',
+    secondaryColor: colors?.secondary || '#8B5CF6'
   };
 
-  const formatCurrency = (amount) => {
+  const salesChartData = {
+    labels: dashboardData.salesChart.labels,
+    datasets: [
+      {
+        label: 'Vendas Mensais (R$)',
+        data: dashboardData.salesChart.data,
+        backgroundColor: `${chartTheme.primaryColor}20`,
+        borderColor: chartTheme.primaryColor,
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+      },
+    ],
+  };
+
+  const categoryChartData = {
+    labels: dashboardData.categoryChart.labels,
+    datasets: [
+      {
+        data: dashboardData.categoryChart.data,
+        backgroundColor: [
+          chartTheme.primaryColor,
+          chartTheme.secondaryColor,
+          '#10B981',
+          '#F59E0B',
+          '#EF4444',
+        ],
+        borderWidth: 0,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          color: chartTheme.textColor,
+          font: {
+            size: 12,
+          },
+        },
+      },
+      tooltip: {
+        backgroundColor: chartTheme.backgroundColor,
+        titleColor: chartTheme.textColor,
+        bodyColor: chartTheme.textColor,
+        borderColor: chartTheme.gridColor,
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          color: chartTheme.gridColor,
+        },
+        ticks: {
+          color: chartTheme.textColor,
+        },
+      },
+      y: {
+        grid: {
+          color: chartTheme.gridColor,
+        },
+        ticks: {
+          color: chartTheme.textColor,
+        },
+      },
+    },
+  };
+
+  const doughnutOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: chartTheme.textColor,
+          padding: 20,
+          font: {
+            size: 12,
+          },
+        },
+      },
+      tooltip: {
+        backgroundColor: chartTheme.backgroundColor,
+        titleColor: chartTheme.textColor,
+        bodyColor: chartTheme.textColor,
+        borderColor: chartTheme.gridColor,
+        borderWidth: 1,
+      },
+    },
+  };
+
+  const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL'
-    }).format(amount);
+    }).format(value);
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return '--';
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
+  const formatDate = (dateStr) => {
+    return new Date(dateStr).toLocaleDateString('pt-BR');
   };
+
+  const MetricCard = ({ icon: Icon, title, value, change, isPositive, isCurrency = false }) => (
+    <div className="metric-card">
+      <div className="metric-icon">
+        <Icon size={24} />
+      </div>
+      <div className="metric-content">
+        <h3 className="metric-title">{title}</h3>
+        <p className="metric-value">
+          {isCurrency ? formatCurrency(value) : value.toLocaleString('pt-BR')}
+        </p>
+        {change && (
+          <div className={`metric-change ${isPositive ? 'positive' : 'negative'}`}>
+            {isPositive ? <FiTrendingUp size={14} /> : <FiTrendingDown size={14} />}
+            <span>{Math.abs(change)}%</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   if (loading) {
     return (
       <div className="dashboard-loading">
-        <Loader size={40} className="spinner" />
-        <p>Carregando painel...</p>
-      </div>
-    );
-  }
-
-  // Se não estiver autenticado, mostrar mensagem de boas-vindas
-  if (!isAuthenticated) {
-    return (
-      <div className="dashboard-welcome">
-        <h1>Bem-vindo ao Stock Web</h1>
-        <p>Faça login para acessar o painel de controle</p>
-        <button
-          className="btn-primary-modern"
-          onClick={() => window.location.href = '/login'}
-        >
-          Fazer Login
-        </button>
+        <div className="spinner"></div>
+        <p>Carregando dashboard...</p>
       </div>
     );
   }
 
   return (
-    <div className="dashboard-page fade-in">
-      <div className="page-header">
-        <h1 className="page-title">{getGreeting()}</h1>
-        <p className="page-subtitle">Visão geral do seu negócio em tempo real</p>
-      </div>
-
-      {/* Cards de Estatísticas */}
-      <div className="row mb-5">
-        <div className="col-md-3">
-          <div className="stat-card slide-in">
-            <div className="stat-icon">
-              <Package />
-            </div>
-            <div className="stat-number">{stats.totalProducts}</div>
-            <div className="stat-label">Total de Produtos</div>
-          </div>
+    <div className="dashboard">
+      {/* Dashboard Header */}
+      <div className="dashboard-header">
+        <div className="dashboard-title-section">
+          <h1>Dashboard</h1>
+          <p>Visão geral do seu negócio</p>
         </div>
-        <div className="col-md-3">
-          <div className="stat-card slide-in" style={{animationDelay: '0.1s'}}>
-            <div className="stat-icon">
-              <TrendingUp />
-            </div>
-            <div className="stat-number">{formatCurrency(stats.totalSales)}</div>
-            <div className="stat-label">Vendas do Mês</div>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="stat-card slide-in" style={{animationDelay: '0.2s'}}>
-            <div className="stat-icon">
-              <AlertTriangle />
-            </div>
-            <div className="stat-number">{stats.lowStockItems}</div>
-            <div className="stat-label">Estoque Baixo</div>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="stat-card slide-in" style={{animationDelay: '0.3s'}}>
-            <div className="stat-icon">
-              <Users />
-            </div>
-            <div className="stat-number">{stats.totalCustomers}</div>
-            <div className="stat-label">Clientes Ativos</div>
-          </div>
+        <div className="dashboard-actions">
+          <button 
+            className="btn btn-secondary"
+            onClick={loadDashboardData}
+            disabled={loading}
+          >
+            <FiRefreshCw size={16} className={loading ? 'spinner' : ''} />
+            Atualizar
+          </button>
         </div>
       </div>
 
-      {/* Ações Rápidas */}
-      <div className="modern-card mb-5">
-        <div className="card-header d-flex justify-content-between align-items-center">
-          <h2 className="card-title">Ações Rápidas</h2>
-          <span className="badge-modern">Acesso direto às principais funcionalidades</span>
+      {/* Metrics Cards */}
+      <div className="metrics-grid">
+        <MetricCard
+          icon={FiPackage}
+          title="Total de Produtos"
+          value={dashboardData.metrics.totalProducts}
+          change={8.2}
+          isPositive={true}
+        />
+        <MetricCard
+          icon={FiShoppingCart}
+          title="Vendas do Mês"
+          value={dashboardData.metrics.monthlySales}
+          change={12.5}
+          isPositive={true}
+          isCurrency={true}
+        />
+        <MetricCard
+          icon={FiUsers}
+          title="Clientes Ativos"
+          value={dashboardData.metrics.activeCustomers}
+          change={-2.1}
+          isPositive={false}
+        />
+        <MetricCard
+          icon={FiDollarSign}
+          title="Valor em Estoque"
+          value={dashboardData.metrics.totalStockValue}
+          change={5.8}
+          isPositive={true}
+          isCurrency={true}
+        />
+      </div>
+
+      {/* Charts Section */}
+      <div className="dashboard-charts">
+        <div className="chart-container">
+          <div className="chart-header">
+            <h3>Vendas Mensais</h3>
+            <p>Evolução das vendas ao longo do ano</p>
+          </div>
+          <div className="chart-content">
+            <Line data={salesChartData} options={chartOptions} />
+          </div>
         </div>
-        <div className="card-body">
-          <div className="quick-actions-grid">
-            {/* Principais */}
-            <div className="action-section">
-              <h3 className="action-section-title">Principais</h3>
-              <div className="action-buttons">
-                <button 
-                  className="btn-primary-modern action-btn"
-                  onClick={() => window.location.href = '/inventory'}
-                >
-                  <Plus />
-                  <span>Adicionar Produto</span>
-                </button>
-                <button 
-                  className="btn-primary-modern action-btn"
-                  onClick={() => window.location.href = '/sales'}
-                >
-                  <ShoppingCart />
-                  <span>Nova Venda</span>
-                </button>
-              </div>
-            </div>
 
-            {/* Cadastros */}
-            <div className="action-section">
-              <h3 className="action-section-title">Cadastros</h3>
-              <div className="action-buttons">
-                <button 
-                  className="btn-secondary-modern action-btn"
-                  onClick={() => window.location.href = '/customers'}
-                >
-                  <UserPlus />
-                  <span>Novo Cliente</span>
-                </button>
-                <button 
-                  className="btn-secondary-modern action-btn"
-                  onClick={() => window.location.href = '/suppliers'}
-                >
-                  <Truck />
-                  <span>Novo Fornecedor</span>
-                </button>
-                <button 
-                  className="btn-secondary-modern action-btn"
-                  onClick={() => window.location.href = '/categories'}
-                >
-                  <FolderPlus />
-                  <span>Nova Categoria</span>
-                </button>
-                <button 
-                  className="btn-secondary-modern action-btn"
-                  onClick={() => window.location.href = '/users'}
-                >
-                  <UserCog />
-                  <span>Novo Usuário</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Relatórios */}
-            <div className="action-section">
-              <h3 className="action-section-title">Relatórios</h3>
-              <div className="action-buttons">
-                <button 
-                  className="btn-accent-modern action-btn"
-                  onClick={() => window.location.href = '/reports'}
-                >
-                  <BarChart3 />
-                  <span>Relatórios</span>
-                </button>
-              </div>
-            </div>
+        <div className="chart-container">
+          <div className="chart-header">
+            <h3>Vendas por Categoria</h3>
+            <p>Distribuição das vendas por categoria</p>
+          </div>
+          <div className="chart-content">
+            <Doughnut data={categoryChartData} options={doughnutOptions} />
           </div>
         </div>
       </div>
 
-      <div className="row">
-        {/* Vendas Recentes */}
-        <div className="col-md-8">
-          <div className="modern-card">
-            <div className="card-header d-flex justify-content-between align-items-center">
-              <h2 className="card-title">Vendas Recentes</h2>
-              <button 
-                className="btn-secondary-modern btn-sm"
-                onClick={loadDashboardData}
-                disabled={refreshing}
-              >
-                <RefreshCw size={16} className={refreshing ? 'spinner' : ''} />
-                Atualizar
-              </button>
-            </div>
-            <div className="card-body">
-              <div style={{overflowX: 'auto'}}>
-                <table className="modern-table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Cliente</th>
-                      <th>Data</th>
-                      <th>Valor</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recentSales.length === 0 ? (
-                      <tr>
-                        <td colSpan="5" className="text-center" style={{padding: '2rem', color: 'var(--gray-500)'}}>
-                          <ShoppingCart size={24} />
-                          <br /><br />Nenhuma venda encontrada
-                        </td>
-                      </tr>
-                    ) : (
-                      recentSales.map(sale => (
-                        <tr key={sale.id}>
-                          <td>#{sale.id}</td>
-                          <td>{sale.customerName || 'Cliente não informado'}</td>
-                          <td>{formatDate(sale.created_at || sale.date)}</td>
-                          <td>{formatCurrency(sale.final_amount || sale.totalAmount || 0)}</td>
-                          <td>
-                            <span className="badge-success">
-                              Concluída
-                            </span>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+      {/* Recent Sales */}
+      <div className="recent-sales">
+        <div className="recent-sales-header">
+          <h3>Vendas Recentes</h3>
+          <button className="btn btn-secondary btn-sm">
+            <FiEye size={14} />
+            Ver Todas
+          </button>
         </div>
-
-        {/* Alertas de Estoque */}
-        <div className="col-md-4">
-          <div className="modern-card">
-            <div className="card-header">
-              <h2 className="card-title">Alertas de Estoque</h2>
-            </div>
-            <div className="card-body">
-              {lowStockAlerts.length === 0 ? (
-                <div className="text-center" style={{padding: '1rem', color: 'var(--success-500)'}}>
-                  <CheckCircle size={32} />
-                  <br /><br />
-                  <strong>Tudo em ordem!</strong><br />
-                  Nenhum produto com estoque baixo
-                </div>
-              ) : (
-                lowStockAlerts.map(product => (
-                  <div key={product.id} className="low-stock-item">
-                    <div>
-                      <strong>{product.name}</strong><br />
-                      <small style={{color: 'var(--warning-500)'}}>
-                        Estoque: {product.stock_quantity || product.stock || 0} unidades
-                      </small>
-                    </div>
-                    <AlertTriangle size={20} style={{color: 'var(--warning-500)'}} />
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+        <div className="recent-sales-table">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Valor</th>
+                <th>Itens</th>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dashboardData.recentSales.map(sale => (
+                <tr key={sale.id}>
+                  <td className="sale-customer">{sale.customer}</td>
+                  <td className="sale-amount">{formatCurrency(sale.amount)}</td>
+                  <td className="sale-items">{sale.items} {sale.items === 1 ? 'item' : 'itens'}</td>
+                  <td className="sale-date">{formatDate(sale.date)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
