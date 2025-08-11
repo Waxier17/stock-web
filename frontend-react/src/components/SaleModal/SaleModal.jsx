@@ -800,8 +800,25 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => setCurrentStep(currentStep + 1)}
-                  disabled={currentStep === 0 && !validation.customer_id?.isValid}
+                  onClick={() => {
+                    const canProceed =
+                      (currentStep === 0 && validation.customer_id?.isValid) ||
+                      (currentStep === 1 && validation.items?.isValid) ||
+                      (currentStep === 2 && validation.payment_method?.isValid);
+
+                    if (canProceed) {
+                      setCurrentStep(currentStep + 1);
+                    } else {
+                      if (currentStep === 0) toast.warning('Selecione um cliente para continuar');
+                      else if (currentStep === 1) toast.warning('Adicione pelo menos um produto');
+                      else if (currentStep === 2) toast.warning('Selecione o método de pagamento');
+                    }
+                  }}
+                  disabled={
+                    (currentStep === 0 && !validation.customer_id?.isValid) ||
+                    (currentStep === 1 && !validation.items?.isValid) ||
+                    (currentStep === 2 && !validation.payment_method?.isValid)
+                  }
                 >
                   Próximo
                 </button>
