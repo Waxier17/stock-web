@@ -730,6 +730,31 @@
   
   .filters-grid {
     grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .filter-group {
+    min-height: auto;
+  }
+
+  .range-inputs {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+
+  .range-inputs span {
+    text-align: center;
+    order: 2;
+    padding: var(--space-xs) 0;
+  }
+
+  .range-inputs input:first-child {
+    order: 1;
+  }
+
+  .range-inputs input:last-child {
+    order: 3;
   }
   
   .content-toolbar {
