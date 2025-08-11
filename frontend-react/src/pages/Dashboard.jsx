@@ -20,7 +20,7 @@ import {
 import './Dashboard.css';
 
 function Dashboard() {
-  const { user, makeAuthenticatedRequest } = useAuth();
+  const { user, token, isAuthenticated, makeAuthenticatedRequest } = useAuth();
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalSales: 0,
