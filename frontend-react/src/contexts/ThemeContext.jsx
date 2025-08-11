@@ -34,16 +34,22 @@ export function ThemeProvider({ children }) {
 
   // Aplicar tema ao documento
   useEffect(() => {
-    const root = document.documentElement;
-    if (isDarkMode) {
-      root.classList.add('dark-theme');
-      root.classList.remove('light-theme');
-    } else {
-      root.classList.add('light-theme');
-      root.classList.remove('dark-theme');
+    if (!isLoaded) return;
+
+    try {
+      const root = document.documentElement;
+      if (isDarkMode) {
+        root.classList.add('dark-theme');
+        root.classList.remove('light-theme');
+      } else {
+        root.classList.add('light-theme');
+        root.classList.remove('dark-theme');
+      }
+      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    } catch (error) {
+      console.warn('Error setting theme:', error);
     }
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
+  }, [isDarkMode, isLoaded]);
 
   const toggleTheme = () => {
     setIsDarkMode(prev => !prev);
