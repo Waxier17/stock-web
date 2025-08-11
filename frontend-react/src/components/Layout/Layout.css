@@ -1,0 +1,51 @@
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-content {
+  display: flex;
+  flex: 1;
+}
+
+.main-content {
+  margin-left: 280px;
+  padding: var(--space-xl);
+  min-height: calc(100vh - 73px);
+  width: calc(100% - 280px);
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.page-header {
+  margin-bottom: var(--space-xl);
+}
+
+.page-title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: var(--space-sm);
+}
+
+.page-subtitle {
+  color: var(--gray-500);
+  font-size: var(--font-size-base);
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: var(--space-lg);
+    width: 100%;
+  }
+
+  .page-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-lg);
+  }
+}
