@@ -108,8 +108,6 @@ export function AuthProvider({ children }) {
         // Token expirado ou inválido
         console.warn('Token expired or invalid, logging out');
         logout();
-        // Forçar reload da página para garantir redirecionamento
-        window.location.href = '/login';
         throw new Error('Sessão expirada. Faça login novamente.');
       }
 
