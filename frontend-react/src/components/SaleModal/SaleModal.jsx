@@ -111,9 +111,15 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
 
   // Filter products based on search
   useEffect(() => {
-    if (productSearch) {
+    if (!products || products.length === 0) {
+      setFilteredProducts([]);
+      return;
+    }
+
+    if (productSearch && productSearch.trim() !== '') {
       const filtered = products.filter(product =>
-        product.name.toLowerCase().includes(productSearch.toLowerCase())
+        product.name.toLowerCase().includes(productSearch.toLowerCase()) ||
+        (product.description && product.description.toLowerCase().includes(productSearch.toLowerCase()))
       );
       setFilteredProducts(filtered);
     } else {
