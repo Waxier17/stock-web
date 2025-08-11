@@ -110,8 +110,14 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    loadDashboardData();
-  }, []);
+    // Só carregar dados se estiver autenticado
+    if (isAuthenticated && token) {
+      loadDashboardData();
+    } else {
+      console.log('User not authenticated, skipping data load');
+      setLoading(false);
+    }
+  }, [isAuthenticated, token]);
 
   const getGreeting = () => {
     const currentHour = new Date().getHours();
