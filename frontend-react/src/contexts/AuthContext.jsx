@@ -22,43 +22,22 @@ export function AuthProvider({ children }) {
     const savedUser = localStorage.getItem('user');
 
     if (savedToken && savedUser) {
-      console.log('Found saved token, verifying...');
-      // Verificar se o token ainda é válido
-      verifyToken(savedToken, savedUser);
-    } else {
-      console.log('No saved token found');
-      setLoading(false);
-    }
-  }, []);
-
-  // Função para verificar se o token é válido
-  const verifyToken = async (token, userString) => {
-    try {
-      const response = await fetch('/api/auth/verify', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        setToken(token);
-        setUser(JSON.parse(userString));
+      console.log('Found saved token, setting user as authenticated');
+      try {
+        setToken(savedToken);
+        setUser(JSON.parse(savedUser));
         setIsAuthenticated(true);
-        console.log('Token is valid, user authenticated');
-      } else {
-        console.log('Token is invalid, clearing storage');
+      } catch (error) {
+        console.error('Error parsing saved user data:', error);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
-    } catch (error) {
-      console.log('Token verification failed, clearing storage:', error);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-    } finally {
-      setLoading(false);
+    } else {
+      console.log('No saved token found - user needs to login');
     }
-  };
+
+    setLoading(false);
+  }, []);
 
   // Funç��o de login
   const login = async (credentials) => {
