@@ -244,7 +244,7 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
 
     const item = formData.items.find(i => i.product_id === productId);
     if (item && newQuantity > item.available_stock) {
-      alert(`Estoque insuficiente. Máximo: ${item.available_stock} unidades`);
+      toast.warning(`Estoque insuficiente. Máximo: ${item.available_stock} unidades`);
       return;
     }
 
