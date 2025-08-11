@@ -294,7 +294,7 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
     const allValid = requiredFields.every(field => validation[field]?.isValid);
     
     if (!allValid) {
-      alert('Por favor, preencha todos os campos obrigatórios.');
+      toast.error('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 
