@@ -707,14 +707,24 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
         <div className="steps-nav">
           {steps.map((step, index) => {
             const StepIcon = step.icon;
+            const isCompleted = index < currentStep;
+            const isActive = index === currentStep;
+            const isDisabled = index > currentStep && (
+              (index === 1 && !validation.customer_id?.isValid) ||
+              (index === 2 && !validation.items?.isValid) ||
+              (index === 3 && (!validation.items?.isValid || !validation.customer_id?.isValid))
+            );
+
             return (
               <button
                 key={step.id}
-                className={`step-button ${index === currentStep ? 'active' : ''} ${index < currentStep ? 'completed' : ''}`}
-                onClick={() => setCurrentStep(index)}
+                className={`step-button ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''} ${isDisabled ? 'disabled' : ''}`}
+                onClick={() => !isDisabled && setCurrentStep(index)}
+                disabled={isDisabled}
+                type="button"
               >
                 <div className="step-icon">
-                  <StepIcon size={16} />
+                  {isCompleted ? <FiCheckCircle size={16} /> : <StepIcon size={16} />}
                 </div>
                 <span className="step-label">{step.label}</span>
               </button>
