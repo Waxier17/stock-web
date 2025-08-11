@@ -221,6 +221,28 @@
 .required {
   color: var(--color-error);
   font-weight: 600;
+  margin-left: var(--space-xs);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field-icon {
+  position: absolute;
+  right: var(--space-md);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.field-icon.error {
+  color: var(--color-error);
+}
+
+.field-icon.success {
+  color: var(--color-success);
 }
 
 .form-field input,
