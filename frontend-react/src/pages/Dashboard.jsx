@@ -43,7 +43,7 @@ ChartJS.register(
 function Dashboard() {
   const { isAuthenticated, token, makeAuthenticatedRequest } = useAuth();
   const { isDarkMode, colors } = useTheme();
-  const toast = useToast();
+  // const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState({
     metrics: {
