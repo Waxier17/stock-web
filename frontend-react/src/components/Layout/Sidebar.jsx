@@ -60,7 +60,7 @@ const navigationItems = [
   {
     path: '/reports',
     label: 'Relatórios',
-    icon: FiBarChart3,
+    icon: FiBarChart2,
     description: 'Análises e relatórios'
   }
 ];
