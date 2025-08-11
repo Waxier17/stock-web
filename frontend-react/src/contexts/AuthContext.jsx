@@ -18,25 +18,32 @@ export function AuthProvider({ children }) {
 
   // Verificar se existe token salvo no localStorage
   useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('user');
+    const checkAuthState = async () => {
+      // Pequeno delay para evitar flickering
+      await new Promise(resolve => setTimeout(resolve, 100));
 
-    if (savedToken && savedUser) {
-      console.log('Found saved token, setting user as authenticated');
-      try {
-        setToken(savedToken);
-        setUser(JSON.parse(savedUser));
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Error parsing saved user data:', error);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+      const savedToken = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
+
+      if (savedToken && savedUser) {
+        console.log('Found saved token, setting user as authenticated');
+        try {
+          setToken(savedToken);
+          setUser(JSON.parse(savedUser));
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.error('Error parsing saved user data:', error);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      } else {
+        console.log('No saved token found - user needs to login');
       }
-    } else {
-      console.log('No saved token found - user needs to login');
-    }
 
-    setLoading(false);
+      setLoading(false);
+    };
+
+    checkAuthState();
   }, []);
 
   // Funç��o de login
