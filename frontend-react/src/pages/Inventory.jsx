@@ -1,113 +1,200 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import { useToast } from '../contexts/ToastContext';
 import {
-  Package,
-  Search,
-  RefreshCw,
-  Plus,
-  Edit2,
-  Trash2,
-  PackagePlus,
-  Info,
-  DollarSign,
-  Truck,
-  X,
-  Save,
-  Loader,
-  AlertCircle
-} from 'lucide-react';
+  FiPackage,
+  FiSearch,
+  FiRefreshCw,
+  FiPlus,
+  FiEdit2,
+  FiTrash2,
+  FiFilter,
+  FiGrid,
+  FiList,
+  FiDownload,
+  FiUpload,
+  FiEye,
+  FiTrendingUp,
+  FiTrendingDown,
+  FiAlertTriangle,
+  FiDollarSign,
+  FiBarChart2,
+  FiShoppingCart,
+  FiCalendar,
+  FiTag,
+  FiTruck,
+  FiBox,
+  FiInfo
+} from 'react-icons/fi';
 import ProductModal from '../components/ProductModal/ProductModal';
 import './Inventory.css';
 
 function Inventory() {
   const { makeAuthenticatedRequest } = useAuth();
+  const { isDarkMode } = useTheme();
+  const toast = useToast();
+  
+  // State management
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
+  
+  // UI state
+  const [viewMode, setViewMode] = useState('table'); // 'table' or 'grid'
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  
+  // Filter state
+  const [filters, setFilters] = useState({
+    search: '',
+    category: '',
+    supplier: '',
+    stockStatus: '', // 'low', 'normal', 'out'
+    priceRange: { min: '', max: '' },
+    stockRange: { min: '', max: '' }
+  });
+  
+  // Statistics
+  const [stats, setStats] = useState({
+    totalProducts: 0,
+    totalValue: 0,
+    lowStockItems: 0,
+    outOfStockItems: 0,
+    categoriesCount: 0
+  });
 
-  // Carregar dados do estoque
+  // Load initial data
   useEffect(() => {
     loadInventoryData();
   }, []);
 
-  // Filtrar produtos quando mudarem search/category
+  // Apply filters when they change
   useEffect(() => {
-    filterProducts();
-  }, [searchTerm, categoryFilter, allProducts]);
+    applyFilters();
+  }, [filters, allProducts]);
+
+  // Calculate statistics when products change
+  useEffect(() => {
+    calculateStats();
+  }, [allProducts]);
 
   const loadInventoryData = async () => {
     try {
       setLoading(true);
-      await Promise.all([
-        loadProducts(),
-        loadCategories(),
-        loadSuppliers()
+      const [productsData, categoriesData, suppliersData] = await Promise.all([
+        makeAuthenticatedRequest('/api/inventory/products'),
+        makeAuthenticatedRequest('/api/categories'),
+        makeAuthenticatedRequest('/api/suppliers')
       ]);
+      
+      setAllProducts(productsData || []);
+      setProducts(productsData || []);
+      setCategories(categoriesData || []);
+      setSuppliers(suppliersData || []);
+      
     } catch (error) {
       console.error('Erro ao carregar dados do estoque:', error);
+      toast.error('Erro ao carregar dados do estoque');
     } finally {
       setLoading(false);
     }
   };
 
-  const loadProducts = async () => {
-    try {
-      const cacheBuster = Date.now();
-      const data = await makeAuthenticatedRequest(`/api/inventory/products?_=${cacheBuster}`);
-      setAllProducts(data);
-      setProducts(data);
-    } catch (error) {
-      console.error('Erro ao carregar produtos:', error);
-      setAllProducts([]);
-      setProducts([]);
-    }
+  const calculateStats = () => {
+    const totalProducts = allProducts.length;
+    const totalValue = allProducts.reduce((sum, product) => {
+      const price = parseFloat(product.price) || 0;
+      const stock = parseInt(product.stock_quantity || product.stock) || 0;
+      return sum + (price * stock);
+    }, 0);
+    
+    const lowStockItems = allProducts.filter(product => {
+      const stock = parseInt(product.stock_quantity || product.stock) || 0;
+      const minStock = parseInt(product.min_stock_level || product.minStock) || 10;
+      return stock <= minStock && stock > 0;
+    }).length;
+    
+    const outOfStockItems = allProducts.filter(product => {
+      const stock = parseInt(product.stock_quantity || product.stock) || 0;
+      return stock === 0;
+    }).length;
+    
+    const categoriesCount = new Set(allProducts.map(p => p.category_id).filter(Boolean)).size;
+    
+    setStats({
+      totalProducts,
+      totalValue,
+      lowStockItems,
+      outOfStockItems,
+      categoriesCount
+    });
   };
 
-  const loadCategories = async () => {
-    try {
-      const data = await makeAuthenticatedRequest('/api/inventory/categories');
-      setCategories(data);
-    } catch (error) {
-      console.error('Erro ao carregar categorias:', error);
-      setCategories([]);
-    }
-  };
+  const applyFilters = () => {
+    let filtered = [...allProducts];
 
-  const loadSuppliers = async () => {
-    try {
-      const data = await makeAuthenticatedRequest('/api/suppliers');
-      setSuppliers(data);
-    } catch (error) {
-      console.error('Erro ao carregar fornecedores:', error);
-      setSuppliers([]);
-    }
-  };
-
-  const filterProducts = () => {
-    let filtered = allProducts;
-
-    // Filtro por busca
-    if (searchTerm) {
+    // Search filter
+    if (filters.search) {
+      const searchTerm = filters.search.toLowerCase();
       filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (product.category_name && product.category_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (product.supplier_name && product.supplier_name.toLowerCase().includes(searchTerm.toLowerCase()))
+        product.name?.toLowerCase().includes(searchTerm) ||
+        product.description?.toLowerCase().includes(searchTerm) ||
+        product.category_name?.toLowerCase().includes(searchTerm) ||
+        product.supplier_name?.toLowerCase().includes(searchTerm)
       );
     }
 
-    // Filtro por categoria
-    if (categoryFilter) {
-      filtered = filtered.filter(product =>
-        product.category_name === categoryFilter
-      );
+    // Category filter
+    if (filters.category) {
+      filtered = filtered.filter(product => product.category_id === parseInt(filters.category));
+    }
+
+    // Supplier filter
+    if (filters.supplier) {
+      filtered = filtered.filter(product => product.supplier_id === parseInt(filters.supplier));
+    }
+
+    // Stock status filter
+    if (filters.stockStatus) {
+      filtered = filtered.filter(product => {
+        const stock = parseInt(product.stock_quantity || product.stock) || 0;
+        const minStock = parseInt(product.min_stock_level || product.minStock) || 10;
+        
+        switch (filters.stockStatus) {
+          case 'low': return stock <= minStock && stock > 0;
+          case 'out': return stock === 0;
+          case 'normal': return stock > minStock;
+          default: return true;
+        }
+      });
+    }
+
+    // Price range filter
+    if (filters.priceRange.min || filters.priceRange.max) {
+      filtered = filtered.filter(product => {
+        const price = parseFloat(product.price) || 0;
+        const min = parseFloat(filters.priceRange.min) || 0;
+        const max = parseFloat(filters.priceRange.max) || Infinity;
+        return price >= min && price <= max;
+      });
+    }
+
+    // Stock range filter
+    if (filters.stockRange.min || filters.stockRange.max) {
+      filtered = filtered.filter(product => {
+        const stock = parseInt(product.stock_quantity || product.stock) || 0;
+        const min = parseInt(filters.stockRange.min) || 0;
+        const max = parseInt(filters.stockRange.max) || Infinity;
+        return stock >= min && stock <= max;
+      });
     }
 
     setProducts(filtered);
@@ -117,6 +204,35 @@ function Inventory() {
     setRefreshing(true);
     await loadInventoryData();
     setRefreshing(false);
+    toast.success('Dados atualizados com sucesso!');
+  };
+
+  const handleFilterChange = (filterType, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterType]: value
+    }));
+  };
+
+  const handleFilterRangeChange = (filterType, rangeType, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterType]: {
+        ...prev[filterType],
+        [rangeType]: value
+      }
+    }));
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      category: '',
+      supplier: '',
+      stockStatus: '',
+      priceRange: { min: '', max: '' },
+      stockRange: { min: '', max: '' }
+    });
   };
 
   const handleAddProduct = async (productData) => {
@@ -127,10 +243,11 @@ function Inventory() {
       });
       
       setShowAddModal(false);
-      await loadProducts();
-      showSuccess('Produto adicionado com sucesso!');
+      await loadInventoryData();
+      toast.success('Produto adicionado com sucesso!');
     } catch (error) {
       console.error('Erro ao adicionar produto:', error);
+      toast.error('Erro ao adicionar produto: ' + error.message);
       throw error;
     }
   };
@@ -149,28 +266,34 @@ function Inventory() {
       
       setShowEditModal(false);
       setEditingProduct(null);
-      await loadProducts();
-      showSuccess('Produto atualizado com sucesso!');
+      await loadInventoryData();
+      toast.success('Produto atualizado com sucesso!');
     } catch (error) {
       console.error('Erro ao atualizar produto:', error);
+      toast.error('Erro ao atualizar produto: ' + error.message);
       throw error;
     }
   };
 
-  const handleDeleteProduct = async (productId) => {
-    if (!window.confirm('Tem certeza que deseja excluir este produto?')) return;
+  const handleDeleteProduct = async (productId, productName) => {
+    if (!window.confirm(`Tem certeza que deseja excluir "${productName}"?`)) return;
 
     try {
       await makeAuthenticatedRequest(`/api/inventory/products/${productId}`, {
         method: 'DELETE',
       });
       
-      await loadProducts();
-      showSuccess('Produto excluído com sucesso!');
+      await loadInventoryData();
+      toast.success('Produto excluído com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir produto:', error);
-      alert('Erro ao excluir produto: ' + error.message);
+      toast.error('Erro ao excluir produto: ' + error.message);
     }
+  };
+
+  const handleViewDetails = (product) => {
+    setSelectedProduct(product);
+    setShowDetailsModal(true);
   };
 
   const formatCurrency = (amount) => {
@@ -181,106 +304,314 @@ function Inventory() {
   };
 
   const getStockStatus = (product) => {
-    const stock = product.stock_quantity || product.stock || 0;
-    const minStock = product.min_stock_level || product.minStock || 10;
-    const isLowStock = stock <= minStock;
+    const stock = parseInt(product.stock_quantity || product.stock) || 0;
+    const minStock = parseInt(product.min_stock_level || product.minStock) || 10;
     
-    return {
-      isLow: isLowStock,
-      text: isLowStock ? 'Estoque Baixo' : 'Normal',
-      className: isLowStock ? 'stock-status low' : 'stock-status normal'
-    };
+    if (stock === 0) {
+      return { status: 'out', label: 'Sem estoque', className: 'stock-status-out', icon: FiAlertTriangle };
+    } else if (stock <= minStock) {
+      return { status: 'low', label: 'Estoque baixo', className: 'stock-status-low', icon: FiTrendingDown };
+    } else {
+      return { status: 'normal', label: 'Normal', className: 'stock-status-normal', icon: FiTrendingUp };
+    }
   };
 
-  const showSuccess = (message) => {
-    // Implementar notificação de sucesso aqui
-    console.log(message);
+  const StatCard = ({ icon: Icon, title, value, change, trend, color }) => (
+    <div className={`stat-card ${color}`}>
+      <div className="stat-icon">
+        <Icon size={24} />
+      </div>
+      <div className="stat-content">
+        <h3>{title}</h3>
+        <p className="stat-value">{value}</p>
+        {change && (
+          <span className={`stat-change ${trend}`}>
+            {trend === 'up' ? <FiTrendingUp size={14} /> : <FiTrendingDown size={14} />}
+            {change}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+
+  const ProductCard = ({ product }) => {
+    const stockStatus = getStockStatus(product);
+    const StatusIcon = stockStatus.icon;
+    
+    return (
+      <div className="product-card">
+        <div className="product-card-header">
+          <div className="product-image">
+            <FiPackage size={32} />
+          </div>
+          <div className={`stock-badge ${stockStatus.className}`}>
+            <StatusIcon size={14} />
+            {parseInt(product.stock_quantity || product.stock) || 0}
+          </div>
+        </div>
+        
+        <div className="product-card-body">
+          <h4 className="product-name">{product.name}</h4>
+          <p className="product-category">{product.category_name || 'Sem categoria'}</p>
+          <p className="product-price">{formatCurrency(product.price)}</p>
+          <p className="product-supplier">{product.supplier_name || 'Sem fornecedor'}</p>
+        </div>
+        
+        <div className="product-card-actions">
+          <button 
+            className="btn-icon btn-view"
+            onClick={() => handleViewDetails(product)}
+            title="Ver detalhes"
+          >
+            <FiEye size={16} />
+          </button>
+          <button 
+            className="btn-icon btn-edit"
+            onClick={() => handleEditProduct(product)}
+            title="Editar"
+          >
+            <FiEdit2 size={16} />
+          </button>
+          <button 
+            className="btn-icon btn-delete"
+            onClick={() => handleDeleteProduct(product.id, product.name)}
+            title="Excluir"
+          >
+            <FiTrash2 size={16} />
+          </button>
+        </div>
+      </div>
+    );
   };
 
   if (loading) {
     return (
       <div className="inventory-loading">
-        <Loader size={40} className="spinner" />
-        <p>Carregando estoque...</p>
+        <div className="spinner"></div>
+        <p>Carregando inventário...</p>
       </div>
     );
   }
 
   return (
-    <div className="inventory-page fade-in">
-      <div className="page-header">
-        <h1 className="page-title">Gerenciamento de Estoque</h1>
-        <p className="page-subtitle">Controle completo do seu inventário</p>
+    <div className="inventory-page">
+      {/* Page Header */}
+      <div className="inventory-header">
+        <div className="header-content">
+          <div className="header-title">
+            <h1>Inventário</h1>
+            <p>Gestão completa do seu estoque</p>
+          </div>
+          <div className="header-actions">
+            <button className="btn btn-secondary" onClick={() => setShowFilters(!showFilters)}>
+              <FiFilter size={16} />
+              Filtros
+            </button>
+            <button className="btn btn-secondary" onClick={handleRefresh} disabled={refreshing}>
+              <FiRefreshCw size={16} className={refreshing ? 'spinner' : ''} />
+              Atualizar
+            </button>
+            <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
+              <FiPlus size={16} />
+              Novo Produto
+            </button>
+          </div>
+        </div>
+
+        {/* Statistics */}
+        <div className="stats-grid">
+          <StatCard
+            icon={FiPackage}
+            title="Total de Produtos"
+            value={stats.totalProducts.toLocaleString()}
+            color="blue"
+          />
+          <StatCard
+            icon={FiDollarSign}
+            title="Valor do Estoque"
+            value={formatCurrency(stats.totalValue)}
+            color="green"
+          />
+          <StatCard
+            icon={FiAlertTriangle}
+            title="Estoque Baixo"
+            value={stats.lowStockItems.toLocaleString()}
+            color="orange"
+          />
+          <StatCard
+            icon={FiBox}
+            title="Sem Estoque"
+            value={stats.outOfStockItems.toLocaleString()}
+            color="red"
+          />
+        </div>
       </div>
 
-      {/* Action Bar */}
-      <div className="modern-card mb-4">
-        <div className="card-body">
-          <div className="row align-items-center">
-            <div className="col-md-6">
-              <div className="search-container">
-                <Search className="search-icon" size={20} />
+      {/* Filters Panel */}
+      {showFilters && (
+        <div className="filters-panel">
+          <div className="filters-header">
+            <h3>Filtros Avançados</h3>
+            <button className="btn btn-sm btn-secondary" onClick={clearFilters}>
+              Limpar Filtros
+            </button>
+          </div>
+          
+          <div className="filters-grid">
+            <div className="filter-group">
+              <label>Buscar</label>
+              <div className="search-input-group">
+                <FiSearch size={16} />
                 <input
                   type="text"
-                  className="search-input"
-                  placeholder="Pesquisar produtos..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Nome, descrição, categoria..."
+                  value={filters.search}
+                  onChange={(e) => handleFilterChange('search', e.target.value)}
                 />
               </div>
             </div>
-            <div className="col-md-6">
-              <div className="action-buttons-container">
-                <button
-                  className="btn-secondary-modern"
-                  onClick={handleRefresh}
-                  disabled={refreshing}
-                >
-                  <RefreshCw size={16} className={refreshing ? 'spinner' : ''} />
-                  Atualizar
-                </button>
-                <button
-                  className="btn-primary-modern"
-                  onClick={() => setShowAddModal(true)}
-                >
-                  <Plus size={16} />
-                  Adicionar Produto
-                </button>
+
+            <div className="filter-group">
+              <label>Categoria</label>
+              <select
+                value={filters.category}
+                onChange={(e) => handleFilterChange('category', e.target.value)}
+              >
+                <option value="">Todas as categorias</option>
+                {categories.map(category => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Fornecedor</label>
+              <select
+                value={filters.supplier}
+                onChange={(e) => handleFilterChange('supplier', e.target.value)}
+              >
+                <option value="">Todos os fornecedores</option>
+                {suppliers.map(supplier => (
+                  <option key={supplier.id} value={supplier.id}>
+                    {supplier.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Status do Estoque</label>
+              <select
+                value={filters.stockStatus}
+                onChange={(e) => handleFilterChange('stockStatus', e.target.value)}
+              >
+                <option value="">Todos os status</option>
+                <option value="normal">Normal</option>
+                <option value="low">Estoque baixo</option>
+                <option value="out">Sem estoque</option>
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Faixa de Preço</label>
+              <div className="range-inputs">
+                <input
+                  type="number"
+                  placeholder="Mín"
+                  value={filters.priceRange.min}
+                  onChange={(e) => handleFilterRangeChange('priceRange', 'min', e.target.value)}
+                />
+                <span>até</span>
+                <input
+                  type="number"
+                  placeholder="Máx"
+                  value={filters.priceRange.max}
+                  onChange={(e) => handleFilterRangeChange('priceRange', 'max', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="filter-group">
+              <label>Quantidade em Estoque</label>
+              <div className="range-inputs">
+                <input
+                  type="number"
+                  placeholder="Mín"
+                  value={filters.stockRange.min}
+                  onChange={(e) => handleFilterRangeChange('stockRange', 'min', e.target.value)}
+                />
+                <span>até</span>
+                <input
+                  type="number"
+                  placeholder="Máx"
+                  value={filters.stockRange.max}
+                  onChange={(e) => handleFilterRangeChange('stockRange', 'max', e.target.value)}
+                />
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Products Table */}
-      <div className="modern-card">
-        <div className="card-header d-flex justify-content-between align-items-center">
-          <h2 className="card-title">Produtos</h2>
-          <div className="table-controls">
-            <span className="products-count">
-              {products.length} produto{products.length !== 1 ? 's' : ''}
+      {/* Content Area */}
+      <div className="inventory-content">
+        {/* Toolbar */}
+        <div className="content-toolbar">
+          <div className="toolbar-left">
+            <span className="results-count">
+              {products.length} de {allProducts.length} produtos
             </span>
-            <select
-              className="category-filter"
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-            >
-              <option value="">Todas as categorias</option>
-              {categories.map(category => (
-                <option key={category.id} value={category.name}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
+          </div>
+          <div className="toolbar-right">
+            <div className="view-toggle">
+              <button 
+                className={`btn-toggle ${viewMode === 'table' ? 'active' : ''}`}
+                onClick={() => setViewMode('table')}
+              >
+                <FiList size={16} />
+              </button>
+              <button 
+                className={`btn-toggle ${viewMode === 'grid' ? 'active' : ''}`}
+                onClick={() => setViewMode('grid')}
+              >
+                <FiGrid size={16} />
+              </button>
+            </div>
           </div>
         </div>
-        <div className="card-body">
-          <div className="table-container">
-            <table className="modern-table">
+
+        {/* Products Display */}
+        {products.length === 0 ? (
+          <div className="empty-state">
+            <FiPackage size={64} />
+            <h3>Nenhum produto encontrado</h3>
+            <p>
+              {Object.values(filters).some(v => v && v !== '' && (typeof v !== 'object' || Object.values(v).some(x => x)))
+                ? 'Tente ajustar os filtros para encontrar produtos.'
+                : 'Comece adicionando seu primeiro produto.'
+              }
+            </p>
+            {!Object.values(filters).some(v => v && v !== '' && (typeof v !== 'object' || Object.values(v).some(x => x))) && (
+              <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
+                <FiPlus size={16} />
+                Adicionar Primeiro Produto
+              </button>
+            )}
+          </div>
+        ) : viewMode === 'grid' ? (
+          <div className="products-grid">
+            {products.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="products-table-container">
+            <table className="products-table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Nome</th>
+                  <th>Produto</th>
                   <th>Categoria</th>
                   <th>Preço</th>
                   <th>Estoque</th>
@@ -290,62 +621,61 @@ function Inventory() {
                 </tr>
               </thead>
               <tbody>
-                {products.length === 0 ? (
-                  <tr>
-                    <td colSpan="8" className="empty-state">
-                      <Package size={32} />
-                      <br /><br />
-                      {searchTerm || categoryFilter ? 
-                        'Nenhum produto encontrado com os filtros aplicados' : 
-                        'Nenhum produto cadastrado'
-                      }
-                    </td>
-                  </tr>
-                ) : (
-                  products.map(product => {
-                    const stockStatus = getStockStatus(product);
-                    return (
-                      <tr key={product.id}>
-                        <td>#{product.id}</td>
-                        <td><strong>{product.name}</strong></td>
-                        <td>{product.category_name || 'Sem categoria'}</td>
-                        <td>{formatCurrency(product.price)}</td>
-                        <td>{product.stock_quantity || product.stock || 0} un.</td>
-                        <td>
-                          <span className={stockStatus.className}>
-                            {stockStatus.text}
-                          </span>
-                        </td>
-                        <td>{product.supplier_name || 'Não informado'}</td>
-                        <td>
-                          <div className="action-buttons">
-                            <button
-                              className="btn-icon btn-edit"
-                              onClick={() => handleEditProduct(product)}
-                              title="Editar"
-                            >
-                              <Edit2 size={16} />
-                            </button>
-                            <button
-                              className="btn-icon btn-delete"
-                              onClick={() => handleDeleteProduct(product.id)}
-                              title="Excluir"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
+                {products.map(product => {
+                  const stockStatus = getStockStatus(product);
+                  const StatusIcon = stockStatus.icon;
+                  
+                  return (
+                    <tr key={product.id}>
+                      <td className="product-info">
+                        <div className="product-name">{product.name}</div>
+                        {product.description && (
+                          <div className="product-description">{product.description}</div>
+                        )}
+                      </td>
+                      <td>{product.category_name || 'Sem categoria'}</td>
+                      <td className="price">{formatCurrency(product.price)}</td>
+                      <td>{parseInt(product.stock_quantity || product.stock) || 0}</td>
+                      <td>
+                        <span className={`status-badge ${stockStatus.className}`}>
+                          <StatusIcon size={14} />
+                          {stockStatus.label}
+                        </span>
+                      </td>
+                      <td>{product.supplier_name || 'Sem fornecedor'}</td>
+                      <td className="actions">
+                        <button 
+                          className="btn-icon btn-view"
+                          onClick={() => handleViewDetails(product)}
+                          title="Ver detalhes"
+                        >
+                          <FiEye size={16} />
+                        </button>
+                        <button 
+                          className="btn-icon btn-edit"
+                          onClick={() => handleEditProduct(product)}
+                          title="Editar"
+                        >
+                          <FiEdit2 size={16} />
+                        </button>
+                        <button 
+                          className="btn-icon btn-delete"
+                          onClick={() => handleDeleteProduct(product.id, product.name)}
+                          title="Excluir"
+                        >
+                          <FiTrash2 size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Add Product Modal */}
+      {/* Modals */}
       {showAddModal && (
         <ProductModal
           title="Adicionar Novo Produto"
@@ -356,7 +686,6 @@ function Inventory() {
         />
       )}
 
-      {/* Edit Product Modal */}
       {showEditModal && editingProduct && (
         <ProductModal
           title="Editar Produto"
@@ -369,6 +698,111 @@ function Inventory() {
             setEditingProduct(null);
           }}
         />
+      )}
+
+      {/* Product Details Modal */}
+      {showDetailsModal && selectedProduct && (
+        <div className="modal-backdrop" onClick={() => setShowDetailsModal(false)}>
+          <div className="product-details-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Detalhes do Produto</h2>
+              <button className="btn-close" onClick={() => setShowDetailsModal(false)}>
+                <FiX size={16} />
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="product-details-grid">
+                <div className="detail-section">
+                  <h3><FiInfo size={16} /> Informações Gerais</h3>
+                  <div className="detail-item">
+                    <label>Nome:</label>
+                    <span>{selectedProduct.name}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Descrição:</label>
+                    <span>{selectedProduct.description || 'Não informado'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>ID:</label>
+                    <span>#{selectedProduct.id}</span>
+                  </div>
+                </div>
+                
+                <div className="detail-section">
+                  <h3><FiTag size={16} /> Categoria e Fornecedor</h3>
+                  <div className="detail-item">
+                    <label>Categoria:</label>
+                    <span>{selectedProduct.category_name || 'Sem categoria'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Fornecedor:</label>
+                    <span>{selectedProduct.supplier_name || 'Sem fornecedor'}</span>
+                  </div>
+                </div>
+                
+                <div className="detail-section">
+                  <h3><FiDollarSign size={16} /> Valores</h3>
+                  <div className="detail-item">
+                    <label>Preço de Venda:</label>
+                    <span>{formatCurrency(selectedProduct.price)}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Custo:</label>
+                    <span>{selectedProduct.cost ? formatCurrency(selectedProduct.cost) : 'Não informado'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Margem:</label>
+                    <span>
+                      {selectedProduct.cost ? 
+                        `${(((selectedProduct.price - selectedProduct.cost) / selectedProduct.cost) * 100).toFixed(1)}%` : 
+                        'N/A'
+                      }
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="detail-section">
+                  <h3><FiBox size={16} /> Estoque</h3>
+                  <div className="detail-item">
+                    <label>Quantidade:</label>
+                    <span>{parseInt(selectedProduct.stock_quantity || selectedProduct.stock) || 0} unidades</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Estoque Mínimo:</label>
+                    <span>{parseInt(selectedProduct.min_stock_level || selectedProduct.minStock) || 10} unidades</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Status:</label>
+                    <span className={getStockStatus(selectedProduct).className}>
+                      {getStockStatus(selectedProduct).label}
+                    </span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Valor Total:</label>
+                    <span>
+                      {formatCurrency((selectedProduct.price * (parseInt(selectedProduct.stock_quantity || selectedProduct.stock) || 0)))}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-secondary" onClick={() => setShowDetailsModal(false)}>
+                Fechar
+              </button>
+              <button 
+                className="btn btn-primary" 
+                onClick={() => {
+                  setShowDetailsModal(false);
+                  handleEditProduct(selectedProduct);
+                }}
+              >
+                <FiEdit2 size={16} />
+                Editar Produto
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
