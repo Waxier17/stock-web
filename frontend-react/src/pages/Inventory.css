@@ -202,13 +202,17 @@
 .search-input-group svg {
   position: absolute;
   left: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
   color: var(--color-text-muted);
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
 }
 
 .search-input-group input {
   padding-left: calc(var(--space-md) + 24px);
+  position: relative;
+  z-index: 1;
 }
 
 .filter-group input,
