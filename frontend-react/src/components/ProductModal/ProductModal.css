@@ -326,6 +326,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-md);
+  align-items: start;
+}
+
+.field-row .form-field {
+  min-height: auto;
 }
 
 /* Advanced Toggle */
