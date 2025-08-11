@@ -288,13 +288,25 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validar todos os campos obrigatórios
     const requiredFields = ['customer_id', 'items', 'payment_method'];
     const allValid = requiredFields.every(field => validation[field]?.isValid);
-    
+
     if (!allValid) {
-      toast.error('Por favor, preencha todos os campos obrigatórios.');
+      const invalidFields = requiredFields.filter(field => !validation[field]?.isValid);
+      const fieldNames = {
+        customer_id: 'Cliente',
+        items: 'Produtos',
+        payment_method: 'Método de pagamento'
+      };
+      const missingFields = invalidFields.map(field => fieldNames[field]).join(', ');
+      toast.error(`Campos obrigatórios: ${missingFields}`);
+      return;
+    }
+
+    if (formData.final_amount <= 0) {
+      toast.error('O valor total da venda deve ser maior que zero');
       return;
     }
 
@@ -304,12 +316,22 @@ function SaleModal({ title, customers, products, sale, onSave, onCancel }) {
       const processedData = {
         ...formData,
         discount: parseFloat(formData.discount) || 0,
-        customer_id: parseInt(formData.customer_id)
+        customer_id: parseInt(formData.customer_id),
+        items: formData.items.map(item => ({
+          ...item,
+          product_id: parseInt(item.product_id),
+          quantity: parseInt(item.quantity),
+          price: parseFloat(item.price),
+          total: parseFloat(item.total)
+        }))
       };
 
       await onSave(processedData);
+      toast.success(isEditing ? 'Venda atualizada com sucesso!' : 'Venda registrada com sucesso!');
     } catch (error) {
       console.error('Erro ao salvar venda:', error);
+      toast.error(`Erro ao salvar venda: ${error.message || 'Erro desconhecido'}`);
+      throw error;
     } finally {
       setLoading(false);
     }
