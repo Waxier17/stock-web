@@ -249,13 +249,23 @@
 .light-theme .form-field select,
 .light-theme .form-field textarea {
   background: #FFFFFF;
-  border-color: #E2E8F0;
+  border-color: #CBD5E1;
   color: #0F172A;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .light-theme .form-field input::placeholder,
 .light-theme .form-field textarea::placeholder {
   color: #64748B;
+  opacity: 1;
+}
+
+.light-theme .form-field input:focus,
+.light-theme .form-field select:focus,
+.light-theme .form-field textarea:focus {
+  background: #FFFFFF;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 /* Dark theme specific fixes */
@@ -265,6 +275,12 @@
   background: var(--color-background);
   border-color: var(--color-border);
   color: var(--color-text-primary);
+}
+
+.dark-theme .form-field input::placeholder,
+.dark-theme .form-field textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
 }
 
 .form-field input:focus,
