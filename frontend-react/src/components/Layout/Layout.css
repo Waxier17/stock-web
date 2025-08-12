@@ -466,7 +466,7 @@
   }
   
   .layout-content-wrapper {
-    padding: var(--space-4);
+    padding: var(--space-4) var(--space-4) var(--space-4) 0;
   }
   
   .stats-grid {

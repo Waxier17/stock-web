@@ -459,7 +459,7 @@
 
 /* ===== DARK THEME SUPPORT ===== */
 .dark-theme .sidebar {
-  background-color: var(--color-background-secondary);
+  background: linear-gradient(to bottom, var(--color-background-secondary), rgba(102, 126, 234, 0.05));
   border-right-color: var(--color-secondary-700);
 }
 
