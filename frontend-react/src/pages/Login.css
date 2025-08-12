@@ -388,7 +388,13 @@
 }
 
 .checkbox-wrapper:hover .checkbox-checkmark {
-  border-color: var(--color-primary);
+  border-color: #4f46e5;
+  background: #f0f9ff;
+  transform: scale(1.05);
+}
+
+.checkbox-wrapper:hover .checkbox-label {
+  color: #1f2937;
 }
 
 .checkbox-wrapper input[type="checkbox"]:checked + .checkbox-checkmark {
