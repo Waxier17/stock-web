@@ -442,12 +442,12 @@
 /* Login button */
 .login-button {
   width: 100%;
-  padding: 0.875rem 1.5rem;
+  padding: 1rem 1.5rem;
   background: linear-gradient(135deg, #4f46e5, #7c3aed);
   color: white;
   border: none;
   border-radius: 0.75rem;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -455,8 +455,10 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 48px;
+  min-height: 52px;
   box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
+  text-transform: none;
+  letter-spacing: 0.025em;
 }
 
 .login-button:hover:not(:disabled) {
