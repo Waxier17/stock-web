@@ -1,4 +1,7 @@
-/* ===== Modern Theme System para Stock Web ===== */
+/* ===== Import Modern Design System ===== */
+@import './design-system.css';
+
+/* ===== Legacy compatibility and overrides ===== */
 
 :root {
   /* Base font and sizing */
