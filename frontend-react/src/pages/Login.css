@@ -514,6 +514,50 @@
   font-weight: 500;
 }
 
+.dev-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.dev-info p {
+  margin: 0.25rem 0;
+  font-size: 0.8rem;
+  color: #0369a1;
+}
+
+.dev-info code {
+  background: #e0f2fe;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  color: #0c4a6e;
+}
+
+.setup-admin-btn {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: #0284c7;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.setup-admin-btn:hover:not(:disabled) {
+  background: #0369a1;
+}
+
+.setup-admin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Responsive design */
 @media (max-width: 1024px) {
   .login-sidebar {
