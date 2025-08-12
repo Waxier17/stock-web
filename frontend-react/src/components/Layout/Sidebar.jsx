@@ -109,7 +109,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             onClick={toggleCollapse}
             aria-label={collapsed ? 'Expandir sidebar' : 'Recolher sidebar'}
           >
-            {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+            {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
           </button>
         </div>
 
@@ -129,7 +129,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     title={collapsed ? item.name : ''}
                   >
                     <div className="sidebar-nav-icon">
-                      <IconComponent size={20} />
+                      <IconComponent size={24} />
                     </div>
                     
                     {!collapsed && (
