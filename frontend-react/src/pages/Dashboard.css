@@ -11,7 +11,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-5);
   padding: var(--space-4) 0 var(--space-3) 0;
   border-bottom: 2px solid;
   border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
@@ -55,14 +55,16 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  flex-shrink: 0;
 }
 
 .dashboard-actions .btn {
   font-weight: 600;
-  padding: var(--space-3) var(--space-5);
-  border-radius: var(--radius-xl);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: var(--font-size-sm);
 }
 
 .dashboard-actions .btn:hover {
