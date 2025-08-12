@@ -218,19 +218,19 @@
 }
 
 .login-title {
-  font-size: 1.875rem;
+  font-size: var(--font-size-3xl);
   font-weight: 700;
-  color: #1f2937;
+  color: var(--color-text-primary);
   margin: 0 0 0.5rem 0;
-  background: linear-gradient(135deg, #1f2937, #4f46e5);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .login-subtitle {
-  color: #6b7280;
-  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
   margin: 0;
   line-height: 1.5;
 }
@@ -469,7 +469,7 @@
 .login-footer {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--color-border);
 }
 
 .security-note {
@@ -477,8 +477,8 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  color: #6b7280;
-  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
   font-weight: 500;
 }
 
