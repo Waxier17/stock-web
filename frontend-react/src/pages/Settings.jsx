@@ -349,7 +349,7 @@ function Settings() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .page-container {
           padding: var(--space-6);
           max-width: 1200px;
