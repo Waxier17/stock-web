@@ -291,19 +291,19 @@
 .form-input {
   width: 100%;
   padding: 0.875rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background: #f9fafb;
-  color: #1f2937;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-slow);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
   box-sizing: border-box;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #4f46e5;
-  background: #ffffff;
+  border-color: var(--color-primary);
+  background: var(--color-background-secondary);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
   transform: translateY(-1px);
 }
@@ -314,7 +314,7 @@
 }
 
 .form-input::placeholder {
-  color: #9ca3af;
+  color: var(--color-text-muted);
 }
 
 .password-wrapper {
