@@ -93,7 +93,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         <div className="sidebar-header">
           <div className="sidebar-brand">
             <div className="sidebar-brand-icon">
-              <Home size={24} />
+              <Home size={20} />
             </div>
             {!collapsed && (
               <div className="sidebar-brand-text">
@@ -109,7 +109,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             onClick={toggleCollapse}
             aria-label={collapsed ? 'Expandir sidebar' : 'Recolher sidebar'}
           >
-            {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </button>
         </div>
 
@@ -129,7 +129,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     title={collapsed ? item.name : ''}
                   >
                     <div className="sidebar-nav-icon">
-                      <IconComponent size={24} />
+                      <IconComponent size={20} />
                     </div>
                     
                     {!collapsed && (
