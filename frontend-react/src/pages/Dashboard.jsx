@@ -313,7 +313,7 @@ function Dashboard() {
         tabIndex={onClick ? 0 : -1}
       >
         <div className="metric-icon">
-          <Icon size={20} />
+          <Icon size={18} />
         </div>
         <div className="metric-content">
           <h3 className="metric-title">
