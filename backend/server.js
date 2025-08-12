@@ -62,6 +62,8 @@ console.log('Applying users routes');
 app.use('/api/users', usersRoutes);
 console.log('Applying categories routes');
 app.use('/api/categories', categoriesRoutes);
+console.log('Applying seed routes');
+app.use('/api/seed', seedRoutes);
 
 app.get('/api/health', (req, res) => {
     res.status(200).json({ status: 'OK', message: 'Stock Web API is running' });
