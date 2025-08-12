@@ -368,6 +368,13 @@
   gap: 0.75rem;
   cursor: pointer;
   font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.checkbox-wrapper:hover {
+  background: rgba(79, 70, 229, 0.05);
 }
 
 .checkbox-wrapper input[type="checkbox"] {
