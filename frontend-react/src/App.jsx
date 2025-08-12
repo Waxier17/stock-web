@@ -100,6 +100,7 @@ function App() {
                 <Route path="users" element={<Users />} />
                 <Route path="reports" element={<Reports />} />
                 <Route path="settings" element={<Settings />} />
+                <Route path="seed" element={<SeedPage />} />
               </Route>
 
               {/* Rota de fallback */}
