@@ -59,6 +59,12 @@
   --color-background-secondary: #ffffff;
   --color-background-tertiary: #f9fafb;
 
+  /* Surface and Border Colors */
+  --color-surface: #f1f5f9;
+  --color-surface-hover: #e2e8f0;
+  --color-border: #e2e8f0;
+  --color-border-light: #cbd5e1;
+
   /* Text Colors */
   --color-text-primary: #1f2937;
   --color-text-secondary: #6b7280;
