@@ -31,12 +31,44 @@ function Login() {
 
     try {
       const result = await login(formData);
-      
+
       if (!result.success) {
         setError(result.error);
       }
     } catch (err) {
       setError('Erro interno do servidor. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSetupAdmin = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/auth/setup-admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Erro ao criar usuário admin');
+      } else {
+        setError('');
+        // Auto-fill form with admin credentials
+        setFormData({
+          username: 'admin',
+          password: 'password123'
+        });
+        alert('Usuário admin criado com sucesso!\nCredenciais: admin / password123');
+      }
+    } catch (err) {
+      setError('Erro ao conectar com o servidor.');
     } finally {
       setLoading(false);
     }
