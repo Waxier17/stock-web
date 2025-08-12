@@ -13,7 +13,6 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  margin-left: 300px;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: linear-gradient(to right, rgba(102, 126, 234, 0.01), transparent 200px);
 }
@@ -425,13 +424,7 @@
 
 /* Desktop */
 @media (min-width: 1024px) {
-  .layout-main {
-    margin-left: 300px;
-  }
-
-  .layout.sidebar--collapsed .layout-main {
-    margin-left: 72px;
-  }
+  /* Sidebar é relative em desktop, não precisa de margin-left */
 }
 
 /* Tablet */
