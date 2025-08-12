@@ -381,7 +381,7 @@ function Dashboard() {
       {/* Enhanced Dashboard Header */}
       <div className="dashboard-header">
         <div className="dashboard-title-section">
-          <h1>Dashboard</h1>
+          <h1 style={{ fontSize: '1.375rem', fontWeight: '700', marginBottom: '8px' }}>Dashboard</h1>
           <p>Visão geral completa do seu negócio em tempo real</p>
         </div>
         <div className="dashboard-actions">
