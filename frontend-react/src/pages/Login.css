@@ -544,6 +544,12 @@
   
   .features-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .feature-item {
+    min-height: 120px;
+    padding: 1.25rem 1rem;
   }
   
   .form-options {
