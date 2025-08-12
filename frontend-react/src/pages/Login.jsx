@@ -244,21 +244,6 @@ function Login() {
               <ShieldCheck size={16} />
               <span>Conexão segura protegida por SSL</span>
             </div>
-
-            {process.env.NODE_ENV === 'development' && (
-              <div className="dev-info">
-                <p>🔧 <strong>Modo Desenvolvimento</strong></p>
-                <p>Credenciais padrão: <code>admin</code> / <code>password123</code></p>
-                <button
-                  type="button"
-                  className="setup-admin-btn"
-                  onClick={handleSetupAdmin}
-                  disabled={loading}
-                >
-                  Criar Usuário Admin
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>
