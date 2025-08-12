@@ -178,7 +178,12 @@
   --color-background-primary: #0f172a;
   --color-background-secondary: #1e293b;
   --color-background-tertiary: #334155;
-  
+
+  --color-surface: #334155;
+  --color-surface-hover: #475569;
+  --color-border: #334155;
+  --color-border-light: #475569;
+
   --color-text-primary: #f1f5f9;
   --color-text-secondary: #cbd5e1;
   --color-text-tertiary: #94a3b8;
