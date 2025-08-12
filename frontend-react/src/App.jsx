@@ -98,6 +98,7 @@ function App() {
                 <Route path="categories" element={<Categories />} />
                 <Route path="users" element={<Users />} />
                 <Route path="reports" element={<Reports />} />
+                <Route path="settings" element={<Settings />} />
               </Route>
 
               {/* Rota de fallback */}
