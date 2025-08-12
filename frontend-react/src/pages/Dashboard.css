@@ -584,19 +584,20 @@
 
 @media (max-width: 1024px) {
   .dashboard-header {
-    margin-bottom: var(--space-2xl);
-    padding: var(--space-6) 0 var(--space-4) 0;
+    margin-bottom: var(--space-6);
+    padding: var(--space-5) 0 var(--space-4) 0;
   }
-  
+
   .metrics-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-4);
+    margin-bottom: var(--space-6);
   }
-  
+
   .chart-content {
     height: 280px;
   }
-  
+
   .chart-large .chart-content {
     height: 300px;
   }
@@ -606,54 +607,55 @@
   .dashboard-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-4);
-    margin-bottom: var(--space-xl);
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+    padding: var(--space-4) 0 var(--space-3) 0;
   }
-  
+
   .dashboard-actions {
     width: 100%;
     justify-content: flex-end;
   }
-  
+
   .metrics-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-4);
-    margin-bottom: var(--space-xl);
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
   }
-  
+
   .metric-card {
-    padding: var(--space-5);
-    gap: var(--space-4);
+    padding: var(--space-4);
+    gap: var(--space-3);
   }
-  
+
   .metric-icon {
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
   }
-  
+
   .metric-value {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-xl);
   }
-  
+
   .chart-container {
     padding: var(--space-4);
   }
-  
+
   .chart-content {
     height: 240px;
   }
-  
+
   .recent-sales-header {
     padding: var(--space-4);
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-3);
   }
-  
+
   .recent-sales-header .btn {
     align-self: flex-end;
   }
-  
+
   .enhanced-table thead th,
   .enhanced-table tbody td {
     padding: var(--space-3) var(--space-4);
