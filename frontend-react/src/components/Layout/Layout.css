@@ -14,7 +14,6 @@
   flex-direction: column;
   min-width: 0;
   margin-left: 300px;
-  padding-left: var(--space-6);
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: linear-gradient(to right, rgba(102, 126, 234, 0.01), transparent 200px);
 }
@@ -32,7 +31,7 @@
 
 .layout-content-wrapper {
   min-height: calc(100vh - 64px);
-  padding: 0 var(--space-6) var(--space-6) 0;
+  padding: var(--space-6);
   animation: fadeIn 0.4s ease-out;
 }
 
