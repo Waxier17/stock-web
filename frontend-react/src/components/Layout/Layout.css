@@ -130,17 +130,17 @@
 /* ===== STATS GRID ===== */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-5);
   margin-bottom: var(--space-8);
 }
 
 .stat-card {
   background: var(--color-background-secondary);
   border: 1px solid var(--color-secondary-200);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
   transition: var(--transition-all);
   position: relative;
   overflow: hidden;
@@ -419,18 +419,19 @@
   }
   
   .stats-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
   }
 }
 
 /* Desktop */
 @media (min-width: 1024px) {
   .layout-main {
-    margin-left: 280px;
+    margin-left: 300px;
   }
-  
+
   .layout.sidebar--collapsed .layout-main {
-    margin-left: 64px;
+    margin-left: 72px;
   }
 }
 
