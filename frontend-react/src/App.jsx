@@ -12,6 +12,7 @@ import Suppliers from './pages/Suppliers';
 import Categories from './pages/Categories';
 import Users from './pages/Users';
 import Reports from './pages/Reports';
+import Settings from './pages/Settings';
 import './styles/global.css';
 
 // Componente para proteger rotas autenticadas
