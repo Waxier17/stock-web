@@ -392,7 +392,7 @@
 .recent-sales {
   background: var(--color-background-secondary);
   border: 1px solid var(--color-secondary-200);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -417,16 +417,16 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: var(--space-6);
+  padding: var(--space-4);
   border-bottom: 1px solid var(--color-secondary-200);
   background: linear-gradient(135deg, var(--color-background-tertiary) 0%, rgba(102, 126, 234, 0.02) 100%);
 }
 
 .section-title h3 {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: 700;
   color: var(--color-text-primary);
-  margin: 0 0 var(--space-1) 0;
+  margin: 0 0 2px 0;
   letter-spacing: -0.01em;
 }
 
@@ -449,9 +449,9 @@
 
 .enhanced-table thead th {
   background: var(--color-background-tertiary);
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-3) var(--space-4);
   text-align: left;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: 700;
   color: var(--color-text-secondary);
   text-transform: uppercase;
@@ -461,7 +461,7 @@
 }
 
 .enhanced-table tbody td {
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--color-secondary-100);
   vertical-align: middle;
   transition: all 0.2s ease;
