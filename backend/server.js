@@ -17,6 +17,7 @@ const cleanupRoutes = require('./routes/cleanup');
 const inspectRoutes = require('./routes/inspect');
 const usersRoutes = require('./routes/users');
 const categoriesRoutes = require('./routes/categories');
+const seedRoutes = require('./routes/seed');
 
 // Create Express app
 const app = express();
