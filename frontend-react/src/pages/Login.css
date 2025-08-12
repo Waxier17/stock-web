@@ -128,7 +128,7 @@
 .brand-description {
   font-size: 1.125rem;
   line-height: 1.6;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
   opacity: 0.9;
 }
 
@@ -156,8 +156,9 @@
 }
 
 .feature-item:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .feature-icon {
