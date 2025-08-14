@@ -77,39 +77,104 @@ function Dashboard() {
     try {
       setLoading(true);
 
-      // Simulated data for demonstration
-      const mockData = {
+      // Fetch real data from API endpoints
+      const [productsRes, salesRes, customersRes] = await Promise.all([
+        makeAuthenticatedRequest('/api/products'),
+        makeAuthenticatedRequest('/api/sales'),
+        makeAuthenticatedRequest('/api/customers')
+      ]);
+
+      const products = productsRes?.products || [];
+      const sales = salesRes?.sales || [];
+      const customers = customersRes?.customers || [];
+
+      // Calculate metrics from real data
+      const totalProducts = products.length;
+      const monthlySales = sales.reduce((sum, sale) => {
+        const saleDate = new Date(sale.created_at);
+        const currentMonth = new Date().getMonth();
+        const saleMonth = saleDate.getMonth();
+        return saleMonth === currentMonth ? sum + (sale.final_amount || 0) : sum;
+      }, 0);
+
+      const activeCustomers = customers.filter(customer => {
+        // Consider active customers those who made purchases in last 30 days
+        const lastPurchase = sales.find(sale => sale.customer_id === customer.id);
+        if (!lastPurchase) return false;
+        const purchaseDate = new Date(lastPurchase.created_at);
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        return purchaseDate >= thirtyDaysAgo;
+      }).length;
+
+      const totalStockValue = products.reduce((sum, product) => {
+        return sum + ((product.price || 0) * (product.stock_quantity || 0));
+      }, 0);
+
+      // Generate chart data from real data
+      const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+      const salesByMonth = new Array(12).fill(0);
+
+      sales.forEach(sale => {
+        const month = new Date(sale.created_at).getMonth();
+        salesByMonth[month] += sale.final_amount || 0;
+      });
+
+      // Get category data
+      const categoryCount = {};
+      products.forEach(product => {
+        const categoryName = product.category_name || 'Sem categoria';
+        categoryCount[categoryName] = (categoryCount[categoryName] || 0) + 1;
+      });
+
+      const dashboardData = {
         metrics: {
-          totalProducts: 127,
-          monthlySales: 25890,
-          activeCustomers: 342,
-          totalStockValue: 186450
+          totalProducts,
+          monthlySales,
+          activeCustomers,
+          totalStockValue
         },
         salesChart: {
-          labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-          data: [12500, 19000, 15000, 22000, 18500, 25000, 28000, 24000, 30000, 27000, 31000, 35000]
+          labels: monthNames,
+          data: salesByMonth
         },
         categoryChart: {
-          labels: ['Eletrônicos', 'Roupas', 'Casa & Jardim', 'Esportes', 'Livros'],
-          data: [35, 25, 20, 15, 5]
+          labels: Object.keys(categoryCount),
+          data: Object.values(categoryCount)
         },
-        recentSales: [
-          { id: 1, customer: 'João Silva', amount: 1250.00, date: '2024-01-15', items: 3 },
-          { id: 2, customer: 'Maria Santos', amount: 850.50, date: '2024-01-15', items: 2 },
-          { id: 3, customer: 'Pedro Costa', amount: 2100.00, date: '2024-01-14', items: 5 },
-          { id: 4, customer: 'Ana Lima', amount: 675.75, date: '2024-01-14', items: 1 },
-          { id: 5, customer: 'Carlos Oliveira', amount: 1450.25, date: '2024-01-13', items: 4 }
-        ]
+        recentSales: sales.slice(0, 5).map(sale => ({
+          id: sale.id,
+          customer: sale.customer_name || 'Cliente não identificado',
+          amount: sale.final_amount || 0,
+          date: sale.created_at,
+          items: sale.items_count || 1
+        }))
       };
 
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setDashboardData(mockData);
-      
+      setDashboardData(dashboardData);
+
     } catch (error) {
       console.error('Dashboard data error:', error);
       toast.error('Erro ao carregar dados do dashboard');
+
+      // Set empty data on error
+      setDashboardData({
+        metrics: {
+          totalProducts: 0,
+          monthlySales: 0,
+          activeCustomers: 0,
+          totalStockValue: 0
+        },
+        salesChart: {
+          labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+          data: new Array(12).fill(0)
+        },
+        categoryChart: {
+          labels: [],
+          data: []
+        },
+        recentSales: []
+      });
     } finally {
       setLoading(false);
     }
