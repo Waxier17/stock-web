@@ -17,6 +17,7 @@ const cleanupRoutes = require('./routes/cleanup');
 const inspectRoutes = require('./routes/inspect');
 const usersRoutes = require('./routes/users');
 const categoriesRoutes = require('./routes/categories');
+const seedRoutes = require('./routes/seed');
 
 // Create Express app
 const app = express();
@@ -61,6 +62,8 @@ console.log('Applying users routes');
 app.use('/api/users', usersRoutes);
 console.log('Applying categories routes');
 app.use('/api/categories', categoriesRoutes);
+console.log('Applying seed routes');
+app.use('/api/seed', seedRoutes);
 
 app.get('/api/health', (req, res) => {
     res.status(200).json({ status: 'OK', message: 'Stock Web API is running' });

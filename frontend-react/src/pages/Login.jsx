@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, EyeOff, Loader } from 'lucide-react';
+import { Eye, EyeOff, Loader, ShieldCheck, Package, TrendingUp, BarChart3 } from 'lucide-react';
 import './Login.css';
 
 function Login() {
@@ -31,7 +31,7 @@ function Login() {
 
     try {
       const result = await login(formData);
-      
+
       if (!result.success) {
         setError(result.error);
       }
@@ -42,88 +42,178 @@ function Login() {
     }
   };
 
+
   return (
     <div className="login-container">
-      <div className="login-card">
-        <div className="logo-container">
-          <h1 className="logo-title">Stock Web</h1>
-          <p className="logo-subtitle">Sistema de Gerenciamento de Estoque</p>
-        </div>
+      {/* Background decorative elements */}
+      <div className="background-decoration">
+        <div className="floating-shape shape-1"></div>
+        <div className="floating-shape shape-2"></div>
+        <div className="floating-shape shape-3"></div>
+        <div className="floating-shape shape-4"></div>
+      </div>
 
-        {error && (
-          <div className="alert-error">
-            {error}
+      {/* Left side - Branding and features */}
+      <div className="login-sidebar">
+        <div className="branding-section">
+          <div className="logo-section">
+            <div className="logo-icon">
+              <Package size={32} />
+            </div>
+            <h1 className="brand-title">Stock Web</h1>
           </div>
-        )}
+          
+          <h2 className="brand-subtitle">
+            Sistema Completo de Gerenciamento de Estoque
+          </h2>
+          
+          <p className="brand-description">
+            Controle total do seu inventário com relatórios avançados, 
+            análises em tempo real e gestão inteligente de fornecedores.
+          </p>
 
-        <form onSubmit={handleSubmit}>
-          <div className="modern-form-group">
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-              placeholder="Digite seu usuário"
-              className="modern-input"
-              required
-              disabled={loading}
-            />
-            <label className="modern-label">Usuário</label>
-          </div>
-
-          <div className="modern-form-group">
-            <div className="password-input-container">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                placeholder="Digite sua senha"
-                className="modern-input"
-                required
-                disabled={loading}
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-                disabled={loading}
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-              <label className="modern-label">Senha</label>
+          <div className="features-grid">
+            <div className="feature-item">
+              <div className="feature-icon">
+                <Package size={20} />
+              </div>
+              <div className="feature-content">
+                <h4>Gestão de Inventário</h4>
+                <p>Controle completo de produtos</p>
+              </div>
+            </div>
+            
+            <div className="feature-item">
+              <div className="feature-icon">
+                <TrendingUp size={20} />
+              </div>
+              <div className="feature-content">
+                <h4>Análise de Vendas</h4>
+                <p>Relatórios em tempo real</p>
+              </div>
+            </div>
+            
+            <div className="feature-item">
+              <div className="feature-icon">
+                <BarChart3 size={20} />
+              </div>
+              <div className="feature-content">
+                <h4>Dashboard Inteligente</h4>
+                <p>Insights e métricas avançadas</p>
+              </div>
+            </div>
+            
+            <div className="feature-item">
+              <div className="feature-icon">
+                <ShieldCheck size={20} />
+              </div>
+              <div className="feature-content">
+                <h4>Segurança Avançada</h4>
+                <p>Proteção de dados garantida</p>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="modern-checkbox">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              disabled={loading}
-            />
-            <label htmlFor="rememberMe">Lembrar de mim</label>
+      {/* Right side - Login form */}
+      <div className="login-form-section">
+        <div className="login-card">
+          <div className="login-header">
+            <h2 className="login-title">Bem-vindo de volta!</h2>
+            <p className="login-subtitle">Entre com suas credenciais para acessar o sistema</p>
           </div>
 
-          <button
-            type="submit"
-            className="modern-button"
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <Loader size={20} className="spinner" />
-                Entrando...
-              </>
-            ) : (
-              'Entrar'
-            )}
-          </button>
-        </form>
+          {error && (
+            <div className="alert-error">
+              <div className="alert-icon">⚠️</div>
+              <span>{error}</span>
+            </div>
+          )}
 
-        <div className="login-footer">
-          <p>Acesso restrito a usuários autorizados</p>
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="form-group">
+              <label className="form-label">Usuário</label>
+              <div className="input-wrapper">
+                <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  placeholder="Digite seu nome de usuário"
+                  className="form-input"
+                  required
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Senha</label>
+              <div className="input-wrapper password-wrapper">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Digite sua senha"
+                  className="form-input"
+                  required
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="form-options">
+              <label className="checkbox-wrapper">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  disabled={loading}
+                />
+                <span className="checkbox-checkmark"></span>
+                <span className="checkbox-label">Lembrar de mim</span>
+              </label>
+              
+              <a href="#" className="forgot-password">
+                Esqueceu a senha?
+              </a>
+            </div>
+
+            <button
+              type="submit"
+              className="login-button"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader size={18} className="button-spinner" />
+                  Entrando...
+                </>
+              ) : (
+                <>
+                  <ShieldCheck size={18} />
+                  Entrar no Sistema
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="login-footer">
+            <div className="security-note">
+              <ShieldCheck size={16} />
+              <span>Conexão segura protegida por SSL</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

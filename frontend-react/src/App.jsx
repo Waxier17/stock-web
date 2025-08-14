@@ -12,6 +12,8 @@ import Suppliers from './pages/Suppliers';
 import Categories from './pages/Categories';
 import Users from './pages/Users';
 import Reports from './pages/Reports';
+import Settings from './pages/Settings';
+import SeedPage from './pages/SeedPage';
 import './styles/global.css';
 
 // Componente para proteger rotas autenticadas
@@ -97,6 +99,8 @@ function App() {
                 <Route path="categories" element={<Categories />} />
                 <Route path="users" element={<Users />} />
                 <Route path="reports" element={<Reports />} />
+                <Route path="settings" element={<Settings />} />
+                <Route path="seed" element={<SeedPage />} />
               </Route>
 
               {/* Rota de fallback */}

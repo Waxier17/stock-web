@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
     checkAuthState();
   }, []);
 
-  // Funç��o de login
+  // Função de login
   const login = async (credentials) => {
     try {
       const response = await fetch('/api/auth/login', {
@@ -57,23 +57,23 @@ export function AuthProvider({ children }) {
         body: JSON.stringify(credentials),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Erro ao fazer login');
+        throw new Error(data.message || data.error || 'Erro ao fazer login');
       }
 
-      const data = await response.json();
-      
       // Salvar dados no estado e localStorage
       setToken(data.token);
       setUser(data.user);
       setIsAuthenticated(true);
-      
+
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      
+
       return { success: true };
     } catch (error) {
+      console.error('Login error:', error);
       return { success: false, error: error.message };
     }
   };

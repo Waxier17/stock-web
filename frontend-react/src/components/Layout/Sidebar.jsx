@@ -1,106 +1,122 @@
+import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useTheme } from '../../contexts/ThemeContext';
 import {
-  FiHome,
-  FiPackage,
-  FiShoppingCart,
-  FiUsers,
-  FiTruck,
-  FiTag,
-  FiUser,
-  FiBarChart2,
-  FiX,
-  FiChevronLeft
-} from 'react-icons/fi';
+  BarChart3,
+  Package,
+  FolderOpen,
+  Users,
+  Truck,
+  ShoppingCart,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  Home,
+  Database
+} from 'lucide-react';
 import './Sidebar.css';
 
+// Navigation items configuration
 const navigationItems = [
   {
+    name: 'Dashboard',
     path: '/dashboard',
-    label: 'Dashboard',
-    icon: FiHome,
-    description: 'Visão geral do sistema'
+    icon: BarChart3,
+    description: 'Visão geral com gráficos e indicadores'
   },
   {
+    name: 'Produtos',
     path: '/inventory',
-    label: 'Produtos',
-    icon: FiPackage,
-    description: 'Gerenciar estoque'
+    icon: Package,
+    description: 'Listagem, busca e filtro de produtos'
   },
   {
-    path: '/sales',
-    label: 'Vendas',
-    icon: FiShoppingCart,
-    description: 'Controle de vendas'
-  },
-  {
-    path: '/customers',
-    label: 'Clientes',
-    icon: FiUsers,
-    description: 'Base de clientes'
-  },
-  {
-    path: '/suppliers',
-    label: 'Fornecedores',
-    icon: FiTruck,
-    description: 'Gestão de fornecedores'
-  },
-  {
+    name: 'Categorias',
     path: '/categories',
-    label: 'Categorias',
-    icon: FiTag,
-    description: 'Organizar produtos'
+    icon: FolderOpen,
+    description: 'Gerenciamento de categorias'
   },
   {
-    path: '/users',
-    label: 'Usuários',
-    icon: FiUser,
-    description: 'Gerenciar usuários'
+    name: 'Clientes',
+    path: '/customers',
+    icon: Users,
+    description: 'Cadastro e listagem de clientes'
   },
   {
-    path: '/reports',
-    label: 'Relatórios',
-    icon: FiBarChart2,
-    description: 'Análises e relatórios'
+    name: 'Fornecedores',
+    path: '/suppliers',
+    icon: Truck,
+    description: 'Controle de fornecedores'
+  },
+  {
+    name: 'Vendas',
+    path: '/sales',
+    icon: ShoppingCart,
+    description: 'Registro e histórico de vendas'
+  },
+  {
+    name: 'Configurações',
+    path: '/settings',
+    icon: Settings,
+    description: 'Ajustes gerais do sistema'
+  },
+  {
+    name: 'Dados de Teste',
+    path: '/seed',
+    icon: Database,
+    description: 'Popular banco com dados fictícios'
   }
 ];
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
+  const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
-  const { isDarkMode } = useTheme();
+
+  const toggleCollapse = () => {
+    setCollapsed(!collapsed);
+  };
 
   const closeSidebar = () => {
     setSidebarOpen(false);
+  };
+
+  const isActiveRoute = (path) => {
+    return location.pathname === path;
   };
 
   return (
     <>
       {/* Mobile Overlay */}
       {sidebarOpen && (
-        <div className="sidebar-overlay" onClick={closeSidebar} />
+        <div 
+          className="sidebar-overlay"
+          onClick={closeSidebar}
+          aria-hidden="true"
+        />
       )}
 
-      {/* Sidebar */}
-      <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
+      {/* Sidebar Container */}
+      <aside className={`sidebar ${sidebarOpen ? 'sidebar--open' : ''} ${collapsed ? 'sidebar--collapsed' : ''}`}>
         {/* Sidebar Header */}
         <div className="sidebar-header">
-          <div className="sidebar-logo">
-            <div className="sidebar-logo-icon">
-              <FiPackage size={24} />
+          <div className="sidebar-brand">
+            <div className="sidebar-brand-icon">
+              <Home size={20} />
             </div>
-            <div className="sidebar-logo-text">
-              <h1>Stock Web</h1>
-              <p>Sistema de Gestão</p>
-            </div>
+            {!collapsed && (
+              <div className="sidebar-brand-text">
+                <h2 className="sidebar-brand-title">Stock Web</h2>
+                <p className="sidebar-brand-subtitle">Gestão de Estoque</p>
+              </div>
+            )}
           </div>
-          
-          {/* Close button for mobile */}
+
+          {/* Collapse Toggle - Desktop Only */}
           <button 
-            className="sidebar-close"
-            onClick={closeSidebar}
-            aria-label="Fechar menu"
+            className="sidebar-collapse-toggle"
+            onClick={toggleCollapse}
+            aria-label={collapsed ? 'Expandir sidebar' : 'Recolher sidebar'}
           >
-            <FiX size={20} />
+            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           </button>
         </div>
 
@@ -108,24 +124,29 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         <nav className="sidebar-nav">
           <ul className="sidebar-nav-list">
             {navigationItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-              
+              const IconComponent = item.icon;
+              const isActive = isActiveRoute(item.path);
+
               return (
                 <li key={item.path} className="sidebar-nav-item">
                   <NavLink
                     to={item.path}
-                    className={`sidebar-nav-link ${isActive ? 'active' : ''}`}
+                    className={`sidebar-nav-link ${isActive ? 'sidebar-nav-link--active' : ''}`}
                     onClick={closeSidebar}
-                    title={item.description}
+                    title={collapsed ? item.name : ''}
                   >
                     <div className="sidebar-nav-icon">
-                      <Icon size={20} />
+                      <IconComponent size={20} />
                     </div>
-                    <div className="sidebar-nav-content">
-                      <span className="sidebar-nav-label">{item.label}</span>
-                      <span className="sidebar-nav-description">{item.description}</span>
-                    </div>
+                    
+                    {!collapsed && (
+                      <div className="sidebar-nav-content">
+                        <span className="sidebar-nav-text">{item.name}</span>
+                        <span className="sidebar-nav-description">{item.description}</span>
+                      </div>
+                    )}
+
+                    {/* Active Indicator */}
                     {isActive && <div className="sidebar-nav-indicator" />}
                   </NavLink>
                 </li>
@@ -136,19 +157,16 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
         {/* Sidebar Footer */}
         <div className="sidebar-footer">
-          <div className="sidebar-footer-content">
-            <div className="sidebar-version">
-              <p>Stock Web v2.0</p>
-              <p>Sistema de Gestão</p>
+          {!collapsed && (
+            <div className="sidebar-footer-content">
+              <div className="sidebar-stats">
+                <div className="sidebar-stat">
+                  <span className="sidebar-stat-label">Versão</span>
+                  <span className="sidebar-stat-value">2.1.0</span>
+                </div>
+              </div>
             </div>
-            <button 
-              className="sidebar-collapse-btn"
-              onClick={() => setSidebarOpen(false)}
-              title="Recolher menu"
-            >
-              <FiChevronLeft size={16} />
-            </button>
-          </div>
+          )}
         </div>
       </aside>
     </>
