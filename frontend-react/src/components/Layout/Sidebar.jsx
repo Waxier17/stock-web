@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { 
-  BarChart3, 
-  Package, 
-  FolderOpen, 
-  Users, 
-  Truck, 
-  ShoppingCart, 
+import {
+  BarChart3,
+  Package,
+  FolderOpen,
+  Users,
+  Truck,
+  ShoppingCart,
   Settings,
   ChevronLeft,
   ChevronRight,
-  Home
+  Home,
+  Database
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -61,7 +62,7 @@ const navigationItems = [
   {
     name: 'Dados de Teste',
     path: '/seed',
-    icon: Package,
+    icon: Database,
     description: 'Popular banco com dados fictícios'
   }
 ];
