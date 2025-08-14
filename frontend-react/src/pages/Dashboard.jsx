@@ -578,39 +578,56 @@ function Dashboard() {
           </button>
         </div>
         <div className="recent-sales-table">
-          <table className="enhanced-table">
-            <thead>
-              <tr>
-                <th>Cliente</th>
-                <th>Valor</th>
-                <th>Itens</th>
-                <th>Data</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {dashboardData.recentSales.map(sale => (
-                <tr key={sale.id} className="table-row-clickable">
-                  <td className="sale-customer">
-                    <div className="customer-info">
-                      <span className="customer-name">{sale.customer}</span>
-                    </div>
-                  </td>
-                  <td className="sale-amount">{formatCurrency(sale.amount)}</td>
-                  <td className="sale-items">
-                    <span className="items-count">{sale.items}</span>
-                    <span className="items-label">{sale.items === 1 ? 'item' : 'itens'}</span>
-                  </td>
-                  <td className="sale-date">{formatDate(sale.date)}</td>
-                  <td className="sale-actions">
-                    <button className="action-btn" title="Ver detalhes">
-                      <ArrowUpRight size={14} />
-                    </button>
-                  </td>
+          {dashboardData.recentSales.length > 0 ? (
+            <table className="enhanced-table">
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Valor</th>
+                  <th>Itens</th>
+                  <th>Data</th>
+                  <th></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {dashboardData.recentSales.map(sale => (
+                  <tr key={sale.id} className="table-row-clickable">
+                    <td className="sale-customer">
+                      <div className="customer-info">
+                        <span className="customer-name">{sale.customer}</span>
+                      </div>
+                    </td>
+                    <td className="sale-amount">{formatCurrency(sale.amount)}</td>
+                    <td className="sale-items">
+                      <span className="items-count">{sale.items}</span>
+                      <span className="items-label">{sale.items === 1 ? 'item' : 'itens'}</span>
+                    </td>
+                    <td className="sale-date">{formatDate(sale.date)}</td>
+                    <td className="sale-actions">
+                      <button className="action-btn" title="Ver detalhes">
+                        <ArrowUpRight size={14} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <EmptyState
+              icon={ShoppingCart}
+              title="Nenhuma venda registrada"
+              description="Quando você registrar vendas, elas aparecerão aqui."
+              action={
+                <button
+                  className="btn btn-primary"
+                  onClick={() => navigate('/sales')}
+                >
+                  <ShoppingCart size={16} />
+                  Registrar Primeira Venda
+                </button>
+              }
+            />
+          )}
         </div>
       </div>
     </div>
