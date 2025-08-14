@@ -79,7 +79,7 @@ function Dashboard() {
 
       // Fetch real data from API endpoints
       const [productsRes, salesRes, customersRes] = await Promise.all([
-        makeAuthenticatedRequest('/api/products'),
+        makeAuthenticatedRequest('/api/inventory/products'),
         makeAuthenticatedRequest('/api/sales'),
         makeAuthenticatedRequest('/api/customers')
       ]);
