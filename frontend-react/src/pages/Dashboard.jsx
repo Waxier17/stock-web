@@ -16,17 +16,18 @@ import {
   ArcElement,
 } from 'chart.js';
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
-import { 
-  Package, 
-  ShoppingCart, 
-  Users, 
+import {
+  Package,
+  ShoppingCart,
+  Users,
   DollarSign,
   TrendingUp,
   TrendingDown,
   RefreshCw,
   Eye,
   ArrowUpRight,
-  Info
+  Info,
+  Database
 } from 'lucide-react';
 import './Dashboard.css';
 
@@ -494,14 +495,23 @@ function Dashboard() {
         </div>
         <div className="dashboard-actions">
           {(dashboardData.metrics.totalProducts === 0 && !loading) && (
-            <button
-              className="btn btn-primary"
-              onClick={handleSeedData}
-              disabled={loading}
-            >
-              <Package size={16} />
-              Popular com Dados de Teste
-            </button>
+            <>
+              <button
+                className="btn btn-primary"
+                onClick={handleSeedData}
+                disabled={loading}
+              >
+                <Package size={16} />
+                Popular com Dados de Teste
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => navigate('/seed')}
+              >
+                <Database size={16} />
+                Gerenciar Dados
+              </button>
+            </>
           )}
           <button
             className="btn btn-secondary"
