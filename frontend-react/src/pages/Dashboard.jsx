@@ -144,7 +144,7 @@ function Dashboard() {
         },
         recentSales: sales.slice(0, 5).map(sale => ({
           id: sale.id,
-          customer: sale.customer_name || 'Cliente não identificado',
+          customer: sale.customer_name || `Cliente #${sale.customer_id || 'N/A'}`,
           amount: sale.final_amount || 0,
           date: sale.created_at,
           items: sale.items_count || 1
