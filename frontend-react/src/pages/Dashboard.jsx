@@ -430,6 +430,31 @@ function Dashboard() {
     </div>
   );
 
+  // Seed database with test data
+  const handleSeedData = async () => {
+    try {
+      setLoading(true);
+      toast.info('Populando banco de dados...');
+
+      const response = await makeAuthenticatedRequest('/api/seed/seed-database', {
+        method: 'POST'
+      });
+
+      if (response.success) {
+        toast.success('Dados de teste adicionados com sucesso!');
+        // Reload dashboard data
+        await loadDashboardData();
+      } else {
+        toast.error('Erro ao popular dados: ' + (response.error || 'Erro desconhecido'));
+      }
+    } catch (error) {
+      console.error('Seed error:', error);
+      toast.error('Erro ao popular dados de teste');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Navigation handlers for clickable cards
   const handleCardClick = (type) => {
     switch (type) {
