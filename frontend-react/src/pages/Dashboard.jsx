@@ -540,7 +540,23 @@ function Dashboard() {
             </div>
           </div>
           <div className="chart-content">
-            <Line data={salesChartData} options={chartOptions} />
+            {dashboardData.salesChart.data.some(value => value > 0) ? (
+              <Line data={salesChartData} options={chartOptions} />
+            ) : (
+              <EmptyState
+                icon={TrendingUp}
+                title="Sem dados de vendas"
+                description="Registre vendas para ver o gráfico de evolução."
+                action={
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => navigate('/sales')}
+                  >
+                    Registrar Venda
+                  </button>
+                }
+              />
+            )}
           </div>
         </div>
 
@@ -557,7 +573,23 @@ function Dashboard() {
             </div>
           </div>
           <div className="chart-content">
-            <Doughnut data={categoryChartData} options={doughnutOptions} />
+            {dashboardData.categoryChart.data.length > 0 ? (
+              <Doughnut data={categoryChartData} options={doughnutOptions} />
+            ) : (
+              <EmptyState
+                icon={Package}
+                title="Sem produtos cadastrados"
+                description="Cadastre produtos para ver a distribuição por categoria."
+                action={
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => navigate('/inventory')}
+                  >
+                    Cadastrar Produto
+                  </button>
+                }
+              />
+            )}
           </div>
         </div>
       </div>
