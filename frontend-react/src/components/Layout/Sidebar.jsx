@@ -57,6 +57,12 @@ const navigationItems = [
     path: '/settings',
     icon: Settings,
     description: 'Ajustes gerais do sistema'
+  },
+  {
+    name: 'Dados de Teste',
+    path: '/seed',
+    icon: Package,
+    description: 'Popular banco com dados fictícios'
   }
 ];
 
