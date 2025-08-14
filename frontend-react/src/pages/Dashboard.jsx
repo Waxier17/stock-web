@@ -412,6 +412,24 @@ function Dashboard() {
     );
   };
 
+  // Empty state component
+  const EmptyState = ({ icon: Icon, title, description, action }) => (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 'var(--space-8)',
+      textAlign: 'center',
+      color: 'var(--color-text-secondary)'
+    }}>
+      <Icon size={48} style={{ marginBottom: 'var(--space-4)', opacity: 0.5 }} />
+      <h3 style={{ margin: '0 0 var(--space-2) 0', color: 'var(--color-text-primary)' }}>{title}</h3>
+      <p style={{ margin: '0 0 var(--space-4) 0', maxWidth: '300px' }}>{description}</p>
+      {action && action}
+    </div>
+  );
+
   // Navigation handlers for clickable cards
   const handleCardClick = (type) => {
     switch (type) {
