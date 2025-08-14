@@ -61,7 +61,7 @@ function SeedPage() {
   };
 
   return (
-    <div className="seed-page">
+    <div className="seed-page" style={{ maxWidth: '800px', margin: '0 auto' }}>
       <div className="page-header">
         <div className="page-title-section">
           <h1 className="page-title">
@@ -79,7 +79,7 @@ function SeedPage() {
           <h2 className="content-section-title">Dados de Demonstração</h2>
         </div>
 
-        <div className="seed-info">
+        <div className="seed-info" style={{ marginBottom: 'var(--space-6)' }}>
           <div className="alert alert-info">
             <AlertTriangle size={20} />
             <div>
@@ -95,7 +95,7 @@ function SeedPage() {
           </div>
         </div>
 
-        <div className="seed-actions">
+        <div className="seed-actions" style={{ marginBottom: 'var(--space-8)' }}>
           <button
             className="btn btn-primary"
             onClick={handleSeedData}
@@ -117,7 +117,13 @@ function SeedPage() {
         </div>
 
         {stats && (
-          <div className="seed-results">
+          <div className="seed-results" style={{
+            marginTop: 'var(--space-6)',
+            padding: 'var(--space-6)',
+            background: 'var(--color-success-50)',
+            border: '1px solid var(--color-success-200)',
+            borderRadius: 'var(--radius-lg)'
+          }}>
             <h3 style={{ color: 'var(--color-success-600)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <CheckCircle size={20} />
               Dados populados com sucesso!
@@ -164,40 +170,6 @@ function SeedPage() {
         </div>
       </div>
 
-      <style jsx>{`
-        .seed-page {
-          max-width: 800px;
-          margin: 0 auto;
-        }
-
-        .seed-info {
-          margin-bottom: var(--space-6);
-        }
-
-        .seed-actions {
-          margin-bottom: var(--space-8);
-        }
-
-        .seed-results {
-          margin-top: var(--space-6);
-          padding: var(--space-6);
-          background: var(--color-success-50);
-          border: 1px solid var(--color-success-200);
-          border-radius: var(--radius-lg);
-        }
-
-        .steps-list {
-          color: var(--color-text-secondary);
-          font-size: var(--font-size-base);
-        }
-
-        .stat-value {
-          font-size: var(--font-size-2xl);
-          font-weight: var(--font-weight-bold);
-          color: var(--color-primary-600);
-          margin: var(--space-2) 0 0 0;
-        }
-      `}</style>
     </div>
   );
 }
