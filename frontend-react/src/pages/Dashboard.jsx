@@ -468,7 +468,17 @@ function Dashboard() {
           <p>Visão geral completa do seu negócio em tempo real</p>
         </div>
         <div className="dashboard-actions">
-          <button 
+          {(dashboardData.metrics.totalProducts === 0 && !loading) && (
+            <button
+              className="btn btn-primary"
+              onClick={handleSeedData}
+              disabled={loading}
+            >
+              <Package size={16} />
+              Popular com Dados de Teste
+            </button>
+          )}
+          <button
             className="btn btn-secondary"
             onClick={loadDashboardData}
             disabled={loading}
