@@ -84,9 +84,9 @@ function Dashboard() {
         makeAuthenticatedRequest('/api/customers')
       ]);
 
-      const products = productsRes?.products || [];
-      const sales = salesRes?.sales || [];
-      const customers = customersRes?.customers || [];
+      const products = productsRes?.products || productsRes?.data || [];
+      const sales = salesRes?.sales || salesRes?.data || [];
+      const customers = customersRes?.customers || customersRes?.data || [];
 
       // Calculate metrics from real data
       const totalProducts = products.length;
