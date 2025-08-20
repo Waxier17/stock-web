@@ -351,18 +351,20 @@ class UnifiedThemeSystem {
     updateThemeIcons() {
         const actualTheme = this.currentTheme === 'system' ? this.getSystemTheme() : this.currentTheme;
         const iconName = this.themes[actualTheme]?.icon || 'sun';
-        
+
+        // Atualizar ícone do botão principal
         document.querySelectorAll('.theme-icon').forEach(icon => {
             icon.setAttribute('data-lucide', iconName);
         });
     }
-    
+
     updateThemeControls() {
-        // Atualizar seletores de tema
+        // Atualizar opções ativas no dropdown
         document.querySelectorAll('.theme-option').forEach(option => {
             option.classList.toggle('active', option.dataset.theme === this.currentTheme);
         });
-        
+
+        // Atualizar inputs de radio se existirem
         document.querySelectorAll('input[name="theme"]').forEach(input => {
             input.checked = input.value === this.currentTheme;
         });
