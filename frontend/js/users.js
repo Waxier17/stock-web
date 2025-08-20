@@ -21,7 +21,7 @@ function initializeStats() {
     updateStats();
 }
 
-// Reset all stats to zero
+// Reset all stats to zero and clear all animations
 function resetStats() {
     const elements = [
         'totalUsersCard',
@@ -39,6 +39,12 @@ function resetStats() {
             if (element._animationTimer) {
                 clearInterval(element._animationTimer);
                 delete element._animationTimer;
+            }
+
+            // Clear any pending animation requests
+            if (element._animationRequest) {
+                clearTimeout(element._animationRequest);
+                delete element._animationRequest;
             }
 
             if (id.includes('Card')) {
