@@ -377,7 +377,7 @@ function updateStats() {
     console.log('Stats updated:', { totalUsers, adminUsers, regularUsers });
 }
 
-// Enhanced animate number counting with safer logic
+// Enhanced animate number counting with safer logic and debouncing
 function animateNumber(elementId, targetNumber) {
     const element = document.getElementById(elementId);
     if (!element) return;
@@ -385,6 +385,7 @@ function animateNumber(elementId, targetNumber) {
     // Clear any existing animation
     if (element._animationTimer) {
         clearInterval(element._animationTimer);
+        delete element._animationTimer;
     }
 
     // Get current number, but handle edge cases
@@ -398,6 +399,13 @@ function animateNumber(elementId, targetNumber) {
 
     // If target and current are the same, just set it
     if (currentNumber === targetNumber) {
+        element.textContent = targetNumber;
+        return;
+    }
+
+    // For very large differences, just set directly to prevent excessive animation
+    const difference = Math.abs(targetNumber - currentNumber);
+    if (difference > 100) {
         element.textContent = targetNumber;
         return;
     }
