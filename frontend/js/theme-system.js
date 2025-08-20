@@ -1030,6 +1030,30 @@ if (document.readyState === 'loading') {
 window.ThemeSystem = ThemeSystem;
 window.themeSystem = () => themeSystemInstance || initThemeSystem();
 
+// Global function to force theme refresh
+window.forceThemeRefresh = function() {
+    const themeSystem = window.themeSystem();
+    if (themeSystem) {
+        const currentTheme = themeSystem.getTheme();
+        themeSystem.applyTheme(currentTheme);
+        console.log('Theme refreshed:', currentTheme);
+        return true;
+    }
+    return false;
+};
+
+// Global function to toggle theme
+window.toggleTheme = function() {
+    const themeSystem = window.themeSystem();
+    if (themeSystem) {
+        const currentTheme = themeSystem.getActualTheme();
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        themeSystem.setTheme(newTheme);
+        return newTheme;
+    }
+    return null;
+};
+
 // Compatibility with existing code
 document.addEventListener('DOMContentLoaded', () => {
     // Re-initialize icons after theme system is loaded
