@@ -1,5 +1,13 @@
 // Emergency white box fix - can be run manually
+let isEmergencyFixing = false;
+
 window.emergencyFixWhiteBoxes = function() {
+    if (isEmergencyFixing) {
+        console.log('🚨 Emergency fix already running, skipping...');
+        return 0;
+    }
+
+    isEmergencyFixing = true;
     console.log('🚨 Running emergency white box fixes...');
     
     // Force dark theme data attribute
