@@ -67,7 +67,10 @@ class UnifiedThemeSystem {
         
         // Aplicar tema inicial imediatamente
         this.applyTheme(this.currentTheme, true);
-        
+
+        // Marcar página como pronta para prevenir flicker
+        document.documentElement.classList.add('theme-ready');
+
         // Setup event listeners
         this.setupEventListeners();
         
