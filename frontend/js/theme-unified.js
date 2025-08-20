@@ -316,6 +316,20 @@ class UnifiedThemeSystem {
         const newTheme = currentActual === 'dark' ? 'light' : 'dark';
         this.setTheme(newTheme);
     }
+
+    toggleDropdown() {
+        const dropdown = document.getElementById('themeDropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('show');
+        }
+    }
+
+    closeDropdown() {
+        const dropdown = document.getElementById('themeDropdown');
+        if (dropdown) {
+            dropdown.classList.remove('show');
+        }
+    }
     
     updateUI() {
         // Atualizar ícones de tema
