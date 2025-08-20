@@ -3,12 +3,17 @@ const User = require('../models/User');
 // Get all users (admin only)
 const getAllUsers = async (req, res) => {
     try {
+        console.log('Getting all users - called by:', req.user?.username);
         const users = await User.findAll();
+        console.log('Found users:', users.length);
+
         // Remove passwords from response
         const usersWithoutPasswords = users.map(user => {
             const { password, ...userWithoutPassword } = user;
             return userWithoutPassword;
         });
+
+        console.log('Returning users without passwords:', usersWithoutPasswords.length);
         res.status(200).json(usersWithoutPasswords);
     } catch (err) {
         console.error('Error fetching users:', err.message);
