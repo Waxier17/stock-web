@@ -341,12 +341,15 @@ function displayUsers(usersToShow) {
         tbody.appendChild(tr);
     });
 
-    // Update count with animation
+    // Update count without unnecessary animation
     const usersCountEl = document.getElementById('usersCount');
     if (usersCountEl) {
         const count = usersToShow.length;
         usersCountEl.textContent = `${count} ${count === 1 ? 'usuário encontrado' : 'usuários encontrados'}`;
-        usersCountEl.classList.add('fade-in-enhanced');
+        // Only add animation on initial load, not on filter updates
+        if (!document.getElementById('searchInput')?.value) {
+            usersCountEl.classList.add('fade-in-enhanced');
+        }
     }
 
     // Re-initialize icons for new elements
