@@ -16,12 +16,29 @@ async function seedData() {
     try {
         console.log('🌱 Starting database seeding...');
 
-        // 1. Create admin user
-        const hashedPassword = await bcrypt.hash('password123', 10);
-        
-        await runQuery(`INSERT OR IGNORE INTO Users (username, email, password, role) VALUES (?, ?, ?, ?)`, 
-            ['admin', 'admin@stockweb.com', hashedPassword, 'admin']);
+        // 1. Create users
+        const adminPassword = await bcrypt.hash('password123', 10);
+        const userPassword = await bcrypt.hash('password123', 10);
+
+        // Create admin user
+        await runQuery(`INSERT OR IGNORE INTO Users (username, email, password, role) VALUES (?, ?, ?, ?)`,
+            ['admin', 'admin@stockweb.com', adminPassword, 'admin']);
         console.log('✅ Admin user created');
+
+        // Create test users
+        const testUsers = [
+            ['joao_silva', 'joao@teste.com', userPassword, 'user'],
+            ['maria_santos', 'maria@teste.com', userPassword, 'user'],
+            ['pedro_admin', 'pedro@teste.com', adminPassword, 'admin'],
+            ['ana_user', 'ana@teste.com', userPassword, 'user'],
+            ['carlos_user', 'carlos@teste.com', userPassword, 'user']
+        ];
+
+        for (const [username, email, password, role] of testUsers) {
+            await runQuery(`INSERT OR IGNORE INTO Users (username, email, password, role) VALUES (?, ?, ?, ?)`,
+                [username, email, password, role]);
+        }
+        console.log('✅ Test users created');
 
         // 2. Create categories
         const categories = [
