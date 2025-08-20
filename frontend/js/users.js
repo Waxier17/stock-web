@@ -486,6 +486,7 @@ function addSearchHighlight() {
 
 // Enhanced open user modal
 function openUserModal(user = null) {
+    console.log('🎯 openUserModal called with user:', user);
     const modal = document.getElementById('userModal');
     const modalTitle = document.getElementById('modalTitle');
     const userForm = document.getElementById('userForm');
