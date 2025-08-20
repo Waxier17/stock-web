@@ -1,4 +1,5 @@
 // Enhanced Users management functionality
+console.log('🚀 Users.js loading...');
 let users = [];
 let isEditMode = false;
 
