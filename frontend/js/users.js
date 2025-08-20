@@ -14,6 +14,14 @@ document.addEventListener('DOMContentLoaded', function() {
     loadUsers();
     setupEventListeners();
     initializeEnhancements();
+
+    // Verify that openUserModal is accessible globally
+    console.log('🔍 openUserModal function available:', typeof openUserModal);
+    if (typeof openUserModal !== 'function') {
+        console.error('❌ openUserModal is not defined as a function!');
+    } else {
+        console.log('✅ openUserModal is properly defined');
+    }
 });
 
 // Initialize stats with zero values
