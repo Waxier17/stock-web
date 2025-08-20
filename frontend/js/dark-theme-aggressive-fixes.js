@@ -1,13 +1,20 @@
-// Aggressive dark theme fixes for white boxes
+// Optimized dark theme fixes for white boxes
 (function() {
     'use strict';
 
     let isFixing = false;
+    let fixTimeout = null;
 
     function removeWhiteBackgrounds() {
         const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
 
-        if (!isDarkTheme || isFixing) return;
+        if (!isDarkTheme) return;
+
+        // Debounce rapid calls
+        if (isFixing) {
+            console.log('🔧 Theme fix already in progress, skipping...');
+            return;
+        }
 
         isFixing = true;
         console.log('🔧 Applying optimized dark theme fixes...');
@@ -16,9 +23,7 @@
         const targetSelectors = [
             '.modern-card', '.card', '.stat-card-enhanced',
             '.modal-content', '.modal-body', '.modal-header',
-            '.form-input', '.form-control', '.alert', '.badge',
-            '[style*="background:white"]', '[style*="background-color:white"]',
-            '[style*="background:#fff"]', '[style*="background-color:#fff"]'
+            '.form-input', '.form-control', '.alert', '.badge'
         ];
 
         const allElements = document.querySelectorAll(targetSelectors.join(','));
