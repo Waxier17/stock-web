@@ -1,5 +1,4 @@
 // Enhanced Users management functionality
-console.log('🚀 Users.js loading...');
 let users = [];
 let isEditMode = false;
 
@@ -14,14 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadUsers();
     setupEventListeners();
     initializeEnhancements();
-
-    // Verify that openUserModal is accessible globally
-    console.log('🔍 openUserModal function available:', typeof openUserModal);
-    if (typeof openUserModal !== 'function') {
-        console.error('❌ openUserModal is not defined as a function!');
-    } else {
-        console.log('✅ openUserModal is properly defined');
-    }
 });
 
 // Initialize stats with zero values
@@ -494,7 +485,6 @@ function addSearchHighlight() {
 
 // Enhanced open user modal
 window.openUserModal = function(user = null) {
-    console.log('🎯 openUserModal called with user:', user);
     const modal = document.getElementById('userModal');
     const modalTitle = document.getElementById('modalTitle');
     const userForm = document.getElementById('userForm');
