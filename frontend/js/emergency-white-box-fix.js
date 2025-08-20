@@ -79,12 +79,17 @@ window.emergencyFixWhiteBoxes = function() {
     });
     
     console.log(`✅ Emergency fix complete! Fixed ${fixedCount} elements.`);
-    
-    // Force a repaint
-    document.body.style.display = 'none';
-    document.body.offsetHeight;
-    document.body.style.display = '';
-    
+
+    // Force a repaint (less aggressive)
+    document.documentElement.style.transform = 'translateZ(0)';
+    document.documentElement.offsetHeight;
+    document.documentElement.style.transform = '';
+
+    // Reset flag
+    setTimeout(() => {
+        isEmergencyFixing = false;
+    }, 1000);
+
     return fixedCount;
 };
 
