@@ -6,10 +6,27 @@ let isEditMode = false;
 document.addEventListener('DOMContentLoaded', function() {
     lucide.createIcons();
     checkAuth();
+
+    // Initialize stats with zero values first
+    initializeStats();
+
     loadUsers();
     setupEventListeners();
     initializeEnhancements();
 });
+
+// Initialize stats with zero values
+function initializeStats() {
+    const totalUsersCard = document.getElementById('totalUsersCard');
+    const adminUsersCard = document.getElementById('adminUsersCard');
+    const regularUsersCard = document.getElementById('regularUsersCard');
+
+    if (totalUsersCard) totalUsersCard.textContent = '0';
+    if (adminUsersCard) adminUsersCard.textContent = '0';
+    if (regularUsersCard) regularUsersCard.textContent = '0';
+
+    updateStats();
+}
 
 // Enhanced authentication check
 function checkAuth() {
@@ -286,18 +303,24 @@ function displayUsers(usersToShow) {
     addEnhancedTooltips();
 }
 
-// Enhanced update statistics
+// Enhanced update statistics with safe values
 function updateStats() {
-    const totalUsers = users.length;
-    const adminUsers = users.filter(user => user.role === 'admin').length;
-    const regularUsers = users.filter(user => user.role === 'user').length;
+    // Ensure users array exists and is valid
+    if (!Array.isArray(users)) {
+        console.warn('Users array is not valid, initializing empty array');
+        users = [];
+    }
 
-    // Animate number changes
+    const totalUsers = users.length || 0;
+    const adminUsers = users.filter(user => user && user.role === 'admin').length || 0;
+    const regularUsers = users.filter(user => user && user.role === 'user').length || 0;
+
+    // Animate number changes with safe values
     animateNumber('totalUsersCard', totalUsers);
     animateNumber('adminUsersCard', adminUsers);
     animateNumber('regularUsersCard', regularUsers);
-    
-    // Update badges
+
+    // Update badges with safe values
     const totalUsersEl = document.getElementById('totalUsers');
     const adminUsersEl = document.getElementById('adminUsers');
     const regularUsersEl = document.getElementById('regularUsers');
@@ -305,6 +328,9 @@ function updateStats() {
     if (totalUsersEl) totalUsersEl.textContent = `${totalUsers} Total`;
     if (adminUsersEl) adminUsersEl.textContent = `${adminUsers} Admin`;
     if (regularUsersEl) regularUsersEl.textContent = `${regularUsers} Regular`;
+
+    // Debug log for troubleshooting
+    console.log('Stats updated:', { totalUsers, adminUsers, regularUsers });
 }
 
 // Enhanced animate number counting with safer logic
