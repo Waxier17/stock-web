@@ -204,10 +204,12 @@ async function loadUsers() {
         });
 
         if (response.ok) {
-            users = await response.json();
+            const data = await response.json();
+            users = Array.isArray(data) ? data : [];
+
             displayUsers(users);
             updateStats();
-            
+
             if (users.length === 0) {
                 if (emptyState) {
                     emptyState.style.display = 'flex';
@@ -219,7 +221,7 @@ async function loadUsers() {
                     tableContainer.classList.add('fade-in-enhanced');
                 }
             }
-            
+
             // Show success notification
             showAlert(`${users.length} usuários carregados com sucesso!`, 'success', 3000);
         } else {
@@ -227,6 +229,8 @@ async function loadUsers() {
         }
     } catch (error) {
         console.error('Error loading users:', error);
+        users = []; // Ensure users is always an array
+        updateStats(); // Update stats even on error
         showAlert('Erro ao carregar usuários: ' + error.message, 'error');
         if (emptyState) emptyState.style.display = 'flex';
     } finally {
