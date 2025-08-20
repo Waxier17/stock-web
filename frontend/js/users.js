@@ -89,11 +89,16 @@ function checkAuth() {
 
 // Initialize enhanced features
 function initializeEnhancements() {
-    // Add smooth animations to cards
-    const cards = document.querySelectorAll('.stat-card-enhanced');
+    // Add smooth animations to cards (only once)
+    const cards = document.querySelectorAll('.stat-card-enhanced:not(.animation-completed)');
     cards.forEach((card, index) => {
         card.style.animationDelay = `${index * 0.1}s`;
         card.classList.add('fade-in-enhanced');
+
+        // Mark animation as completed after it finishes
+        setTimeout(() => {
+            card.classList.add('animation-completed');
+        }, 600 + (index * 100));
     });
 
     // Enhanced search with debounce
