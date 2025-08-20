@@ -347,7 +347,7 @@ function displayUsers(usersToShow) {
     addEnhancedTooltips();
 }
 
-// Enhanced update statistics with safe values
+// Enhanced update statistics with safe values and change detection
 function updateStats() {
     // Ensure users array exists and is valid
     if (!Array.isArray(users)) {
@@ -359,7 +359,23 @@ function updateStats() {
     const adminUsers = users.filter(user => user && user.role === 'admin').length || 0;
     const regularUsers = users.filter(user => user && user.role === 'user').length || 0;
 
-    // Animate number changes with safe values
+    // Check if stats have actually changed to prevent unnecessary animations
+    const currentStats = {
+        total: parseInt(document.getElementById('totalUsersCard')?.textContent) || 0,
+        admin: parseInt(document.getElementById('adminUsersCard')?.textContent) || 0,
+        regular: parseInt(document.getElementById('regularUsersCard')?.textContent) || 0
+    };
+
+    const hasChanged = currentStats.total !== totalUsers ||
+                      currentStats.admin !== adminUsers ||
+                      currentStats.regular !== regularUsers;
+
+    if (!hasChanged) {
+        console.log('Stats unchanged, skipping animation');
+        return;
+    }
+
+    // Animate number changes with safe values only if they changed
     animateNumber('totalUsersCard', totalUsers);
     animateNumber('adminUsersCard', adminUsers);
     animateNumber('regularUsersCard', regularUsers);
