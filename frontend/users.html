@@ -161,7 +161,7 @@
                                     <i data-lucide="refresh-cw"></i>
                                     Atualizar
                                 </button>
-                                <button class="btn-primary-modern" onclick="openUserModal()">
+                                <button class="btn-primary-modern" onclick="if(typeof openUserModal === 'function') { openUserModal(); } else { console.error('openUserModal not defined'); }">
                                     <i data-lucide="user-plus"></i>
                                     Novo Usuário
                                 </button>
