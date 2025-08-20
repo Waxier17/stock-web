@@ -420,6 +420,15 @@ function animateNumber(elementId, targetNumber) {
             delete element._animationTimer;
         }
     }, speed);
+
+    // Safety timeout to prevent infinite animations
+    setTimeout(() => {
+        if (element._animationTimer) {
+            clearInterval(element._animationTimer);
+            delete element._animationTimer;
+            element.textContent = targetNumber;
+        }
+    }, 5000);
 }
 
 // Enhanced filter users based on search
