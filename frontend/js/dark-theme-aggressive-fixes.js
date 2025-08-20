@@ -2,15 +2,26 @@
 (function() {
     'use strict';
 
+    let isFixing = false;
+
     function removeWhiteBackgrounds() {
         const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
-        
-        if (!isDarkTheme) return;
 
-        console.log('🔧 Applying aggressive dark theme fixes...');
+        if (!isDarkTheme || isFixing) return;
 
-        // Find all elements with white/light backgrounds
-        const allElements = document.querySelectorAll('*:not(svg):not(path):not(.lucide)');
+        isFixing = true;
+        console.log('🔧 Applying optimized dark theme fixes...');
+
+        // Only target specific problematic selectors instead of all elements
+        const targetSelectors = [
+            '.modern-card', '.card', '.stat-card-enhanced',
+            '.modal-content', '.modal-body', '.modal-header',
+            '.form-input', '.form-control', '.alert', '.badge',
+            '[style*="background:white"]', '[style*="background-color:white"]',
+            '[style*="background:#fff"]', '[style*="background-color:#fff"]'
+        ];
+
+        const allElements = document.querySelectorAll(targetSelectors.join(','));
         
         allElements.forEach(element => {
             const computedStyle = window.getComputedStyle(element);
