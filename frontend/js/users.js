@@ -21,7 +21,7 @@ function initializeStats() {
     updateStats();
 }
 
-// Reset all stats to zero and clear all animations
+// Reset all stats to zero
 function resetStats() {
     const elements = [
         'totalUsersCard',
@@ -39,12 +39,6 @@ function resetStats() {
             if (element._animationTimer) {
                 clearInterval(element._animationTimer);
                 delete element._animationTimer;
-            }
-
-            // Clear any pending animation requests
-            if (element._animationRequest) {
-                clearTimeout(element._animationRequest);
-                delete element._animationRequest;
             }
 
             if (id.includes('Card')) {
@@ -89,16 +83,11 @@ function checkAuth() {
 
 // Initialize enhanced features
 function initializeEnhancements() {
-    // Add smooth animations to cards (only once)
-    const cards = document.querySelectorAll('.stat-card-enhanced:not(.animation-completed)');
+    // Add smooth animations to cards
+    const cards = document.querySelectorAll('.stat-card-enhanced');
     cards.forEach((card, index) => {
         card.style.animationDelay = `${index * 0.1}s`;
         card.classList.add('fade-in-enhanced');
-
-        // Mark animation as completed after it finishes
-        setTimeout(() => {
-            card.classList.add('animation-completed');
-        }, 600 + (index * 100));
     });
 
     // Enhanced search with debounce
@@ -298,16 +287,8 @@ function displayUsers(usersToShow) {
 
     usersToShow.forEach((user, index) => {
         const tr = document.createElement('tr');
-        // Only add animation on initial load, not on filter
-        if (!document.getElementById('searchInput')?.value) {
-            tr.style.animationDelay = `${index * 0.05}s`;
-            tr.classList.add('slide-in-enhanced');
-
-            // Mark animation as completed to prevent re-triggering
-            setTimeout(() => {
-                tr.classList.add('animation-completed');
-            }, 500 + (index * 50));
-        }
+        tr.style.animationDelay = `${index * 0.05}s`;
+        tr.classList.add('slide-in-enhanced');
         
         tr.innerHTML = `
             <td>
@@ -351,15 +332,12 @@ function displayUsers(usersToShow) {
         tbody.appendChild(tr);
     });
 
-    // Update count without unnecessary animation
+    // Update count with animation
     const usersCountEl = document.getElementById('usersCount');
     if (usersCountEl) {
         const count = usersToShow.length;
         usersCountEl.textContent = `${count} ${count === 1 ? 'usuário encontrado' : 'usuários encontrados'}`;
-        // Only add animation on initial load, not on filter updates
-        if (!document.getElementById('searchInput')?.value) {
-            usersCountEl.classList.add('fade-in-enhanced');
-        }
+        usersCountEl.classList.add('fade-in-enhanced');
     }
 
     // Re-initialize icons for new elements
@@ -369,7 +347,7 @@ function displayUsers(usersToShow) {
     addEnhancedTooltips();
 }
 
-// Enhanced update statistics with safe values and change detection
+// Enhanced update statistics with safe values
 function updateStats() {
     // Ensure users array exists and is valid
     if (!Array.isArray(users)) {
@@ -381,23 +359,7 @@ function updateStats() {
     const adminUsers = users.filter(user => user && user.role === 'admin').length || 0;
     const regularUsers = users.filter(user => user && user.role === 'user').length || 0;
 
-    // Check if stats have actually changed to prevent unnecessary animations
-    const currentStats = {
-        total: parseInt(document.getElementById('totalUsersCard')?.textContent) || 0,
-        admin: parseInt(document.getElementById('adminUsersCard')?.textContent) || 0,
-        regular: parseInt(document.getElementById('regularUsersCard')?.textContent) || 0
-    };
-
-    const hasChanged = currentStats.total !== totalUsers ||
-                      currentStats.admin !== adminUsers ||
-                      currentStats.regular !== regularUsers;
-
-    if (!hasChanged) {
-        console.log('Stats unchanged, skipping animation');
-        return;
-    }
-
-    // Animate number changes with safe values only if they changed
+    // Animate number changes with safe values
     animateNumber('totalUsersCard', totalUsers);
     animateNumber('adminUsersCard', adminUsers);
     animateNumber('regularUsersCard', regularUsers);
@@ -415,7 +377,7 @@ function updateStats() {
     console.log('Stats updated:', { totalUsers, adminUsers, regularUsers });
 }
 
-// Enhanced animate number counting with safer logic and debouncing
+// Enhanced animate number counting with safer logic
 function animateNumber(elementId, targetNumber) {
     const element = document.getElementById(elementId);
     if (!element) return;
@@ -423,13 +385,6 @@ function animateNumber(elementId, targetNumber) {
     // Clear any existing animation
     if (element._animationTimer) {
         clearInterval(element._animationTimer);
-        delete element._animationTimer;
-    }
-
-    // Clear any pending animation calls
-    if (element._animationRequest) {
-        clearTimeout(element._animationRequest);
-        delete element._animationRequest;
     }
 
     // Get current number, but handle edge cases
@@ -447,47 +402,38 @@ function animateNumber(elementId, targetNumber) {
         return;
     }
 
-    // Use requestAnimationFrame for smoother animation and prevent multiple rapid calls
-    element._animationRequest = setTimeout(() => {
-        const difference = Math.abs(targetNumber - currentNumber);
-        const increment = targetNumber > currentNumber ? 1 : -1;
+    const difference = Math.abs(targetNumber - currentNumber);
+    const increment = targetNumber > currentNumber ? 1 : -1;
 
-        // For large differences, just set the value directly to prevent flickering
-        if (difference > 100) {
-            element.textContent = targetNumber;
-            return;
+    // For large differences, use faster animation
+    const speed = difference > 20 ? 20 : 80;
+    const step = difference > 50 ? Math.ceil(difference / 20) : 1;
+
+    let current = currentNumber;
+
+    element._animationTimer = setInterval(() => {
+        if (increment > 0) {
+            current = Math.min(current + step, targetNumber);
+        } else {
+            current = Math.max(current - step, targetNumber);
         }
 
-        // For smaller differences, use a gentler animation
-        const speed = difference > 10 ? 50 : 100;
-        const step = Math.max(1, Math.ceil(difference / 10));
+        element.textContent = current;
 
-        let current = currentNumber;
+        if (current === targetNumber) {
+            clearInterval(element._animationTimer);
+            delete element._animationTimer;
+        }
+    }, speed);
 
-        element._animationTimer = setInterval(() => {
-            if (increment > 0) {
-                current = Math.min(current + step, targetNumber);
-            } else {
-                current = Math.max(current - step, targetNumber);
-            }
-
-            element.textContent = current;
-
-            if (current === targetNumber) {
-                clearInterval(element._animationTimer);
-                delete element._animationTimer;
-            }
-        }, speed);
-
-        // Reduced safety timeout
-        setTimeout(() => {
-            if (element._animationTimer) {
-                clearInterval(element._animationTimer);
-                delete element._animationTimer;
-                element.textContent = targetNumber;
-            }
-        }, 2000);
-    }, 50); // Small delay to debounce rapid calls
+    // Safety timeout to prevent infinite animations
+    setTimeout(() => {
+        if (element._animationTimer) {
+            clearInterval(element._animationTimer);
+            delete element._animationTimer;
+            element.textContent = targetNumber;
+        }
+    }, 5000);
 }
 
 // Enhanced filter users based on search

@@ -119,55 +119,26 @@
         attributeFilter: ['data-theme'] 
     });
 
-    // Debounced content observer to prevent excessive executions
-    let contentFixTimeout = null;
-    let isFixing = false;
-
-    function debouncedContentFix() {
-        if (isFixing) return;
-
-        clearTimeout(contentFixTimeout);
-        contentFixTimeout = setTimeout(() => {
-            const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
-            if (isDarkTheme && !isFixing) {
-                isFixing = true;
-                removeWhiteBackgrounds();
-                setTimeout(() => {
-                    isFixing = false;
-                }, 2000); // Prevent rapid re-execution
-            }
-        }, 300); // Increased delay
-    }
-
-    // Only watch for major content changes
+    // Also run when new content is added
     const contentObserver = new MutationObserver((mutations) => {
         const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
-        if (!isDarkTheme) return;
-
-        let shouldFix = false;
-        mutations.forEach((mutation) => {
-            // Only fix for modal or significant additions
-            if (mutation.addedNodes.length > 0) {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === 1 &&
-                        (node.classList?.contains('modal') ||
-                         node.classList?.contains('card') ||
-                         node.tagName === 'TR' ||
-                         node.querySelector?.('.modal, .card'))) {
-                        shouldFix = true;
-                    }
-                });
+        if (isDarkTheme) {
+            let shouldFix = false;
+            mutations.forEach((mutation) => {
+                if (mutation.addedNodes.length > 0) {
+                    shouldFix = true;
+                }
+            });
+            
+            if (shouldFix) {
+                setTimeout(removeWhiteBackgrounds, 50);
             }
-        });
-
-        if (shouldFix) {
-            debouncedContentFix();
         }
     });
 
-    contentObserver.observe(document.body, {
-        childList: true,
-        subtree: false // Reduced scope to prevent excessive triggers
+    contentObserver.observe(document.body, { 
+        childList: true, 
+        subtree: true 
     });
 
     // Expose global function for manual fixes

@@ -74,40 +74,36 @@ window.emergencyFixWhiteBoxes = function() {
     return fixedCount;
 };
 
-// Auto-run on dark theme with debouncing
+// Auto-run on dark theme
 document.addEventListener('DOMContentLoaded', function() {
-    let emergencyFixTimeout = null;
-
-    function debouncedEmergencyFix() {
-        clearTimeout(emergencyFixTimeout);
-        emergencyFixTimeout = setTimeout(() => {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            if (isDark) {
-                window.emergencyFixWhiteBoxes();
-            }
-        }, 1000); // Longer delay to prevent excessive execution
-    }
-
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     if (isDark) {
-        debouncedEmergencyFix();
+        setTimeout(() => {
+            window.emergencyFixWhiteBoxes();
+        }, 500);
     }
+});
 
-    // Run when theme changes with debouncing
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.type === 'attributes' &&
-                mutation.attributeName === 'data-theme' &&
-                mutation.target === document.documentElement) {
-                debouncedEmergencyFix();
+// Run when theme changes
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && 
+            mutation.attributeName === 'data-theme' &&
+            mutation.target === document.documentElement) {
+            
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                setTimeout(() => {
+                    window.emergencyFixWhiteBoxes();
+                }, 200);
             }
-        });
+        }
     });
+});
 
-    observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['data-theme']
-    });
+observer.observe(document.documentElement, { 
+    attributes: true, 
+    attributeFilter: ['data-theme'] 
 });
 
 console.log('🚨 Emergency white box fix loaded. Use emergencyFixWhiteBoxes() to run manually.');

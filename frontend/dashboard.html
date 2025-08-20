@@ -10,7 +10,7 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <!-- Custom CSS -->
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/theme-unified.css" rel="stylesheet">
+    <link href="css/dark-theme-fixes.css" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
@@ -29,28 +29,6 @@
             
             <div class="header-user">
                 <div class="user-avatar" id="userAvatar">U</div>
-
-                <!-- Theme Toggle -->
-                <div class="theme-toggle-container">
-                    <button class="theme-toggle-btn" id="themeToggle" title="Alternar tema">
-                        <i data-lucide="sun" class="theme-icon"></i>
-                    </button>
-                    <div class="theme-dropdown" id="themeDropdown">
-                        <button class="theme-option active" data-theme="light">
-                            <i data-lucide="sun" class="theme-option-icon"></i>
-                            <span>Claro</span>
-                        </button>
-                        <button class="theme-option" data-theme="dark">
-                            <i data-lucide="moon" class="theme-option-icon"></i>
-                            <span>Escuro</span>
-                        </button>
-                        <button class="theme-option" data-theme="system">
-                            <i data-lucide="monitor" class="theme-option-icon"></i>
-                            <span>Sistema</span>
-                        </button>
-                    </div>
-                </div>
-
                 <button class="btn-secondary-modern btn-sm" id="logoutBtn">
                     <i data-lucide="log-out"></i>
                     Sair
@@ -817,6 +795,6 @@
     </style>
 
     <script src="js/main.js"></script>
-    <script src="js/theme-unified.js"></script>
+    <script src="js/theme-system.js"></script>
 </body>
 </html>
