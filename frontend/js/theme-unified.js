@@ -402,6 +402,58 @@ class UnifiedThemeSystem {
         console.log('🔄 Refrescando tema...');
         this.applyTheme(this.currentTheme, true);
     }
+
+    autoInjectThemeControl() {
+        // Check if theme control already exists
+        if (document.getElementById('themeToggle')) {
+            return;
+        }
+
+        // Find header-user element
+        const headerUser = document.querySelector('.header-user');
+        if (!headerUser) {
+            return;
+        }
+
+        console.log('🎨 Auto-injecting theme control...');
+
+        // Create theme control HTML
+        const themeControl = document.createElement('div');
+        themeControl.className = 'theme-toggle-container';
+        themeControl.innerHTML = `
+            <button class="theme-toggle-btn" id="themeToggle" title="Alternar tema">
+                <i data-lucide="sun" class="theme-icon"></i>
+            </button>
+            <div class="theme-dropdown" id="themeDropdown">
+                <button class="theme-option active" data-theme="light">
+                    <i data-lucide="sun" class="theme-option-icon"></i>
+                    <span>Claro</span>
+                </button>
+                <button class="theme-option" data-theme="dark">
+                    <i data-lucide="moon" class="theme-option-icon"></i>
+                    <span>Escuro</span>
+                </button>
+                <button class="theme-option" data-theme="system">
+                    <i data-lucide="monitor" class="theme-option-icon"></i>
+                    <span>Sistema</span>
+                </button>
+            </div>
+        `;
+
+        // Find the best position to insert
+        const logoutBtn = headerUser.querySelector('#logoutBtn, .btn-sm');
+
+        if (logoutBtn) {
+            // Insert before logout button
+            headerUser.insertBefore(themeControl, logoutBtn);
+        } else {
+            // Append to header-user
+            headerUser.appendChild(themeControl);
+        }
+
+        // Update UI after injection
+        this.updateUI();
+    }
 }
 
 // ===== INICIALIZAÇÃO E CONTROLE GLOBAL =====
