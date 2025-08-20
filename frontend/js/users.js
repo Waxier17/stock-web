@@ -434,14 +434,14 @@ function animateNumber(elementId, targetNumber) {
         }
     }, speed);
 
-    // Safety timeout to prevent infinite animations
+    // Safety timeout to prevent infinite animations (reduced from 5000ms to 2000ms)
     setTimeout(() => {
         if (element._animationTimer) {
             clearInterval(element._animationTimer);
             delete element._animationTimer;
             element.textContent = targetNumber;
         }
-    }, 5000);
+    }, 2000);
 }
 
 // Enhanced filter users based on search
