@@ -1,0 +1,287 @@
+/* ===== CORREÇÕES ESPECÍFICAS PARA TEMA ESCURO ===== */
+
+/* Force dark theme on all elements when dark mode is active */
+[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+/* Modal fixes */
+[data-theme="dark"] .modal-overlay,
+[data-theme="dark"] .modal-backdrop {
+    background: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: blur(4px);
+}
+
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .modal-modern,
+[data-theme="dark"] .modal-dialog .modal-content {
+    background: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .modal-header {
+    background: var(--background-secondary) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .modal-header h3,
+[data-theme="dark"] .modal-header h4,
+[data-theme="dark"] .modal-header h5,
+[data-theme="dark"] .modal-title {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .modal-body {
+    background: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .modal-footer {
+    background: var(--background-secondary) !important;
+    border-top: 1px solid var(--border-color) !important;
+}
+
+/* Form elements fixes */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea,
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-input {
+    background: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus,
+[data-theme="dark"] .form-input:focus {
+    background: var(--background-primary) !important;
+    border-color: var(--primary-500) !important;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder,
+[data-theme="dark"] .form-control::placeholder {
+    color: var(--text-tertiary) !important;
+}
+
+[data-theme="dark"] label,
+[data-theme="dark"] .form-label {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .form-text,
+[data-theme="dark"] .help-text,
+[data-theme="dark"] small,
+[data-theme="dark"] .text-muted {
+    color: var(--text-secondary) !important;
+}
+
+/* Section fixes for modals */
+[data-theme="dark"] .modal-body > div,
+[data-theme="dark"] .form-section,
+[data-theme="dark"] .card-section {
+    background: var(--background-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Specific modal section fixes */
+[data-theme="dark"] .informacoes-basicas,
+[data-theme="dark"] .informacoes-pessoais,
+[data-theme="dark"] .informacoes-contato,
+[data-theme="dark"] .informacoes-empresa,
+[data-theme="dark"] .endereco,
+[data-theme="dark"] .precos-custos,
+[data-theme="dark"] .selecao-cliente,
+[data-theme="dark"] .produtos-section {
+    background: var(--background-primary) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Button fixes */
+[data-theme="dark"] .btn-secondary,
+[data-theme="dark"] .btn-secondary-modern {
+    background: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-theme="dark"] .btn-secondary:hover,
+[data-theme="dark"] .btn-secondary-modern:hover {
+    background: var(--background-tertiary) !important;
+    border-color: var(--border-hover) !important;
+}
+
+/* Suggestion buttons and chips */
+[data-theme="dark"] .suggestion-btn,
+[data-theme="dark"] .chip,
+[data-theme="dark"] .tag,
+[data-theme="dark"] .badge {
+    background: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-theme="dark"] .suggestion-btn:hover {
+    background: var(--primary-900) !important;
+    color: var(--primary-300) !important;
+}
+
+/* Progress bar fixes */
+[data-theme="dark"] .progress {
+    background: var(--background-secondary) !important;
+}
+
+[data-theme="dark"] .progress-bar {
+    background: var(--primary-600) !important;
+}
+
+/* Search and dropdown fixes */
+[data-theme="dark"] .search-field,
+[data-theme="dark"] .search-container input,
+[data-theme="dark"] .dropdown-menu,
+[data-theme="dark"] .suggestions {
+    background: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+/* Table fixes */
+[data-theme="dark"] .table,
+[data-theme="dark"] .modern-table,
+[data-theme="dark"] .table-enhanced {
+    background: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .table thead th,
+[data-theme="dark"] .modern-table thead th,
+[data-theme="dark"] .table-enhanced thead th {
+    background: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table tbody td,
+[data-theme="dark"] .modern-table tbody td,
+[data-theme="dark"] .table-enhanced tbody td {
+    border-color: var(--border-color) !important;
+    color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .table tbody tr:hover,
+[data-theme="dark"] .modern-table tbody tr:hover,
+[data-theme="dark"] .table-enhanced tbody tr:hover {
+    background: var(--background-secondary) !important;
+}
+
+/* Card fixes */
+[data-theme="dark"] .card,
+[data-theme="dark"] .modern-card {
+    background: var(--background-primary) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .card-header,
+[data-theme="dark"] .card-title {
+    background: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Force override any inline styles */
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background: #ffffff"],
+[data-theme="dark"] [style*="background-color: #ffffff"] {
+    background: var(--background-primary) !important;
+}
+
+[data-theme="dark"] [style*="color: black"],
+[data-theme="dark"] [style*="color: #000"],
+[data-theme="dark"] [style*="color: #000000"] {
+    color: var(--text-primary) !important;
+}
+
+/* Fix text inputs in specific contexts */
+[data-theme="dark"] .modal-body input[type="text"],
+[data-theme="dark"] .modal-body input[type="email"],
+[data-theme="dark"] .modal-body input[type="password"],
+[data-theme="dark"] .modal-body input[type="number"],
+[data-theme="dark"] .modal-body select,
+[data-theme="dark"] .modal-body textarea {
+    background: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+/* Scrollbar for dark theme */
+[data-theme="dark"] ::-webkit-scrollbar {
+    width: 8px;
+    background: var(--background-secondary);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+}
+
+/* Fix any remaining elements that might be white */
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .background-white,
+[data-theme="dark"] .white-background {
+    background: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Ensure icons maintain proper contrast */
+[data-theme="dark"] .icon,
+[data-theme="dark"] i,
+[data-theme="dark"] svg:not(.lucide) {
+    color: var(--text-secondary) !important;
+    fill: var(--text-secondary) !important;
+}
+
+/* Loading states */
+[data-theme="dark"] .loading,
+[data-theme="dark"] .spinner {
+    color: var(--text-secondary) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .loading-text {
+    color: var(--text-secondary) !important;
+}
+
+/* Empty states */
+[data-theme="dark"] .empty-state,
+[data-theme="dark"] .no-data {
+    color: var(--text-secondary) !important;
+}
+
+/* Alerts and notifications */
+[data-theme="dark"] .alert {
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .toast {
+    background: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
