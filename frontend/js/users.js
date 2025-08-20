@@ -241,7 +241,16 @@ async function loadUsers() {
 // Enhanced display users in table
 function displayUsers(usersToShow) {
     const tbody = document.getElementById('usersTableBody');
-    if (!tbody) return;
+    if (!tbody) {
+        console.warn('Table body not found');
+        return;
+    }
+
+    // Ensure usersToShow is an array
+    if (!Array.isArray(usersToShow)) {
+        console.warn('usersToShow is not an array:', usersToShow);
+        usersToShow = [];
+    }
 
     tbody.innerHTML = '';
 
