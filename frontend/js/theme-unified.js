@@ -79,6 +79,9 @@ class UnifiedThemeSystem {
         
         this.isInitialized = true;
         
+        // Auto-inject theme control if not present
+        this.autoInjectThemeControl();
+
         // Dispatch evento de inicialização
         window.dispatchEvent(new CustomEvent('themeSystemReady', {
             detail: { theme: this.currentTheme }
