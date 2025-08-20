@@ -3,6 +3,137 @@ console.log('🚀 Users.js loading...');
 let users = [];
 let isEditMode = false;
 
+// Define global functions early to ensure they're available
+window.openUserModal = function(user = null) {
+    console.log('🎯 openUserModal called with:', user);
+    const modal = document.getElementById('userModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const userForm = document.getElementById('userForm');
+    const passwordGroup = document.getElementById('passwordGroup');
+    const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+
+    isEditMode = !!user;
+
+    if (isEditMode) {
+        modalTitle.innerHTML = `
+            <i data-lucide="edit" style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;"></i>
+            Editar Usuário
+        `;
+        document.getElementById('userId').value = user.id;
+        document.getElementById('username').value = user.username;
+        document.getElementById('email').value = user.email;
+        document.getElementById('role').value = user.role;
+
+        // Hide password fields in edit mode
+        passwordGroup.style.display = 'none';
+        confirmPasswordGroup.style.display = 'none';
+        document.getElementById('password').required = false;
+        document.getElementById('confirmPassword').required = false;
+    } else {
+        modalTitle.innerHTML = `
+            <i data-lucide="user-plus" style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;"></i>
+            Novo Usuário
+        `;
+        userForm.reset();
+        document.getElementById('userId').value = '';
+
+        // Show password fields in create mode
+        passwordGroup.style.display = 'block';
+        confirmPasswordGroup.style.display = 'block';
+        document.getElementById('password').required = true;
+        document.getElementById('confirmPassword').required = true;
+    }
+
+    // Clear any validation errors
+    clearFormErrors();
+
+    modal.style.display = 'flex';
+    modal.classList.add('fade-in-enhanced');
+
+    // Focus on first input
+    setTimeout(() => {
+        document.getElementById('username').focus();
+    }, 300);
+
+    // Re-initialize icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+};
+
+window.closeUserModal = function() {
+    const modal = document.getElementById('userModal');
+    modal.style.display = 'none';
+    document.getElementById('userForm').reset();
+    clearFormErrors();
+};
+
+window.closePasswordModal = function() {
+    const modal = document.getElementById('passwordModal');
+    modal.style.display = 'none';
+    document.getElementById('passwordForm').reset();
+    clearFormErrors();
+};
+
+window.editUser = function(userId) {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+        window.openUserModal(user);
+    }
+};
+
+window.changeUserPassword = function(userId) {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+        document.getElementById('passwordUserId').value = userId;
+        const modal = document.getElementById('passwordModal');
+        modal.style.display = 'flex';
+        modal.classList.add('fade-in-enhanced');
+        document.getElementById('passwordForm').reset();
+        clearFormErrors();
+
+        // Focus on password field
+        setTimeout(() => {
+            document.getElementById('newPassword').focus();
+        }, 300);
+    }
+};
+
+window.deleteUser = async function(userId, username) {
+    // Create custom confirmation dialog
+    const confirmed = await showConfirmDialog(
+        'Confirmar Exclusão',
+        `Tem certeza que deseja excluir o usuário "${username}"?`,
+        'Esta ação não pode ser desfeita.',
+        'error'
+    );
+
+    if (!confirmed) return;
+
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await fetch(`/api/users/${userId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showAlert('Usuário excluído com sucesso!', 'success');
+            loadUsers();
+        } else {
+            showAlert('Erro: ' + (data.error || 'Falha ao excluir usuário'), 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        showAlert('Erro ao excluir usuário: ' + error.message, 'error');
+    }
+};
+
+console.log('✅ Global functions defined early');
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     lucide.createIcons();
