@@ -17,15 +17,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize stats with zero values
 function initializeStats() {
-    const totalUsersCard = document.getElementById('totalUsersCard');
-    const adminUsersCard = document.getElementById('adminUsersCard');
-    const regularUsersCard = document.getElementById('regularUsersCard');
-
-    if (totalUsersCard) totalUsersCard.textContent = '0';
-    if (adminUsersCard) adminUsersCard.textContent = '0';
-    if (regularUsersCard) regularUsersCard.textContent = '0';
-
+    resetStats();
     updateStats();
+}
+
+// Reset all stats to zero
+function resetStats() {
+    const elements = [
+        'totalUsersCard',
+        'adminUsersCard',
+        'regularUsersCard',
+        'totalUsers',
+        'adminUsers',
+        'regularUsers'
+    ];
+
+    elements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            // Clear any running animations
+            if (element._animationTimer) {
+                clearInterval(element._animationTimer);
+                delete element._animationTimer;
+            }
+
+            if (id.includes('Card')) {
+                element.textContent = '0';
+            } else {
+                element.textContent = '0 ' + (id.includes('total') ? 'Total' :
+                                        id.includes('admin') ? 'Admin' : 'Regular');
+            }
+        }
+    });
 }
 
 // Enhanced authentication check
