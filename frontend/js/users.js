@@ -377,7 +377,7 @@ function updateStats() {
     console.log('Stats updated:', { totalUsers, adminUsers, regularUsers });
 }
 
-// Enhanced animate number counting with safer logic
+// Enhanced animate number counting with safer logic and debouncing
 function animateNumber(elementId, targetNumber) {
     const element = document.getElementById(elementId);
     if (!element) return;
@@ -385,6 +385,13 @@ function animateNumber(elementId, targetNumber) {
     // Clear any existing animation
     if (element._animationTimer) {
         clearInterval(element._animationTimer);
+        delete element._animationTimer;
+    }
+
+    // Clear any pending animation calls
+    if (element._animationRequest) {
+        clearTimeout(element._animationRequest);
+        delete element._animationRequest;
     }
 
     // Get current number, but handle edge cases
@@ -402,38 +409,47 @@ function animateNumber(elementId, targetNumber) {
         return;
     }
 
-    const difference = Math.abs(targetNumber - currentNumber);
-    const increment = targetNumber > currentNumber ? 1 : -1;
+    // Use requestAnimationFrame for smoother animation and prevent multiple rapid calls
+    element._animationRequest = setTimeout(() => {
+        const difference = Math.abs(targetNumber - currentNumber);
+        const increment = targetNumber > currentNumber ? 1 : -1;
 
-    // For large differences, use faster animation
-    const speed = difference > 20 ? 20 : 80;
-    const step = difference > 50 ? Math.ceil(difference / 20) : 1;
-
-    let current = currentNumber;
-
-    element._animationTimer = setInterval(() => {
-        if (increment > 0) {
-            current = Math.min(current + step, targetNumber);
-        } else {
-            current = Math.max(current - step, targetNumber);
-        }
-
-        element.textContent = current;
-
-        if (current === targetNumber) {
-            clearInterval(element._animationTimer);
-            delete element._animationTimer;
-        }
-    }, speed);
-
-    // Safety timeout to prevent infinite animations
-    setTimeout(() => {
-        if (element._animationTimer) {
-            clearInterval(element._animationTimer);
-            delete element._animationTimer;
+        // For large differences, just set the value directly to prevent flickering
+        if (difference > 100) {
             element.textContent = targetNumber;
+            return;
         }
-    }, 5000);
+
+        // For smaller differences, use a gentler animation
+        const speed = difference > 10 ? 50 : 100;
+        const step = Math.max(1, Math.ceil(difference / 10));
+
+        let current = currentNumber;
+
+        element._animationTimer = setInterval(() => {
+            if (increment > 0) {
+                current = Math.min(current + step, targetNumber);
+            } else {
+                current = Math.max(current - step, targetNumber);
+            }
+
+            element.textContent = current;
+
+            if (current === targetNumber) {
+                clearInterval(element._animationTimer);
+                delete element._animationTimer;
+            }
+        }, speed);
+
+        // Reduced safety timeout
+        setTimeout(() => {
+            if (element._animationTimer) {
+                clearInterval(element._animationTimer);
+                delete element._animationTimer;
+                element.textContent = targetNumber;
+            }
+        }, 2000);
+    }, 50); // Small delay to debounce rapid calls
 }
 
 // Enhanced filter users based on search
