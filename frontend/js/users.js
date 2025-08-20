@@ -307,23 +307,54 @@ function updateStats() {
     if (regularUsersEl) regularUsersEl.textContent = `${regularUsers} Regular`;
 }
 
-// Animate number counting
+// Enhanced animate number counting with safer logic
 function animateNumber(elementId, targetNumber) {
     const element = document.getElementById(elementId);
     if (!element) return;
-    
-    const currentNumber = parseInt(element.textContent) || 0;
+
+    // Clear any existing animation
+    if (element._animationTimer) {
+        clearInterval(element._animationTimer);
+    }
+
+    // Get current number, but handle edge cases
+    let currentText = element.textContent.replace(/[^0-9.-]/g, '');
+    let currentNumber = parseInt(currentText) || 0;
+
+    // If the current number is unreasonable, start from 0
+    if (currentNumber < 0 || currentNumber > 10000) {
+        currentNumber = 0;
+    }
+
+    // If target and current are the same, just set it
+    if (currentNumber === targetNumber) {
+        element.textContent = targetNumber;
+        return;
+    }
+
+    const difference = Math.abs(targetNumber - currentNumber);
     const increment = targetNumber > currentNumber ? 1 : -1;
+
+    // For large differences, use faster animation
+    const speed = difference > 20 ? 20 : 80;
+    const step = difference > 50 ? Math.ceil(difference / 20) : 1;
+
     let current = currentNumber;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        element.textContent = current;
-        
-        if (current === targetNumber) {
-            clearInterval(timer);
+
+    element._animationTimer = setInterval(() => {
+        if (increment > 0) {
+            current = Math.min(current + step, targetNumber);
+        } else {
+            current = Math.max(current - step, targetNumber);
         }
-    }, 50);
+
+        element.textContent = current;
+
+        if (current === targetNumber) {
+            clearInterval(element._animationTimer);
+            delete element._animationTimer;
+        }
+    }, speed);
 }
 
 // Enhanced filter users based on search
