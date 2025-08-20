@@ -221,7 +221,7 @@ function filterCategories() {
 }
 
 // Open category modal for creating/editing
-function openCategoryModal(category = null) {
+window.openCategoryModal = function(category = null) {
     const modal = document.getElementById('categoryModal');
     const modalTitle = document.getElementById('modalTitle');
     const categoryForm = document.getElementById('categoryForm');
@@ -304,7 +304,7 @@ function clearFieldError(fieldId) {
 }
 
 // Close category modal
-function closeCategoryModal() {
+window.closeCategoryModal = function() {
     document.getElementById('categoryModal').style.display = 'none';
     document.getElementById('categoryForm').reset();
 }
