@@ -682,3 +682,137 @@
         color: var(--text-secondary);
     }
 }
+
+/* ===== CORREÇÕES COMPLETAS PARA TEMA ESCURO ===== */
+[data-theme="dark"] {
+    /* Fix all modal components */
+    .modal-content,
+    .modal-modern,
+    .modal-backdrop {
+        background: var(--background-primary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Fix all form elements */
+    input, select, textarea,
+    .form-control, .form-select, .form-input {
+        background: var(--background-secondary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: var(--text-tertiary) !important;
+    }
+
+    /* Fix labels */
+    label, .form-label {
+        color: var(--text-primary) !important;
+    }
+
+    /* Fix help text */
+    .form-text, .help-text, small {
+        color: var(--text-secondary) !important;
+    }
+
+    /* Fix sections with white backgrounds */
+    .section, .card-section, .form-section {
+        background: var(--background-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Fix progress indicators */
+    .progress-bar {
+        background: var(--background-secondary) !important;
+    }
+
+    /* Fix dropdown suggestions */
+    .suggestions, .dropdown-menu {
+        background: var(--background-primary) !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
+    }
+
+    /* Fix button containers */
+    .button-group, .btn-group {
+        background: transparent !important;
+    }
+
+    /* Fix any remaining white backgrounds */
+    [style*="background: white"],
+    [style*="background-color: white"],
+    [style*="background: #fff"],
+    [style*="background-color: #fff"] {
+        background: var(--background-primary) !important;
+    }
+
+    /* Fix text colors */
+    [style*="color: black"],
+    [style*="color: #000"] {
+        color: var(--text-primary) !important;
+    }
+
+    /* Additional modal fixes */
+    .modal-overlay {
+        background: rgba(0, 0, 0, 0.85) !important;
+    }
+
+    .modal-header h3,
+    .modal-title {
+        color: var(--text-primary) !important;
+    }
+
+    .modal-footer {
+        background: var(--background-secondary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Fix specific form sections in modals */
+    .informacoes-basicas,
+    .informacoes-pessoais,
+    .informacoes-contato,
+    .informacoes-empresa,
+    .endereco,
+    .precos-custos,
+    .selecao-cliente,
+    .produtos-section {
+        background: var(--background-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Fix suggestion buttons */
+    .suggestion-btn,
+    .chip,
+    .tag {
+        background: var(--background-secondary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    .suggestion-btn:hover {
+        background: var(--background-tertiary) !important;
+    }
+
+    /* Fix search fields */
+    .search-field,
+    .search-container input {
+        background: var(--background-secondary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    /* Fix any remaining light elements */
+    .light-section,
+    .white-bg,
+    .bg-white {
+        background: var(--background-primary) !important;
+        color: var(--text-primary) !important;
+    }
+
+    /* Fix user display elements */
+    .user-name {
+        color: var(--text-primary) !important;
+    }
+}

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Web - Gerenciar Usuários (DEBUG)</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/improvements.css" rel="stylesheet">
+    
+    <style>
+        /* Debug banner */
+        .debug-banner {
+            background: #ff6b6b;
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        
+        body {
+            padding-top: 2.5rem;
+        }
+        
+        .debug-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        .debug-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0.25rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-banner">
+        🐛 MODO DEBUG ATIVADO - Verifique o console do navegador para logs detalhados
+    </div>
+
+    <!-- Header -->
+    <header class="modern-header">
+        <div class="header-content">
+            <div class="d-flex align-items-center">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <div class="hamburger" id="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+                <a href="/dashboard.html" class="header-brand">Stock Web</a>
+            </div>
+            
+            <div class="header-user">
+                <span id="userDisplay" class="me-2">Usuário</span>
+                <div class="user-avatar" id="userAvatar">U</div>
+                <button class="btn-secondary-modern btn-sm" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="modern-sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li class="nav-item">
+                    <a href="/dashboard.html" class="nav-link">
+                        <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                        Painel
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/inventory.html" class="nav-link">
+                        <i data-lucide="package" class="nav-icon"></i>
+                        Estoque
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/sales.html" class="nav-link">
+                        <i data-lucide="shopping-cart" class="nav-icon"></i>
+                        Vendas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/customers.html" class="nav-link">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        Clientes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/suppliers.html" class="nav-link">
+                        <i data-lucide="truck" class="nav-icon"></i>
+                        Fornecedores
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/categories.html" class="nav-link">
+                        <i data-lucide="folder" class="nav-icon"></i>
+                        Categorias
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/users.html" class="nav-link active">
+                        <i data-lucide="user-cog" class="nav-icon"></i>
+                        Usuários
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/reports.html" class="nav-link">
+                        <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                        Relatórios
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Gerenciamento de Usuários (DEBUG)</h1>
+                <p class="page-subtitle">Controle completo dos usuários do sistema com debugging ativado</p>
+            </div>
+
+            <!-- Statistics Cards Row -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card-enhanced">
+                        <div class="stat-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="stat-number" id="totalUsersCard">0</div>
+                        <div class="stat-label">Total de Usuários</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="trending-up" style="width: 1rem; height: 1rem;"></i>
+                            <span>Sistema ativo</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card-enhanced">
+                        <div class="stat-icon">
+                            <i data-lucide="shield"></i>
+                        </div>
+                        <div class="stat-number" id="adminUsersCard">0</div>
+                        <div class="stat-label">Administradores</div>
+                        <div class="stat-change">
+                            <i data-lucide="shield-check" style="width: 1rem; height: 1rem;"></i>
+                            <span>Acesso total</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card-enhanced">
+                        <div class="stat-icon">
+                            <i data-lucide="user"></i>
+                        </div>
+                        <div class="stat-number" id="regularUsersCard">0</div>
+                        <div class="stat-label">Usuários Padrão</div>
+                        <div class="stat-change">
+                            <i data-lucide="user-check" style="width: 1rem; height: 1rem;"></i>
+                            <span>Acesso limitado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Bar Enhanced -->
+            <div class="modern-card mb-4">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="search-container">
+                                <i data-lucide="search" class="search-icon"></i>
+                                <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar por nome, email ou função...">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-end gap-3">
+                                <button class="btn-secondary-modern" id="refreshUsers">
+                                    <i data-lucide="refresh-cw"></i>
+                                    Atualizar
+                                </button>
+                                <button class="btn-primary-modern" onclick="alert('Modal em desenvolvimento')">
+                                    <i data-lucide="user-plus"></i>
+                                    Novo Usuário
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="text-muted" id="usersCount">0 usuários encontrados</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge-enhanced primary" id="totalUsers">0 Total</span>
+                                    <span class="badge-enhanced error" id="adminUsers">0 Admin</span>
+                                    <span class="badge-enhanced success" id="regularUsers">0 Regular</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Table Enhanced -->
+            <div class="modern-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i data-lucide="users" style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;"></i>
+                        Lista de Usuários
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div style="overflow-x: auto;">
+                        <table class="table-enhanced" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="hash" style="width: 1rem; height: 1rem;"></i>
+                                            ID
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="user" style="width: 1rem; height: 1rem;"></i>
+                                            Usuário
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="mail" style="width: 1rem; height: 1rem;"></i>
+                                            Email
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="shield" style="width: 1rem; height: 1rem;"></i>
+                                            Função
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="calendar" style="width: 1rem; height: 1rem;"></i>
+                                            Criado em
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="settings" style="width: 1rem; height: 1rem;"></i>
+                                            Ações
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- Users will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Loading State Enhanced -->
+                    <div id="loadingSpinner" class="loading-enhanced text-center py-5">
+                        <div class="spinner-enhanced"></div>
+                        <div class="loading-text">Carregando usuários...</div>
+                    </div>
+                    
+                    <!-- Empty State Enhanced -->
+                    <div id="emptyState" class="empty-state-enhanced" style="display: none;">
+                        <div class="empty-icon">
+                            <i data-lucide="users" style="width: 4rem; height: 4rem;"></i>
+                        </div>
+                        <h3 class="empty-title">Nenhum usuário encontrado</h3>
+                        <p class="empty-description">
+                            Não há usuários cadastrados no sistema ainda. Comece criando o primeiro usuário clicando no botão "Novo Usuário".
+                        </p>
+                        <button class="btn-primary-modern" onclick="alert('Modal em desenvolvimento')">
+                            <i data-lucide="user-plus"></i>
+                            Criar Primeiro Usuário
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Debug Panel -->
+    <div class="debug-panel">
+        <h4>🐛 Debug Controls</h4>
+        <button class="debug-button" onclick="testStatsUpdate()">Testar Stats</button>
+        <button class="debug-button" onclick="loadUsers()">Recarregar Usuários</button>
+        <button class="debug-button" onclick="console.clear()">Limpar Console</button>
+        <button class="debug-button" onclick="location.reload()">Recarregar Página</button>
+        <div style="margin-top: 0.5rem; font-size: 0.75rem;">
+            Verifique o console do navegador (F12) para logs detalhados.
+        </div>
+    </div>
+
+    <script src="js/theme-system.js"></script>
+    <script src="js/users-enhanced.js"></script>
+    <script>
+        // Add global debugging info
+        console.log('🐛 DEBUG MODE ACTIVE');
+        console.log('📊 Page loaded at:', new Date());
+        console.log('🔧 Available debug functions: testStatsUpdate(), loadUsers()');
+    </script>
+</body>
+</html>
