@@ -141,20 +141,30 @@
         attributeFilter: ['data-theme'] 
     });
 
-    // Also run when new content is added
+    // Debounced content observer to prevent excessive executions
     const contentObserver = new MutationObserver((mutations) => {
         const isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
-        if (isDarkTheme) {
-            let shouldFix = false;
-            mutations.forEach((mutation) => {
-                if (mutation.addedNodes.length > 0) {
-                    shouldFix = true;
-                }
-            });
-            
-            if (shouldFix) {
-                setTimeout(removeWhiteBackgrounds, 50);
+        if (!isDarkTheme || isFixing) return;
+
+        let shouldFix = false;
+        mutations.forEach((mutation) => {
+            // Only fix for significant additions (modals, cards)
+            if (mutation.addedNodes.length > 0) {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1 &&
+                        (node.classList?.contains('modal') ||
+                         node.classList?.contains('card') ||
+                         node.querySelector?.('.modal, .card'))) {
+                        shouldFix = true;
+                    }
+                });
             }
+        });
+
+        if (shouldFix) {
+            // Clear any pending fixes and set a new one with longer delay
+            clearTimeout(fixTimeout);
+            fixTimeout = setTimeout(removeWhiteBackgrounds, 300);
         }
     });
 
