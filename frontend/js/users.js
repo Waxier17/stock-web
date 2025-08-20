@@ -795,7 +795,7 @@ function clearFormErrors() {
 }
 
 // Enhanced edit user
-function editUser(userId) {
+window.editUser = function(userId) {
     const user = users.find(u => u.id === userId);
     if (user) {
         openUserModal(user);
@@ -803,7 +803,7 @@ function editUser(userId) {
 }
 
 // Enhanced delete user with better confirmation
-async function deleteUser(userId, username) {
+window.deleteUser = async function(userId, username) {
     // Create custom confirmation dialog
     const confirmed = await showConfirmDialog(
         'Confirmar Exclusão',
@@ -837,7 +837,7 @@ async function deleteUser(userId, username) {
 }
 
 // Enhanced change user password
-function changeUserPassword(userId) {
+window.changeUserPassword = function(userId) {
     const user = users.find(u => u.id === userId);
     if (user) {
         document.getElementById('passwordUserId').value = userId;
