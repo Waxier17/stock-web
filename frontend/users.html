@@ -10,6 +10,7 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <!-- Custom CSS -->
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/improvements.css" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
@@ -96,17 +97,60 @@
         <main class="main-content">
             <div class="page-header">
                 <h1 class="page-title">Gerenciamento de Usuários</h1>
-                <p class="page-subtitle">Controle completo dos usuários do sistema</p>
+                <p class="page-subtitle">Controle completo dos usuários do sistema com interface moderna e intuitiva</p>
             </div>
 
-            <!-- Action Bar -->
+            <!-- Statistics Cards Row -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card-enhanced">
+                        <div class="stat-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="stat-number" id="totalUsersCard">0</div>
+                        <div class="stat-label">Total de Usuários</div>
+                        <div class="stat-change positive">
+                            <i data-lucide="trending-up" style="width: 1rem; height: 1rem;"></i>
+                            <span>Sistema ativo</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card-enhanced">
+                        <div class="stat-icon">
+                            <i data-lucide="shield"></i>
+                        </div>
+                        <div class="stat-number" id="adminUsersCard">0</div>
+                        <div class="stat-label">Administradores</div>
+                        <div class="stat-change">
+                            <i data-lucide="shield-check" style="width: 1rem; height: 1rem;"></i>
+                            <span>Acesso total</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card-enhanced">
+                        <div class="stat-icon">
+                            <i data-lucide="user"></i>
+                        </div>
+                        <div class="stat-number" id="regularUsersCard">0</div>
+                        <div class="stat-label">Usuários Padrão</div>
+                        <div class="stat-change">
+                            <i data-lucide="user-check" style="width: 1rem; height: 1rem;"></i>
+                            <span>Acesso limitado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Bar Enhanced -->
             <div class="modern-card mb-4">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-6">
                             <div class="search-container">
                                 <i data-lucide="search" class="search-icon"></i>
-                                <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar usuários...">
+                                <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar por nome, email ou função...">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -116,39 +160,78 @@
                                     Atualizar
                                 </button>
                                 <button class="btn-primary-modern" onclick="openUserModal()">
-                                    <i data-lucide="plus"></i>
-                                    Adicionar Usuário
+                                    <i data-lucide="user-plus"></i>
+                                    Novo Usuário
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="text-muted" id="usersCount">0 usuários encontrados</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge-enhanced primary" id="totalUsers">0 Total</span>
+                                    <span class="badge-enhanced error" id="adminUsers">0 Admin</span>
+                                    <span class="badge-enhanced success" id="regularUsers">0 Regular</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Users Table -->
+            <!-- Users Table Enhanced -->
             <div class="modern-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h2 class="card-title">Usuários</h2>
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="text-muted" id="usersCount">0 usuários</span>
-                        <div class="d-flex gap-2">
-                            <span class="badge bg-primary" id="totalUsers">0 Total</span>
-                            <span class="badge bg-danger" id="adminUsers">0 Admin</span>
-                            <span class="badge bg-success" id="regularUsers">0 Regular</span>
-                        </div>
-                    </div>
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i data-lucide="users" style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;"></i>
+                        Lista de Usuários
+                    </h2>
                 </div>
                 <div class="card-body">
                     <div style="overflow-x: auto;">
-                        <table class="modern-table" id="usersTable">
+                        <table class="table-enhanced" id="usersTable">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Usuário</th>
-                                    <th>Email</th>
-                                    <th>Papel</th>
-                                    <th>Criado em</th>
-                                    <th>Ações</th>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="hash" style="width: 1rem; height: 1rem;"></i>
+                                            ID
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="user" style="width: 1rem; height: 1rem;"></i>
+                                            Usuário
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="mail" style="width: 1rem; height: 1rem;"></i>
+                                            Email
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="shield" style="width: 1rem; height: 1rem;"></i>
+                                            Função
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="calendar" style="width: 1rem; height: 1rem;"></i>
+                                            Criado em
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i data-lucide="settings" style="width: 1rem; height: 1rem;"></i>
+                                            Ações
+                                        </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody id="usersTableBody">
@@ -156,25 +239,40 @@
                             </tbody>
                         </table>
                     </div>
-                    <div id="loadingSpinner" class="loading-state text-center py-5">
-                        <div class="spinner"></div>
-                        <p class="mt-3">Carregando usuários...</p>
+                    
+                    <!-- Loading State Enhanced -->
+                    <div id="loadingSpinner" class="loading-enhanced text-center py-5">
+                        <div class="spinner-enhanced"></div>
+                        <div class="loading-text">Carregando usuários...</div>
                     </div>
-                    <div id="emptyState" class="empty-state text-center py-5" style="display: none;">
-                        <i data-lucide="users" class="mb-3" style="width: 48px; height: 48px; color: #9ca3af;"></i>
-                        <h3>Nenhum usuário encontrado</h3>
-                        <p class="text-muted">Não há usuários cadastrados no sistema ainda.</p>
+                    
+                    <!-- Empty State Enhanced -->
+                    <div id="emptyState" class="empty-state-enhanced" style="display: none;">
+                        <div class="empty-icon">
+                            <i data-lucide="users" style="width: 4rem; height: 4rem;"></i>
+                        </div>
+                        <h3 class="empty-title">Nenhum usu��rio encontrado</h3>
+                        <p class="empty-description">
+                            Não há usuários cadastrados no sistema ainda. Comece criando o primeiro usuário clicando no botão "Novo Usuário".
+                        </p>
+                        <button class="btn-primary-modern" onclick="openUserModal()">
+                            <i data-lucide="user-plus"></i>
+                            Criar Primeiro Usuário
+                        </button>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- User Modal -->
+    <!-- User Modal Enhanced -->
     <div id="userModal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalTitle">Novo Usuário</h3>
+                <h3 id="modalTitle">
+                    <i data-lucide="user-plus" style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;"></i>
+                    Novo Usuário
+                </h3>
                 <button class="modal-close" onclick="closeUserModal()">
                     <i data-lucide="x"></i>
                 </button>
@@ -183,40 +281,72 @@
                 <div class="modal-body">
                     <input type="hidden" id="userId" value="">
                     
-                    <div class="mb-3">
+                    <div class="form-field-enhanced">
                         <label for="username" class="form-label">Nome de Usuário*</label>
-                        <input type="text" id="username" class="form-control" required>
+                        <input type="text" id="username" class="form-input" required>
+                        <div class="field-help">
+                            <i data-lucide="info" style="width: 0.75rem; height: 0.75rem;"></i>
+                            Escolha um nome único para identificação no sistema
+                        </div>
                     </div>
                     
-                    <div class="mb-3">
+                    <div class="form-field-enhanced">
                         <label for="email" class="form-label">Email*</label>
-                        <input type="email" id="email" class="form-control" required>
+                        <input type="email" id="email" class="form-input" required>
+                        <div class="field-icon">
+                            <i data-lucide="mail" style="width: 1rem; height: 1rem;"></i>
+                        </div>
+                        <div class="field-help">
+                            <i data-lucide="info" style="width: 0.75rem; height: 0.75rem;"></i>
+                            Email válido para comunicações e recuperação de senha
+                        </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="role" class="form-label">Papel*</label>
-                        <select id="role" class="form-select" required>
-                            <option value="">Selecione um papel</option>
-                            <option value="user">Usuário Regular</option>
-                            <option value="admin">Administrador</option>
+                    <div class="form-field-enhanced">
+                        <label for="role" class="form-label">Função no Sistema*</label>
+                        <select id="role" class="form-input" required>
+                            <option value="">Selecione uma função</option>
+                            <option value="user">👤 Usuário Padrão - Acesso limitado</option>
+                            <option value="admin">🛡️ Administrador - Acesso total</option>
                         </select>
+                        <div class="field-help">
+                            <i data-lucide="info" style="width: 0.75rem; height: 0.75rem;"></i>
+                            Administradores têm acesso completo, usuários padrão têm acesso limitado
+                        </div>
                     </div>
                     
-                    <div class="mb-3" id="passwordGroup">
+                    <div class="form-field-enhanced" id="passwordGroup">
                         <label for="password" class="form-label">Senha*</label>
-                        <input type="password" id="password" class="form-control">
-                        <small class="form-text text-muted">Mínimo 6 caracteres</small>
+                        <input type="password" id="password" class="form-input">
+                        <div class="field-icon">
+                            <i data-lucide="lock" style="width: 1rem; height: 1rem;"></i>
+                        </div>
+                        <div class="field-help">
+                            <i data-lucide="shield" style="width: 0.75rem; height: 0.75rem;"></i>
+                            Mínimo 6 caracteres para segurança
+                        </div>
                     </div>
                     
-                    <div class="mb-3" id="confirmPasswordGroup">
+                    <div class="form-field-enhanced" id="confirmPasswordGroup">
                         <label for="confirmPassword" class="form-label">Confirmar Senha*</label>
-                        <input type="password" id="confirmPassword" class="form-control">
+                        <input type="password" id="confirmPassword" class="form-input">
+                        <div class="field-icon">
+                            <i data-lucide="lock" style="width: 1rem; height: 1rem;"></i>
+                        </div>
+                        <div class="field-help">
+                            <i data-lucide="check" style="width: 0.75rem; height: 0.75rem;"></i>
+                            Digite a senha novamente para confirmar
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-secondary-modern" onclick="closeUserModal()">Cancelar</button>
+                    <button type="button" class="btn-secondary-modern" onclick="closeUserModal()">
+                        <i data-lucide="x"></i>
+                        Cancelar
+                    </button>
                     <button type="submit" class="btn-primary-modern" id="saveUserBtn">
-                        <span class="btn-text">Salvar</span>
+                        <i data-lucide="save"></i>
+                        <span class="btn-text">Salvar Usuário</span>
                         <span class="spinner-sm" style="display: none;"></span>
                     </button>
                 </div>
@@ -224,11 +354,14 @@
         </div>
     </div>
 
-    <!-- Change Password Modal -->
+    <!-- Change Password Modal Enhanced -->
     <div id="passwordModal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Alterar Senha</h3>
+                <h3>
+                    <i data-lucide="key" style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;"></i>
+                    Alterar Senha
+                </h3>
                 <button class="modal-close" onclick="closePasswordModal()">
                     <i data-lucide="x"></i>
                 </button>
@@ -237,20 +370,47 @@
                 <div class="modal-body">
                     <input type="hidden" id="passwordUserId" value="">
                     
-                    <div class="mb-3">
-                        <label for="newPassword" class="form-label">Nova Senha*</label>
-                        <input type="password" id="newPassword" class="form-control" required>
-                        <small class="form-text text-muted">Mínimo 6 caracteres</small>
+                    <div class="alert-enhanced warning">
+                        <div class="alert-icon">
+                            <i data-lucide="alert-triangle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-title">Alteração de Senha</div>
+                            <div class="alert-description">O usuário será notificado sobre a alteração e precisará usar a nova senha no próximo login.</div>
+                        </div>
                     </div>
                     
-                    <div class="mb-3">
+                    <div class="form-field-enhanced">
+                        <label for="newPassword" class="form-label">Nova Senha*</label>
+                        <input type="password" id="newPassword" class="form-input" required>
+                        <div class="field-icon">
+                            <i data-lucide="lock" style="width: 1rem; height: 1rem;"></i>
+                        </div>
+                        <div class="field-help">
+                            <i data-lucide="shield" style="width: 0.75rem; height: 0.75rem;"></i>
+                            Mínimo 6 caracteres para segurança
+                        </div>
+                    </div>
+                    
+                    <div class="form-field-enhanced">
                         <label for="confirmNewPassword" class="form-label">Confirmar Nova Senha*</label>
-                        <input type="password" id="confirmNewPassword" class="form-control" required>
+                        <input type="password" id="confirmNewPassword" class="form-input" required>
+                        <div class="field-icon">
+                            <i data-lucide="lock" style="width: 1rem; height: 1rem;"></i>
+                        </div>
+                        <div class="field-help">
+                            <i data-lucide="check" style="width: 0.75rem; height: 0.75rem;"></i>
+                            Digite a nova senha novamente para confirmar
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-secondary-modern" onclick="closePasswordModal()">Cancelar</button>
+                    <button type="button" class="btn-secondary-modern" onclick="closePasswordModal()">
+                        <i data-lucide="x"></i>
+                        Cancelar
+                    </button>
                     <button type="submit" class="btn-primary-modern" id="changePasswordBtn">
+                        <i data-lucide="key"></i>
                         <span class="btn-text">Alterar Senha</span>
                         <span class="spinner-sm" style="display: none;"></span>
                     </button>
@@ -260,49 +420,196 @@
     </div>
 
     <style>
-        /* Action buttons styles */
+        /* Enhanced Action Buttons */
         .action-buttons {
             display: flex;
             gap: 0.5rem;
             justify-content: center;
         }
 
-        .btn-icon {
+        .btn-icon-enhanced {
             padding: 0.5rem;
             border: none;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-md);
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            min-width: 2rem;
+            height: 2rem;
+            position: relative;
         }
 
-        .btn-edit {
-            background: var(--primary-100);
-            color: var(--primary-600);
+        .btn-edit-enhanced {
+            background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%);
+            color: var(--primary-700);
+            border: 1px solid var(--primary-300);
         }
 
-        .btn-edit:hover {
-            background: var(--primary-200);
+        .btn-edit-enhanced:hover {
+            background: linear-gradient(135deg, var(--primary-200) 0%, var(--primary-300) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
         }
 
-        .btn-change-password {
-            background: #fef3c7;
-            color: #d97706;
+        .btn-password-enhanced {
+            background: linear-gradient(135deg, var(--warning-100) 0%, var(--warning-200) 100%);
+            color: var(--warning-700);
+            border: 1px solid var(--warning-300);
         }
 
-        .btn-change-password:hover {
-            background: #fde68a;
+        .btn-password-enhanced:hover {
+            background: linear-gradient(135deg, var(--warning-200) 0%, var(--warning-300) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.2);
         }
 
-        .btn-delete {
-            background: #fef2f2;
-            color: var(--error-500);
+        .btn-delete-enhanced {
+            background: linear-gradient(135deg, var(--error-100) 0%, var(--error-200) 100%);
+            color: var(--error-700);
+            border: 1px solid var(--error-300);
         }
 
-        .btn-delete:hover {
-            background: #fee2e2;
+        .btn-delete-enhanced:hover {
+            background: linear-gradient(135deg, var(--error-200) 0%, var(--error-300) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Enhanced User Info Display */
+        .user-info-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar-enhanced {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+            position: relative;
+        }
+
+        .user-avatar-enhanced::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.125rem;
+        }
+
+        .user-email {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        /* Enhanced Role Badges */
+        .role-badge-enhanced {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .role-badge-enhanced::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .role-badge-enhanced:hover::before {
+            transform: translateX(100%);
+        }
+
+        .role-admin {
+            background: linear-gradient(135deg, var(--error-100) 0%, var(--error-200) 100%);
+            color: var(--error-700);
+            border-color: var(--error-300);
+        }
+
+        .role-user {
+            background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%);
+            color: var(--primary-700);
+            border-color: var(--primary-300);
+        }
+
+        /* Enhanced spinner for buttons */
+        .spinner-sm {
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            border-top-color: currentColor;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Dark theme adjustments for enhanced elements */
+        [data-theme="dark"] .user-name {
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .btn-icon-enhanced {
+            border-color: var(--border-color);
+        }
+
+        [data-theme="dark"] .btn-edit-enhanced {
+            background: linear-gradient(135deg, var(--primary-900) 0%, var(--primary-800) 100%);
+            color: var(--primary-300);
+            border-color: var(--primary-700);
+        }
+
+        [data-theme="dark"] .btn-password-enhanced {
+            background: linear-gradient(135deg, var(--warning-900) 0%, var(--warning-800) 100%);
+            color: var(--warning-300);
+            border-color: var(--warning-700);
+        }
+
+        [data-theme="dark"] .btn-delete-enhanced {
+            background: linear-gradient(135deg, var(--error-900) 0%, var(--error-800) 100%);
+            color: var(--error-300);
+            border-color: var(--error-700);
         }
     </style>
 
