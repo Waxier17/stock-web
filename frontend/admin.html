@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Web - Administração</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo">
+                    <i data-lucide="package" class="nav-icon"></i>
+                    <span class="nav-title">Stock Web</span>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="user-menu">
+                    <span id="userDisplay">Carregando...</span>
+                    <button class="btn-logout" onclick="logout()">
+                        <i data-lucide="log-out"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-item">
+                    <i data-lucide="home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="inventory.html" class="nav-item">
+                    <i data-lucide="package"></i>
+                    <span>Inventário</span>
+                </a>
+                <a href="sales.html" class="nav-item">
+                    <i data-lucide="shopping-cart"></i>
+                    <span>Vendas</span>
+                </a>
+                <a href="customers.html" class="nav-item">
+                    <i data-lucide="users"></i>
+                    <span>Clientes</span>
+                </a>
+                <a href="suppliers.html" class="nav-item">
+                    <i data-lucide="truck"></i>
+                    <span>Fornecedores</span>
+                </a>
+                <a href="categories.html" class="nav-item">
+                    <i data-lucide="folder"></i>
+                    <span>Categorias</span>
+                </a>
+                <a href="users.html" class="nav-item">
+                    <i data-lucide="user-cog"></i>
+                    <span>Usuários</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Relatórios</span>
+                </a>
+                <a href="admin.html" class="nav-item active">
+                    <i data-lucide="settings"></i>
+                    <span>Administração</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content">
+            <div class="page-header">
+                <h1 class="page-title">Administração do Sistema</h1>
+                <p class="page-subtitle">Gerencie dados demo e configurações do sistema</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stats-card">
+                    <div class="stats-content">
+                        <div class="stats-number" id="productsCount">-</div>
+                        <div class="stats-label">Produtos</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i data-lucide="package"></i>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-content">
+                        <div class="stats-number" id="customersCount">-</div>
+                        <div class="stats-label">Clientes</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i data-lucide="users"></i>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-content">
+                        <div class="stats-number" id="suppliersCount">-</div>
+                        <div class="stats-label">Fornecedores</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i data-lucide="truck"></i>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-content">
+                        <div class="stats-number" id="salesCount">-</div>
+                        <div class="stats-label">Vendas</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i data-lucide="shopping-cart"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cleanup Options -->
+            <div class="card-modern">
+                <div class="card-header">
+                    <h2 class="card-title">Limpeza de Dados Demo</h2>
+                    <p class="card-subtitle">Remova dados de teste e demonstração do sistema</p>
+                </div>
+                <div class="card-content">
+                    <div class="cleanup-section">
+                        <div class="cleanup-item">
+                            <div class="cleanup-info">
+                                <h3>Reset Completo do Banco</h3>
+                                <p>Remove TUDO e recria todas as tabelas vazias (preserva usuários admin)</p>
+                                <small class="text-warning">⚠️ Remove todos os dados, mas mantém acesso admin</small>
+                            </div>
+                            <button class="btn-danger" onclick="resetDatabase()" style="background: #dc2626;">
+                                <i data-lucide="database"></i>
+                                Reset Total
+                            </button>
+                        </div>
+
+                        <hr class="divider">
+
+                        <div class="cleanup-item">
+                            <div class="cleanup-info">
+                                <h3>Limpeza de Dados (Preserva Usuários)</h3>
+                                <p>Remove todos os dados demo: produtos, clientes, fornecedores e vendas</p>
+                                <small class="text-warning">⚠️ Esta ação não pode ser desfeita</small>
+                            </div>
+                            <button class="btn-danger" onclick="clearAllData()">
+                                <i data-lucide="trash-2"></i>
+                                Limpar Dados
+                            </button>
+                        </div>
+
+                        <hr class="divider">
+
+                        <div class="cleanup-grid">
+                            <div class="cleanup-item">
+                                <div class="cleanup-info">
+                                    <h4>Produtos</h4>
+                                    <p>Remove todos os produtos do inventário</p>
+                                </div>
+                                <button class="btn-secondary" onclick="clearProducts()">
+                                    <i data-lucide="package"></i>
+                                    Limpar Produtos
+                                </button>
+                            </div>
+
+                            <div class="cleanup-item">
+                                <div class="cleanup-info">
+                                    <h4>Clientes</h4>
+                                    <p>Remove todos os clientes cadastrados</p>
+                                </div>
+                                <button class="btn-secondary" onclick="clearCustomers()">
+                                    <i data-lucide="users"></i>
+                                    Limpar Clientes
+                                </button>
+                            </div>
+
+                            <div class="cleanup-item">
+                                <div class="cleanup-info">
+                                    <h4>Fornecedores</h4>
+                                    <p>Remove todos os fornecedores</p>
+                                </div>
+                                <button class="btn-secondary" onclick="clearSuppliers()">
+                                    <i data-lucide="truck"></i>
+                                    Limpar Fornecedores
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Refresh Button -->
+            <div class="actions-bar">
+                <button class="btn-primary" onclick="refreshData()">
+                    <i data-lucide="refresh-cw"></i>
+                    Atualizar Contadores
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+            checkAuth();
+            loadDataCounts();
+        });
+
+        // Authentication check
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            // Check if user is admin
+            if (user.role !== 'admin') {
+                alert('Acesso negado. Apenas administradores podem acessar esta página.');
+                window.location.href = '/dashboard.html';
+                return;
+            }
+
+            document.getElementById('userDisplay').textContent = user.username || 'Admin';
+        }
+
+        // Load data counts
+        async function loadDataCounts() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch('/api/cleanup/counts', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const counts = await response.json();
+                    document.getElementById('productsCount').textContent = counts.products || 0;
+                    document.getElementById('customersCount').textContent = counts.customers || 0;
+                    document.getElementById('suppliersCount').textContent = counts.suppliers || 0;
+                    document.getElementById('salesCount').textContent = counts.sales || 0;
+                } else {
+                    console.error('Error loading data counts');
+                }
+            } catch (error) {
+                console.error('Error loading data counts:', error);
+            }
+        }
+
+        // Clear all data
+        async function clearAllData() {
+            if (!confirm('ATENÇÃO: Esta ação irá remover TODOS os dados demo do sistema (produtos, clientes, fornecedores e vendas). Esta ação não pode ser desfeita. Deseja continuar?')) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch('/api/cleanup/all', {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Todos os dados demo foram removidos com sucesso!');
+                    loadDataCounts();
+                } else {
+                    alert('Erro: ' + (data.error || 'Falha ao limpar dados'));
+                }
+            } catch (error) {
+                console.error('Error clearing all data:', error);
+                alert('Erro ao limpar dados: ' + error.message);
+            }
+        }
+
+        // Clear products
+        async function clearProducts() {
+            if (!confirm('Deseja remover todos os produtos? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch('/api/cleanup/products', {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Produtos removidos com sucesso!');
+                    loadDataCounts();
+                } else {
+                    alert('Erro: ' + (data.error || 'Falha ao limpar produtos'));
+                }
+            } catch (error) {
+                console.error('Error clearing products:', error);
+                alert('Erro ao limpar produtos: ' + error.message);
+            }
+        }
+
+        // Clear customers
+        async function clearCustomers() {
+            if (!confirm('Deseja remover todos os clientes? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch('/api/cleanup/customers', {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Clientes removidos com sucesso!');
+                    loadDataCounts();
+                } else {
+                    alert('Erro: ' + (data.error || 'Falha ao limpar clientes'));
+                }
+            } catch (error) {
+                console.error('Error clearing customers:', error);
+                alert('Erro ao limpar clientes: ' + error.message);
+            }
+        }
+
+        // Clear suppliers
+        async function clearSuppliers() {
+            if (!confirm('Deseja remover todos os fornecedores? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch('/api/cleanup/suppliers', {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Fornecedores removidos com sucesso!');
+                    loadDataCounts();
+                } else {
+                    alert('Erro: ' + (data.error || 'Falha ao limpar fornecedores'));
+                }
+            } catch (error) {
+                console.error('Error clearing suppliers:', error);
+                alert('Erro ao limpar fornecedores: ' + error.message);
+            }
+        }
+
+        // Reset database completely
+        async function resetDatabase() {
+            if (!confirm('⚠️ ATENÇÃO: Esta ação irá RESETAR o banco de dados, removendo TODOS os dados (produtos, clientes, fornecedores, vendas). Os usuários admin serão preservados. Deseja continuar?')) {
+                return;
+            }
+
+            if (!confirm('Confirmação final: Isso irá remover todos os dados do sistema, exceto usuários admin. Tem certeza?')) {
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch('/api/cleanup/reset-database', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('✅ Banco de dados resetado com sucesso! Usuários admin preservados. Recarregando página...');
+                    // Just reload the page since admin is preserved
+                    window.location.reload();
+                } else {
+                    alert('Erro: ' + (data.error || 'Falha ao resetar banco'));
+                }
+            } catch (error) {
+                console.error('Error resetting database:', error);
+                alert('Erro ao resetar banco: ' + error.message);
+            }
+        }
+
+        // Refresh data
+        function refreshData() {
+            loadDataCounts();
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+</html>

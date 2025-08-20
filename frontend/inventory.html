@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Web - Gerenciamento de Estoque</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="modern-header">
+        <div class="header-content">
+            <div class="d-flex align-items-center">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <div class="hamburger" id="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+                <a href="/dashboard.html" class="header-brand">Stock Web</a>
+            </div>
+            
+            <div class="header-user">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <button class="btn-secondary-modern btn-sm" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="modern-sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li class="nav-item">
+                    <a href="/dashboard.html" class="nav-link">
+                        <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                        Painel
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/inventory.html" class="nav-link active">
+                        <i data-lucide="package" class="nav-icon"></i>
+                        Estoque
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/sales.html" class="nav-link">
+                        <i data-lucide="shopping-cart" class="nav-icon"></i>
+                        Vendas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/customers.html" class="nav-link">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        Clientes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/suppliers.html" class="nav-link">
+                        <i data-lucide="truck" class="nav-icon"></i>
+                        Fornecedores
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/categories.html" class="nav-link">
+                        <i data-lucide="folder" class="nav-icon"></i>
+                        Categorias
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/users.html" class="nav-link">
+                        <i data-lucide="user-cog" class="nav-icon"></i>
+                        Usuários
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/reports.html" class="nav-link">
+                        <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                        Relatórios
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Gerenciamento de Estoque</h1>
+                <p class="page-subtitle">Controle completo do seu inventário</p>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="modern-card mb-4">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="search-container">
+                                <i data-lucide="search" class="search-icon"></i>
+                                <input type="text" class="search-input" id="searchProducts" placeholder="Pesquisar produtos...">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-end gap-3">
+                                <button class="btn-secondary-modern" id="refreshProducts">
+                                    <i data-lucide="refresh-cw"></i>
+                                    Atualizar
+                                </button>
+                                <button class="btn-primary-modern" id="addProductBtn">
+                                    <i data-lucide="plus"></i>
+                                    Adicionar Produto
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Table -->
+            <div class="modern-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="card-title">Produtos</h2>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-muted" id="productsCount">0 produtos</span>
+                        <select class="form-select-modern" id="categoryFilter" style="width: auto;">
+                            <option value="">Todas as categorias</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="overflow-x: auto;">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Categoria</th>
+                                    <th>Preço</th>
+                                    <th>Estoque</th>
+                                    <th>Status</th>
+                                    <th>Fornecedor</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTable">
+                                <tr>
+                                    <td colspan="8" class="text-center" style="padding: 3rem; color: var(--gray-500);">
+                                        <i data-lucide="loader" style="width: 2rem; height: 2rem; animation: spin 1s linear infinite;"></i>
+                                        <br><br>Carregando produtos...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal-backdrop" id="modalBackdrop" style="display: none;">
+        <div class="modal-improved" id="addProductModal">
+            <div class="modal-header-improved">
+                <h2>
+                    <i data-lucide="package-plus"></i>
+                    <span id="modalTitle">Adicionar Novo Produto</span>
+                </h2>
+                <button class="btn-secondary-modern btn-sm" id="closeModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body-improved">
+                <form id="addProductForm">
+                    <div class="form-sections" style="padding: 1.5rem;">
+
+                        <!-- Informações Básicas -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="info" class="section-icon"></i>
+                                <h3>Informações Básicas</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group">
+                                    <div class="form-field">
+                                        <label>Nome do Produto <span class="required">*</span></label>
+                                        <input type="text" id="productName" required placeholder="Ex: Smartphone Samsung Galaxy">
+                                        <div class="help-text">
+                                            <i data-lucide="info" style="width: 0.75rem; height: 0.75rem;"></i>
+                                            Nome claro e descritivo do produto
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Categoria <span class="required">*</span></label>
+                                        <select id="productCategory" required>
+                                            <option value="">Selecione uma categoria</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="field-group single">
+                                    <div class="form-field">
+                                        <label>Descrição</label>
+                                        <textarea id="productDescription" placeholder="Descrição detalhada do produto, características, especificações..."></textarea>
+                                        <div class="help-text">Informações adicionais que ajudem na identificação do produto</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preços e Custos -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="dollar-sign" class="section-icon"></i>
+                                <h3>Preços e Custos</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group">
+                                    <div class="form-field">
+                                        <label>Preço de Venda <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i data-lucide="dollar-sign" class="input-icon"></i>
+                                            <input type="number" id="productPrice" step="0.01" required placeholder="0,00">
+                                        </div>
+                                        <div class="help-text">Preço praticado na venda aos clientes</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Custo de Aquisição</label>
+                                        <div class="input-with-icon">
+                                            <i data-lucide="shopping-cart" class="input-icon"></i>
+                                            <input type="number" id="productCost" step="0.01" placeholder="0,00">
+                                        </div>
+                                        <div class="help-text">Quanto custou para adquirir o produto</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controle de Estoque -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="package" class="section-icon"></i>
+                                <h3>Controle de Estoque</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group">
+                                    <div class="form-field">
+                                        <label>Quantidade em Estoque <span class="required">*</span></label>
+                                        <input type="number" id="productStock" required placeholder="0" min="0">
+                                        <div class="help-text">Quantidade atual disponível</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Estoque Mínimo</label>
+                                        <input type="number" id="productMinStock" placeholder="10" min="0">
+                                        <div class="help-text">Quantidade mínima antes do alerta</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fornecedor -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="truck" class="section-icon"></i>
+                                <h3>Informações do Fornecedor</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group single">
+                                    <div class="form-field">
+                                        <label>Fornecedor</label>
+                                        <select id="productSupplier">
+                                            <option value="">Selecione um fornecedor</option>
+                                        </select>
+                                        <div class="help-text">Empresa ou pessoa que fornece este produto</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer-improved">
+                <div class="form-progress">
+                    <span>Progresso do formulário</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="formProgress"></div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn-secondary-modern" id="cancelBtn">
+                        <i data-lucide="x"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn-primary-modern" id="saveProductBtn">
+                        <i data-lucide="save"></i>
+                        <span class="btn-text">Salvar Produto</span>
+                        <span class="spinner" id="saveSpinner" style="display: none;"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div class="modal-backdrop" id="editModalBackdrop" style="display: none;">
+        <div class="modal-improved" id="editProductModal">
+            <div class="modal-header-improved">
+                <h2>
+                    <i data-lucide="edit-3"></i>
+                    <span>Editar Produto</span>
+                </h2>
+                <button class="btn-secondary-modern btn-sm" id="closeEditModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body-improved">
+                <form id="editProductForm">
+                    <input type="hidden" id="editProductId">
+                    <div class="form-sections" style="padding: 1.5rem;">
+
+                        <!-- Informações Básicas -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="info" class="section-icon"></i>
+                                <h3>Informações Básicas</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group">
+                                    <div class="form-field">
+                                        <label>Nome do Produto <span class="required">*</span></label>
+                                        <input type="text" id="editProductName" required placeholder="Ex: Smartphone XYZ, Camiseta Azul...">
+                                        <div class="help-text">
+                                            <i data-lucide="info" style="width: 0.75rem; height: 0.75rem;"></i>
+                                            Nome claro e descritivo do produto
+                                        </div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Categoria <span class="required">*</span></label>
+                                        <select id="editProductCategory" required>
+                                            <option value="">Selecione uma categoria</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="field-group single">
+                                    <div class="form-field">
+                                        <label>Descrição</label>
+                                        <textarea id="editProductDescription" placeholder="Descrição detalhada do produto, características, especificações..."></textarea>
+                                        <div class="help-text">Informações adicionais que ajudem na identificação do produto</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preços e Custos -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="dollar-sign" class="section-icon"></i>
+                                <h3>Preços e Custos</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group">
+                                    <div class="form-field">
+                                        <label>Preço de Venda <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i data-lucide="dollar-sign" class="input-icon"></i>
+                                            <input type="number" id="editProductPrice" step="0.01" required placeholder="0,00">
+                                        </div>
+                                        <div class="help-text">Preço praticado na venda aos clientes</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Custo de Aquisição</label>
+                                        <div class="input-with-icon">
+                                            <i data-lucide="shopping-cart" class="input-icon"></i>
+                                            <input type="number" id="editProductCost" step="0.01" placeholder="0,00">
+                                        </div>
+                                        <div class="help-text">Quanto custou para adquirir o produto</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controle de Estoque -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="package" class="section-icon"></i>
+                                <h3>Controle de Estoque</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group">
+                                    <div class="form-field">
+                                        <label>Quantidade em Estoque <span class="required">*</span></label>
+                                        <input type="number" id="editProductStock" required placeholder="0" min="0">
+                                        <div class="help-text">Quantidade atual disponível</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Estoque Mínimo</label>
+                                        <input type="number" id="editProductMinStock" placeholder="10" min="0">
+                                        <div class="help-text">Quantidade mínima antes do alerta</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fornecedor -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="truck" class="section-icon"></i>
+                                <h3>Informações do Fornecedor</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group single">
+                                    <div class="form-field">
+                                        <label>Fornecedor</label>
+                                        <select id="editProductSupplier">
+                                            <option value="">Selecione um fornecedor</option>
+                                        </select>
+                                        <div class="help-text">Empresa ou pessoa que fornece este produto</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer-improved">
+                <div class="form-progress">
+                    <span>Progresso do formulário</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="editFormProgress"></div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn-secondary-modern" id="cancelEditBtn">
+                        <i data-lucide="x"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn-primary-modern" id="updateProductBtn">
+                        <i data-lucide="save"></i>
+                        <span class="btn-text">Atualizar Produto</span>
+                        <span class="spinner" id="updateSpinner" style="display: none;"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* ===== Melhorias específicas para o modal de produtos ===== */
+
+        .modal-improved {
+            width: 100%;
+            max-width: 800px;
+            max-height: 95vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header-improved {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .modal-header-improved h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-900);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-body-improved {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        .form-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-section {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            background: var(--gray-50);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .section-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: var(--primary-600);
+        }
+
+        .section-body {
+            padding: 1.5rem;
+        }
+
+        .field-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .field-group.single {
+            grid-template-columns: 1fr;
+        }
+
+        .form-field {
+            position: relative;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .form-field .required {
+            color: var(--error-500);
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-field textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon input {
+            padding-left: 2.5rem;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1rem;
+            height: 1rem;
+            color: var(--gray-400);
+        }
+
+        .modal-footer-improved {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--gray-200);
+            background: var(--gray-50);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .form-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .progress-bar {
+            width: 120px;
+            height: 4px;
+            background: var(--gray-200);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-500);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .stock-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+        }
+
+        .stock-status.low {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .stock-status.normal {
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: var(--primary-100);
+            color: var(--primary-600);
+        }
+
+        .btn-edit:hover {
+            background: var(--primary-200);
+        }
+
+        .btn-delete {
+            background: #fef2f2;
+            color: var(--error-500);
+        }
+
+        .btn-delete:hover {
+            background: #fee2e2;
+        }
+
+        /* Responsividade melhorada */
+        @media (max-width: 768px) {
+            .modal-improved {
+                max-width: 95vw;
+                margin: 1rem;
+            }
+
+            .field-group {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-header-improved,
+            .modal-footer-improved {
+                padding: 1rem 1.5rem;
+            }
+
+            .section-body {
+                padding: 1rem;
+            }
+        }
+    </style>
+
+    <script src="js/theme-system.js"></script>
+    <script src="js/inventory.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            checkAuth();
+            
+            // Initialize inventory
+            initializeInventory();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Load initial data
+            loadInventoryData();
+
+            // Check if we need to auto-edit a product (from categories page)
+            checkAutoEditProduct();
+        });
+
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            // Update user avatar
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const userAvatar = document.getElementById('userAvatar');
+            userAvatar.textContent = user.username ? user.username.charAt(0).toUpperCase() : 'U';
+        }
+
+        function initializeInventory() {
+            document.querySelector('.main-content').classList.add('fade-in');
+        }
+
+        function setupEventListeners() {
+            // Mobile menu toggle
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const hamburger = document.getElementById('hamburger');
+            const sidebar = document.getElementById('sidebar');
+            
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                hamburger.classList.toggle('active');
+            });
+
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                if (confirm('Tem certeza que deseja sair?')) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/login.html';
+                }
+            });
+
+            // Search functionality
+            document.getElementById('searchProducts').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                filterProducts(searchTerm);
+            });
+
+            // Category filter
+            document.getElementById('categoryFilter').addEventListener('change', function() {
+                const category = this.value;
+                filterProductsByCategory(category);
+            });
+
+            // Add product modal
+            document.getElementById('addProductBtn').addEventListener('click', showAddModal);
+            document.getElementById('closeModal').addEventListener('click', hideAddModal);
+            document.getElementById('cancelBtn').addEventListener('click', hideAddModal);
+            document.getElementById('saveProductBtn').addEventListener('click', saveProduct);
+
+            // Edit product modal
+            document.getElementById('closeEditModal').addEventListener('click', hideEditModal);
+            document.getElementById('cancelEditBtn').addEventListener('click', hideEditModal);
+            document.getElementById('updateProductBtn').addEventListener('click', updateProduct);
+
+            // Refresh products
+            document.getElementById('refreshProducts').addEventListener('click', loadProducts);
+
+            // Close modals when clicking backdrop
+            document.getElementById('modalBackdrop').addEventListener('click', function(e) {
+                if (e.target === this) hideAddModal();
+            });
+            
+            document.getElementById('editModalBackdrop').addEventListener('click', function(e) {
+                if (e.target === this) hideEditModal();
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                        sidebar.classList.remove('show');
+                        hamburger.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        async function loadInventoryData() {
+            await Promise.all([
+                loadProducts(),
+                loadCategories(),
+                loadSuppliers()
+            ]);
+        }
+
+        let allProducts = [];
+
+        async function loadProducts() {
+            const token = localStorage.getItem('token');
+            const tableBody = document.getElementById('productsTable');
+            const productsCount = document.getElementById('productsCount');
+            
+            try {
+                // Add cache busting parameter
+                const cacheBuster = Date.now();
+                const response = await fetch(`/api/inventory/products?_=${cacheBuster}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
+                
+                if (response.ok) {
+                    allProducts = await response.json();
+                    console.log('Loaded products from API:', allProducts.length > 0 ? allProducts[0] : 'No products');
+                    console.log('First product structure:', allProducts[0]);
+                    renderProducts(allProducts);
+                    productsCount.textContent = `${allProducts.length} produto${allProducts.length !== 1 ? 's' : ''}`;
+                } else {
+                    throw new Error('Failed to load products');
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center" style="padding: 3rem; color: var(--error-500);">
+                            <i data-lucide="alert-circle" style="width: 2rem; height: 2rem;"></i>
+                            <br><br>Erro ao carregar produtos
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        function renderProducts(products) {
+            const tableBody = document.getElementById('productsTable');
+            
+            if (products.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center" style="padding: 3rem; color: var(--gray-500);">
+                            <i data-lucide="package" style="width: 2rem; height: 2rem;"></i>
+                            <br><br>Nenhum produto encontrado
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
+            tableBody.innerHTML = products.map(product => {
+                console.log('Product data:', product); // Debug log
+                const stock = product.stock_quantity || product.stock || 0;
+                const minStock = product.min_stock_level || product.minStock || 10;
+                const isLowStock = stock <= minStock;
+                const statusClass = isLowStock ? 'low' : 'normal';
+                const statusText = isLowStock ? 'Estoque Baixo' : 'Normal';
+
+                return `
+                    <tr>
+                        <td>#${product.id}</td>
+                        <td><strong>${product.name}</strong></td>
+                        <td>${product.category_name || product.categoryName || 'Sem categoria'}</td>
+                        <td>${formatCurrency(product.price || 0)}</td>
+                        <td>${stock} un.</td>
+                        <td>
+                            <span class="stock-status ${statusClass}">
+                                ${statusText}
+                            </span>
+                        </td>
+                        <td>${product.supplier_name || product.supplierName || 'Não informado'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon btn-edit" onclick="editProduct(${product.id})" title="Editar">
+                                    <i data-lucide="edit-2" style="width: 1rem; height: 1rem;"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="deleteProduct(${product.id})" title="Excluir">
+                                    <i data-lucide="trash-2" style="width: 1rem; height: 1rem;"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+
+        async function loadCategories() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch('/api/inventory/categories', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const categories = await response.json();
+                    populateCategorySelects(categories);
+                    populateCategoryFilter(categories);
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        function populateCategorySelects(categories) {
+            const selects = ['productCategory', 'editProductCategory'];
+            
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">Selecione uma categoria</option>' +
+                    categories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+            });
+        }
+
+        function populateCategoryFilter(categories) {
+            const filter = document.getElementById('categoryFilter');
+            filter.innerHTML = '<option value="">Todas as categorias</option>' +
+                categories.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('');
+        }
+
+        async function loadSuppliers() {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch('/api/suppliers', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const suppliers = await response.json();
+                    populateSupplierSelects(suppliers);
+                }
+            } catch (error) {
+                console.error('Error loading suppliers:', error);
+            }
+        }
+
+        function populateSupplierSelects(suppliers) {
+            const selects = ['productSupplier', 'editProductSupplier'];
+            
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">Selecione um fornecedor</option>' +
+                    suppliers.map(sup => `<option value="${sup.id}">${sup.name}</option>`).join('');
+            });
+        }
+
+        function filterProducts(searchTerm) {
+            const filtered = allProducts.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) ||
+                (product.categoryName && product.categoryName.toLowerCase().includes(searchTerm)) ||
+                (product.supplierName && product.supplierName.toLowerCase().includes(searchTerm))
+            );
+            renderProducts(filtered);
+        }
+
+        function filterProductsByCategory(category) {
+            if (!category) {
+                renderProducts(allProducts);
+                return;
+            }
+            
+            const filtered = allProducts.filter(product => 
+                product.categoryName === category
+            );
+            renderProducts(filtered);
+        }
+
+        function showAddModal() {
+            document.getElementById('modalBackdrop').style.display = 'flex';
+            document.getElementById('addProductForm').reset();
+            document.getElementById('formProgress').style.width = '0%';
+            document.getElementById('modalTitle').textContent = 'Adicionar Novo Produto';
+            trackFormProgress();
+        }
+
+        function trackFormProgress() {
+            const requiredFields = ['productName', 'productCategory', 'productPrice', 'productStock'];
+            const progressBar = document.getElementById('formProgress');
+
+            function updateProgress() {
+                const filledFields = requiredFields.filter(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    return field && field.value.trim() !== '';
+                }).length;
+
+                const progress = (filledFields / requiredFields.length) * 100;
+                progressBar.style.width = progress + '%';
+            }
+
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('input', updateProgress);
+                    field.addEventListener('change', updateProgress);
+                }
+            });
+        }
+
+        function hideAddModal() {
+            document.getElementById('modalBackdrop').style.display = 'none';
+        }
+
+        function showEditModal() {
+            document.getElementById('editModalBackdrop').style.display = 'flex';
+        }
+
+        function hideEditModal() {
+            document.getElementById('editModalBackdrop').style.display = 'none';
+        }
+
+        async function saveProduct() {
+            const token = localStorage.getItem('token');
+            const btn = document.getElementById('saveProductBtn');
+            const btnText = btn.querySelector('.btn-text');
+            const spinner = btn.querySelector('.spinner');
+            
+            // Show loading state
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            
+            try {
+                const productData = {
+                    name: document.getElementById('productName').value,
+                    description: document.getElementById('productDescription').value,
+                    category_id: document.getElementById('productCategory').value || null,
+                    price: parseFloat(document.getElementById('productPrice').value),
+                    cost: parseFloat(document.getElementById('productCost').value) || null,
+                    stock_quantity: parseInt(document.getElementById('productStock').value),
+                    min_stock_level: parseInt(document.getElementById('productMinStock').value) || 10,
+                    supplier_id: document.getElementById('productSupplier').value || null
+                };
+                
+                const response = await fetch('/api/inventory/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(productData)
+                });
+                
+                if (response.ok) {
+                    hideAddModal();
+                    await loadProducts();
+                    showSuccessMessage('Produto adicionado com sucesso!');
+                } else {
+                    // Handle specific error cases
+                    if (response.status === 403) {
+                        throw new Error('Acesso negado. Você precisa de privilégios de administrador para criar produtos.');
+                    } else if (response.status === 401) {
+                        throw new Error('Não autorizado. Faça login novamente.');
+                    }
+
+                    // Check if response has JSON content before parsing
+                    let errorMessage = 'Erro ao salvar produto';
+                    try {
+                        const contentType = response.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                            const error = await response.json();
+                            errorMessage = error.message || error.error || errorMessage;
+                        }
+                    } catch (parseError) {
+                        console.warn('Could not parse error response:', parseError);
+                    }
+                    throw new Error(errorMessage);
+                }
+            } catch (error) {
+                console.error('Error saving product:', error);
+                alert('Erro ao salvar produto: ' + error.message);
+            } finally {
+                // Reset loading state
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        }
+
+        function editProduct(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+
+            console.log('Editing product:', product);
+
+            // Populate edit form - use correct property names from database
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('editProductName').value = product.name;
+            document.getElementById('editProductDescription').value = product.description || '';
+            document.getElementById('editProductCategory').value = product.category_id || '';
+            document.getElementById('editProductPrice').value = product.price;
+            document.getElementById('editProductCost').value = product.cost || '';
+            document.getElementById('editProductStock').value = product.stock_quantity || product.stock || 0;
+            document.getElementById('editProductMinStock').value = product.min_stock_level || product.minStock || 10;
+            document.getElementById('editProductSupplier').value = product.supplier_id || '';
+
+            showEditModal();
+        }
+
+        async function updateProduct() {
+            const token = localStorage.getItem('token');
+            const btn = document.getElementById('updateProductBtn');
+            const btnText = btn.querySelector('.btn-text');
+            const spinner = btn.querySelector('.spinner');
+            
+            const productId = document.getElementById('editProductId').value;
+            
+            // Show loading state
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            
+            try {
+                const productData = {
+                    name: document.getElementById('editProductName').value,
+                    description: document.getElementById('editProductDescription').value,
+                    category_id: document.getElementById('editProductCategory').value || null,
+                    price: parseFloat(document.getElementById('editProductPrice').value),
+                    cost: parseFloat(document.getElementById('editProductCost').value) || null,
+                    stock_quantity: parseInt(document.getElementById('editProductStock').value),
+                    min_stock_level: parseInt(document.getElementById('editProductMinStock').value) || 10,
+                    supplier_id: document.getElementById('editProductSupplier').value || null
+                };
+                
+                const response = await fetch(`/api/inventory/products/${productId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(productData)
+                });
+                
+                if (response.ok) {
+                    hideEditModal();
+                    await loadProducts();
+                    showSuccessMessage('Produto atualizado com sucesso!');
+                } else {
+                    // Handle specific error cases
+                    if (response.status === 403) {
+                        throw new Error('Acesso negado. Você precisa de privilégios de administrador para atualizar produtos.');
+                    } else if (response.status === 401) {
+                        throw new Error('Não autorizado. Faça login novamente.');
+                    }
+
+                    // Check if response has JSON content before parsing
+                    let errorMessage = 'Erro ao atualizar produto';
+                    try {
+                        const contentType = response.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                            const error = await response.json();
+                            errorMessage = error.message || error.error || errorMessage;
+                        }
+                    } catch (parseError) {
+                        console.warn('Could not parse error response:', parseError);
+                    }
+                    throw new Error(errorMessage);
+                }
+            } catch (error) {
+                console.error('Error updating product:', error);
+                alert('Erro ao atualizar produto: ' + error.message);
+            } finally {
+                // Reset loading state
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        }
+
+        async function deleteProduct(productId) {
+            if (!confirm('Tem certeza que deseja excluir este produto?')) return;
+
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch(`/api/inventory/products/${productId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    await loadProducts();
+                    showSuccessMessage('Produto excluído com sucesso!');
+                } else {
+                    // Log response details for debugging
+                    const errorDetails = {
+                        status: response.status,
+                        statusText: response.statusText,
+                        url: response.url
+                    };
+                    console.error('Delete product failed:', JSON.stringify(errorDetails, null, 2));
+
+                    // Handle specific error cases
+                    if (response.status === 403) {
+                        throw new Error('Acesso negado. Você precisa de privilégios de administrador para excluir produtos.');
+                    } else if (response.status === 401) {
+                        throw new Error('Não autorizado. Faça login novamente.');
+                    } else if (response.status === 404) {
+                        throw new Error('Produto não encontrado.');
+                    }
+
+                    // Check if response has JSON content before parsing
+                    let errorMessage = `Erro ao excluir produto (Status: ${response.status})`;
+                    try {
+                        const contentType = response.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                            const error = await response.json();
+                            errorMessage = error.message || error.error || errorMessage;
+                        } else {
+                            // If not JSON, try to get text content
+                            const textResponse = await response.text();
+                            if (textResponse) {
+                                errorMessage = `${errorMessage}: ${textResponse}`;
+                            }
+                        }
+                    } catch (parseError) {
+                        console.warn('Could not parse error response:', parseError);
+                    }
+                    throw new Error(errorMessage);
+                }
+            } catch (error) {
+                console.error('Error deleting product:', error);
+
+                // Better error message handling
+                let errorMessage = 'Erro ao excluir produto';
+                if (error.message) {
+                    errorMessage = error.message;
+                }
+
+                // Show user-friendly alert
+                alert(errorMessage);
+            }
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(amount);
+        }
+
+        function showSuccessMessage(message) {
+            // You can implement a toast notification here
+            console.log(message);
+        }
+
+        // Check if we need to auto-edit a product (from categories page)
+        function checkAutoEditProduct() {
+            const editProductId = localStorage.getItem('editProductId');
+            if (editProductId) {
+                localStorage.removeItem('editProductId');
+                // Wait for products to load, then edit
+                setTimeout(() => {
+                    const product = allProducts.find(p => p.id == editProductId);
+                    if (product) {
+                        editProduct(product.id);
+                    }
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+</html>

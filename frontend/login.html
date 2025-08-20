@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Web - Entrar</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card fade-in">
+            <div class="logo-container">
+                <div class="logo-title">Stock Web</div>
+                <div class="logo-subtitle">Sistema Inteligente de Gerenciamento de Estoque</div>
+            </div>
+            
+            <form id="loginForm">
+                <div class="modern-form-group">
+                    <input type="text" class="modern-input" id="username" placeholder=" " required>
+                    <label for="username" class="modern-label">Nome de usuário</label>
+                </div>
+                
+                <div class="modern-form-group">
+                    <input type="password" class="modern-input" id="password" placeholder=" " required>
+                    <label for="password" class="modern-label">Senha</label>
+                </div>
+                
+                <div class="modern-checkbox">
+                    <input type="checkbox" id="remember" value="remember-me">
+                    <label for="remember">Lembrar-me neste dispositivo</label>
+                </div>
+                
+                <button type="submit" class="modern-button" id="loginBtn">
+                    <span class="btn-text">Entrar no Sistema</span>
+                    <span class="spinner" id="loginSpinner" style="display: none;"></span>
+                </button>
+                
+                <div id="errorMessage" class="alert-modern alert-error" style="display: none;">
+                    <i data-lucide="alert-circle" style="width: 1rem; height: 1rem; display: inline-block; margin-right: 0.5rem;"></i>
+                    <span id="errorText"></span>
+                </div>
+            </form>
+
+            
+            <div style="text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-200);">
+                <p style="color: var(--gray-500); font-size: var(--font-size-sm); margin: 0;">
+                    &copy; 2025 Stock Web. Todos os direitos reservados.
+                </p>
+                <p style="color: var(--gray-400); font-size: var(--font-size-xs); margin-top: 0.5rem;">
+                    Desenvolvido por Guilherme Andersen Correa
+                </p>
+            </div>
+        </div>
+        
+        <!-- Background decorative elements -->
+        <div style="position: absolute; top: 10%; left: 10%; width: 100px; height: 100px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; z-index: -1;"></div>
+        <div style="position: absolute; bottom: 20%; right: 15%; width: 150px; height: 150px; background: rgba(59, 130, 246, 0.05); border-radius: 50%; z-index: -1;"></div>
+        <div style="position: absolute; top: 60%; left: 5%; width: 80px; height: 80px; background: rgba(59, 130, 246, 0.08); border-radius: 50%; z-index: -1;"></div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Enhanced login functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.querySelector('.btn-text');
+            const spinner = document.getElementById('loginSpinner');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+
+            // Add floating label effect
+            function addFloatingLabelEvents(input) {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (!this.value) {
+                        this.parentElement.classList.remove('focused');
+                    }
+                });
+                
+                // Check if field has value on load
+                if (input.value) {
+                    input.parentElement.classList.add('focused');
+                }
+            }
+
+            addFloatingLabelEvents(usernameInput);
+            addFloatingLabelEvents(passwordInput);
+
+            // Enhanced form submission
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+                
+                if (!username || !password) {
+                    showError('Por favor, preencha todos os campos obrigatórios.');
+                    return;
+                }
+                
+                // Show loading state
+                setLoading(true);
+                hideError();
+                
+                try {
+                    const response = await fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok && data.token) {
+                        // Store token
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        
+                        // Show success and redirect
+                        showSuccess('Login realizado com sucesso!');
+                        
+                        setTimeout(() => {
+                            window.location.href = '/dashboard.html';
+                        }, 1000);
+                        
+                    } else {
+                        showError(data.message || 'Credenciais inválidas. Tente novamente.');
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showError('Erro de conexão. Verifique sua internet e tente novamente.');
+                } finally {
+                    setLoading(false);
+                }
+            });
+
+            function setLoading(loading) {
+                if (loading) {
+                    loginBtn.disabled = true;
+                    btnText.style.display = 'none';
+                    spinner.style.display = 'inline-block';
+                    loginBtn.style.opacity = '0.8';
+                } else {
+                    loginBtn.disabled = false;
+                    btnText.style.display = 'inline';
+                    spinner.style.display = 'none';
+                    loginBtn.style.opacity = '1';
+                }
+            }
+
+            function showError(message) {
+                errorText.textContent = message;
+                errorMessage.style.display = 'block';
+                errorMessage.className = 'alert-modern alert-error fade-in';
+                
+                // Auto hide after 5 seconds
+                setTimeout(hideError, 5000);
+            }
+
+            function showSuccess(message) {
+                errorText.textContent = message;
+                errorMessage.style.display = 'block';
+                errorMessage.className = 'alert-modern alert-success fade-in';
+            }
+
+            function hideError() {
+                errorMessage.style.display = 'none';
+            }
+
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && (e.target === usernameInput || e.target === passwordInput)) {
+                    loginForm.dispatchEvent(new Event('submit'));
+                }
+            });
+
+            // Check if user is already logged in
+            const token = localStorage.getItem('token');
+            if (token) {
+                // Verify token validity
+                fetch('/api/auth/verify', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/dashboard.html';
+                    } else {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('user');
+                    }
+                })
+                .catch(() => {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                });
+            }
+
+            // Add input validation feedback
+            [usernameInput, passwordInput].forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        this.style.borderColor = 'var(--success-500)';
+                    } else {
+                        this.style.borderColor = 'var(--gray-200)';
+                    }
+                });
+            });
+
+        });
+
+    </script>
+</body>
+</html>

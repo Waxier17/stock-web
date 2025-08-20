@@ -1,0 +1,2444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Web - Gerenciamento de Vendas</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="modern-header">
+        <div class="header-content">
+            <div class="d-flex align-items-center">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <div class="hamburger" id="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </button>
+                <a href="/dashboard.html" class="header-brand">Stock Web</a>
+            </div>
+            
+            <div class="header-user">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <button class="btn-secondary-modern btn-sm" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="modern-sidebar" id="sidebar">
+            <ul class="sidebar-nav">
+                <li class="nav-item">
+                    <a href="/dashboard.html" class="nav-link">
+                        <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                        Painel
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/inventory.html" class="nav-link">
+                        <i data-lucide="package" class="nav-icon"></i>
+                        Estoque
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/sales.html" class="nav-link active">
+                        <i data-lucide="shopping-cart" class="nav-icon"></i>
+                        Vendas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/customers.html" class="nav-link">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        Clientes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/suppliers.html" class="nav-link">
+                        <i data-lucide="truck" class="nav-icon"></i>
+                        Fornecedores
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/categories.html" class="nav-link">
+                        <i data-lucide="folder" class="nav-icon"></i>
+                        Categorias
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/users.html" class="nav-link">
+                        <i data-lucide="user-cog" class="nav-icon"></i>
+                        Usuários
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/reports.html" class="nav-link">
+                        <i data-lucide="bar-chart-3" class="nav-icon"></i>
+                        Relatórios
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Gerenciamento de Vendas</h1>
+                <p class="page-subtitle">Registre e acompanhe suas vendas</p>
+            </div>
+
+            <!-- Sales Stats -->
+            <div class="row mb-5">
+                <div class="col-md-3">
+                    <div class="stat-card slide-in">
+                        <div class="stat-icon">
+                            <i data-lucide="trending-up"></i>
+                        </div>
+                        <div class="stat-number" id="totalSalesToday">--</div>
+                        <div class="stat-label">Vendas Hoje</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card slide-in" style="animation-delay: 0.1s;">
+                        <div class="stat-icon">
+                            <i data-lucide="calendar"></i>
+                        </div>
+                        <div class="stat-number" id="totalSalesMonth">--</div>
+                        <div class="stat-label">Vendas do Mês</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card slide-in" style="animation-delay: 0.2s;">
+                        <div class="stat-icon">
+                            <i data-lucide="shopping-cart"></i>
+                        </div>
+                        <div class="stat-number" id="totalTransactions">--</div>
+                        <div class="stat-label">Transações</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card slide-in" style="animation-delay: 0.3s;">
+                        <div class="stat-icon">
+                            <i data-lucide="dollar-sign"></i>
+                        </div>
+                        <div class="stat-number" id="averageTicket">--</div>
+                        <div class="stat-label">Ticket Médio</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="modern-card mb-4">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="search-container">
+                                <i data-lucide="search" class="search-icon"></i>
+                                <input type="text" class="search-input" id="searchSales" placeholder="Pesquisar vendas...">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex justify-content-end gap-3">
+                                <button class="btn-secondary-modern" id="refreshSales">
+                                    <i data-lucide="refresh-cw"></i>
+                                    Atualizar
+                                </button>
+                                <button class="btn-primary-modern" id="newSaleBtn">
+                                    <i data-lucide="plus"></i>
+                                    Nova Venda
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Table -->
+            <div class="modern-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="card-title">Vendas Recentes</h2>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="text-muted" id="salesCount">0 vendas</span>
+                        <select class="form-select-modern" id="periodFilter" style="width: auto;">
+                            <option value="today">Hoje</option>
+                            <option value="week">Esta Semana</option>
+                            <option value="month" selected>Este Mês</option>
+                            <option value="all">Todas</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div style="overflow-x: auto;">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Data/Hora</th>
+                                    <th>Cliente</th>
+                                    <th>Itens</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesTable">
+                                <tr>
+                                    <td colspan="7" class="text-center" style="padding: 3rem; color: var(--gray-500);">
+                                        <i data-lucide="loader" style="width: 2rem; height: 2rem; animation: spin 1s linear infinite;"></i>
+                                        <br><br>Carregando vendas...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Sale Modal -->
+    <div class="modal-backdrop" id="newSaleModalBackdrop" style="display: none;">
+        <div class="modal-improved" id="newSaleModal">
+            <div class="modal-header-improved">
+                <h2>
+                    <i data-lucide="shopping-cart"></i>
+                    <span>Nova Venda</span>
+                </h2>
+                <button class="btn-secondary-modern btn-sm" id="closeNewSaleModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body-improved">
+                <form id="newSaleForm">
+                    <div class="form-sections" style="padding: 1.5rem;">
+
+                        <!-- Cliente Section -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="users" class="section-icon"></i>
+                                <h3>Seleção do Cliente</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group single">
+                                    <div class="form-field">
+                                        <label>Buscar Cliente</label>
+                                        <div class="autocomplete-container">
+                                            <div class="input-with-icon">
+                                                <i data-lucide="search" class="input-icon"></i>
+                                                <input type="text" id="customerSearch" placeholder="Digite o nome do cliente..." autocomplete="off">
+                                            </div>
+                                            <div class="autocomplete-dropdown" id="customerDropdown" style="display: none;">
+                                                <!-- Customer suggestions will appear here -->
+                                            </div>
+                                        </div>
+                                        <div class="help-text">
+                                            <i data-lucide="info" style="width: 0.75rem; height: 0.75rem;"></i>
+                                            Digite para ver sugestões de clientes
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field-group single">
+                                    <div class="form-field">
+                                        <label>Cliente Selecionado</label>
+                                        <select id="saleCustomer">
+                                            <option value="">Selecione um cliente</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Produtos Section -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="package" class="section-icon"></i>
+                                <h3>Produtos</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group">
+                                    <div class="form-field">
+                                        <label>Buscar Produto</label>
+                                        <div class="autocomplete-container">
+                                            <div class="input-with-icon">
+                                                <i data-lucide="search" class="input-icon"></i>
+                                                <input type="text" id="productSearch" placeholder="Digite o nome do produto..." autocomplete="off">
+                                            </div>
+                                            <div class="autocomplete-dropdown" id="productDropdown" style="display: none;">
+                                                <!-- Product suggestions will appear here -->
+                                            </div>
+                                        </div>
+                                        <div class="help-text">Digite para ver sugestões de produtos</div>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Quantidade</label>
+                                        <div class="input-with-icon">
+                                            <i data-lucide="hash" class="input-icon"></i>
+                                            <input type="number" id="productQuantity" placeholder="Qtd" min="1">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field-group single">
+                                    <button type="button" class="btn-primary-modern w-100" id="addProductBtn">
+                                        <i data-lucide="plus"></i>
+                                        Adicionar Produto
+                                    </button>
+                                </div>
+
+                                <!-- Selected Products List -->
+                                <div class="field-group single">
+                                    <div class="form-field">
+                                        <label>Produtos Selecionados</label>
+                                        <div id="selectedProducts" class="selected-products-container">
+                                            <div class="empty-products">
+                                                <i data-lucide="package" style="width: 2rem; height: 2rem; opacity: 0.5;"></i>
+                                                <p>Nenhum produto selecionado</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagamento Section -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="credit-card" class="section-icon"></i>
+                                <h3>Pagamento</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="field-group single">
+                                    <div class="form-field">
+                                        <label>Meio de Pagamento <span class="required">*</span></label>
+                                        <select id="paymentMethod" required>
+                                            <option value="">Selecione o meio de pagamento</option>
+                                            <option value="cartao_credito">Cartão de Crédito</option>
+                                            <option value="cartao_debito">Cartão de Débito</option>
+                                            <option value="pix">PIX</option>
+                                            <option value="boleto">Boleto</option>
+                                            <option value="fiado">Fiado</option>
+                                            <option value="dinheiro">Dinheiro</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Parcelamento -->
+                                <div class="field-group" id="installmentGroup" style="display: none;">
+                                    <div class="form-field">
+                                        <label>Número de Parcelas</label>
+                                        <select id="installments">
+                                            <option value="1">À vista</option>
+                                            <option value="2">2x</option>
+                                            <option value="3">3x</option>
+                                            <option value="4">4x</option>
+                                            <option value="5">5x</option>
+                                            <option value="6">6x</option>
+                                            <option value="7">7x</option>
+                                            <option value="8">8x</option>
+                                            <option value="9">9x</option>
+                                            <option value="10">10x</option>
+                                            <option value="12">12x</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-field">
+                                        <label>Valor da Parcela</label>
+                                        <div class="input-with-icon">
+                                            <i data-lucide="dollar-sign" class="input-icon"></i>
+                                            <input type="text" id="installmentValue" readonly placeholder="R$ 0,00">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Fiado Date Field -->
+                                <div class="field-group single" id="fiadoDateGroup" style="display: none;">
+                                    <div class="form-field">
+                                        <label>Data Prometida para Pagamento <span class="required">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i data-lucide="calendar" class="input-icon"></i>
+                                            <input type="date" id="fiadoDate">
+                                        </div>
+                                        <div class="help-text">
+                                            <i data-lucide="info" style="width: 0.75rem; height: 0.75rem;"></i>
+                                            Data em que o cliente se compromete a realizar o pagamento
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Resumo Section -->
+                        <div class="form-section">
+                            <div class="section-header">
+                                <i data-lucide="calculator" class="section-icon"></i>
+                                <h3>Resumo da Venda</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="sale-summary">
+                                    <div class="summary-row">
+                                        <span>Subtotal:</span>
+                                        <span class="summary-value" id="saleSubtotal">R$ 0,00</span>
+                                    </div>
+                                    <div class="summary-row discount-row">
+                                        <span>Desconto Adicional:</span>
+                                        <div class="discount-controls">
+                                            <div class="discount-type-toggle">
+                                                <button type="button" class="discount-toggle-btn active" id="discountTypePercent" onclick="toggleDiscountType('percent')">
+                                                    <i data-lucide="percent"></i>
+                                                    %
+                                                </button>
+                                                <button type="button" class="discount-toggle-btn" id="discountTypeValue" onclick="toggleDiscountType('value')">
+                                                    <i data-lucide="dollar-sign"></i>
+                                                    R$
+                                                </button>
+                                            </div>
+                                            <div class="discount-input-container">
+                                                <input type="number" id="saleDiscount" placeholder="0" step="0.01" min="0" max="100">
+                                                <span class="discount-display" id="discountDisplay">R$ 0,00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="summary-divider"></div>
+                                    <div class="summary-row summary-total">
+                                        <span>Total:</span>
+                                        <span class="summary-value" id="saleTotal">R$ 0,00</span>
+                                    </div>
+                                    <div class="installment-info" id="installmentInfo" style="display: none;">
+                                        <div class="summary-row">
+                                            <span>Valor da Parcela:</span>
+                                            <span class="summary-value" id="installmentAmount">R$ 0,00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer-improved">
+                <div class="footer-actions">
+                    <button type="button" class="btn-secondary-modern" id="cancelNewSaleBtn">
+                        <i data-lucide="x"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn-primary-modern" id="confirmSaleBtn">
+                        <i data-lucide="check"></i>
+                        <span class="btn-text">Confirmar Venda</span>
+                        <span class="spinner" id="confirmSaleSpinner" style="display: none;"></span>
+                    </button>
+                </div>
+                <div class="modal-progress">
+                    <div class="progress-enhanced">
+                        <div class="progress-bar" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Sale Modal -->
+    <div class="modal-backdrop" id="viewSaleModalBackdrop" style="display: none;">
+        <div class="modal-improved" id="viewSaleModal">
+            <div class="modal-header-improved">
+                <h2>
+                    <i data-lucide="eye"></i>
+                    <span>Detalhes da Venda</span>
+                </h2>
+                <button class="btn-secondary-modern btn-sm" id="closeViewSaleModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body-improved">
+                <div class="form-sections" style="padding: 1.5rem;">
+
+                    <!-- Informações Gerais -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <i data-lucide="info" class="section-icon"></i>
+                            <h3>Informações Gerais</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="field-group">
+                                <div class="form-field">
+                                    <label>Número da Venda</label>
+                                    <div class="display-value" id="saleNumber">#--</div>
+                                </div>
+                                <div class="form-field">
+                                    <label>Data/Hora</label>
+                                    <div class="display-value" id="saleDateTime">--</div>
+                                </div>
+                            </div>
+                            <div class="field-group">
+                                <div class="form-field">
+                                    <label>Cliente</label>
+                                    <div class="display-value" id="saleCustomerName">--</div>
+                                </div>
+                                <div class="form-field">
+                                    <label>Vendedor</label>
+                                    <div class="display-value" id="saleUserName">--</div>
+                                </div>
+                            </div>
+                            <div class="field-group single">
+                                <div class="form-field">
+                                    <label>Meio de Pagamento</label>
+                                    <div class="display-value" id="salePaymentMethod">--</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Produtos -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <i data-lucide="package" class="section-icon"></i>
+                            <h3>Produtos</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="sale-items-table">
+                                <table class="modern-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Produto</th>
+                                            <th>Qtd</th>
+                                            <th>Preço Unit.</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="saleItemsTableBody">
+                                        <!-- Items will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resumo Financeiro -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <i data-lucide="calculator" class="section-icon"></i>
+                            <h3>Resumo Financeiro</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="sale-summary-view">
+                                <div class="summary-row">
+                                    <span>Subtotal:</span>
+                                    <span class="summary-value" id="viewSubtotal">R$ 0,00</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Desconto:</span>
+                                    <span class="summary-value" id="viewDiscount">R$ 0,00</span>
+                                </div>
+                                <div class="summary-divider"></div>
+                                <div class="summary-row summary-total">
+                                    <span>Total:</span>
+                                    <span class="summary-value" id="viewTotal">R$ 0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observações -->
+                    <div class="form-section" id="notesSection" style="display: none;">
+                        <div class="section-header">
+                            <i data-lucide="message-square" class="section-icon"></i>
+                            <h3>Observações</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="display-value" id="saleNotes">--</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer-improved">
+                <div class="footer-actions">
+                    <button type="button" class="btn-secondary-modern" id="closeSaleViewBtn">
+                        <i data-lucide="x"></i>
+                        Fechar
+                    </button>
+                    <button type="button" class="btn-primary-modern" id="printSaleBtn">
+                        <i data-lucide="printer"></i>
+                        Imprimir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Estilos específicos para modal de vendas melhorada */
+        .modal-improved {
+            width: 100%;
+            max-width: 950px;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-height: 85vh;
+            overflow: hidden;
+            margin: 2rem;
+            animation: modalSlideIn 0.3s ease-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header-improved {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            background: linear-gradient(135deg, var(--primary-50) 0%, white 100%);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        }
+
+        .modal-header-improved h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .modal-body-improved {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            /* Enable smooth scrolling */
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+        }
+
+        /* Remove overflow from internal containers to prevent double scrollbars */
+        .modal-body-improved .form-sections {
+            overflow: visible;
+        }
+
+        .modal-body-improved .section-body {
+            overflow: visible;
+        }
+
+        .modal-footer-improved {
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+        }
+
+        .footer-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+
+        .modal-progress {
+            padding: 0 1.5rem 1rem;
+        }
+
+        .form-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-section {
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: white;
+        }
+
+        .section-header {
+            background: var(--gray-50);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-header h3 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .section-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: var(--primary-600);
+        }
+
+        .section-body {
+            padding: 1.5rem;
+        }
+
+        .field-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .field-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .field-group.single {
+            grid-template-columns: 1fr;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-field label {
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon .input-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1rem;
+            height: 1rem;
+            color: var(--gray-400);
+        }
+
+        .input-with-icon input {
+            padding-left: 2.5rem;
+        }
+
+        .help-text {
+            margin-top: 0.375rem;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .required {
+            color: var(--error-500);
+        }
+
+        /* Selected Products Container */
+        .selected-products-container {
+            min-height: 100px;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            /* Prevent overflow conflicts with parent modal */
+            scrollbar-width: thin;
+        }
+
+        .empty-products {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--gray-500);
+            text-align: center;
+        }
+
+        .empty-products p {
+            margin: 0.5rem 0 0 0;
+            font-size: 0.875rem;
+        }
+
+        .selected-product {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.75rem;
+            background: var(--gray-50);
+            transition: all 0.2s ease;
+        }
+
+        .selected-product:last-child {
+            margin-bottom: 0;
+        }
+
+        .selected-product:hover {
+            border-color: var(--primary-300);
+            background: var(--primary-50);
+        }
+
+        .product-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .product-price {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .product-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .product-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-btn {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-300);
+        }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            padding: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .product-discount {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .product-discount-toggle {
+            display: flex;
+            background: var(--gray-100);
+            border-radius: var(--radius-sm);
+            padding: 0.125rem;
+        }
+
+        .mini-toggle-btn {
+            padding: 0.25rem 0.5rem;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-xs);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+
+        .mini-toggle-btn.active {
+            background: var(--primary-600);
+            color: white;
+        }
+
+        .mini-toggle-btn:hover:not(.active) {
+            background: var(--gray-200);
+        }
+
+        .discount-input-field {
+            width: 60px;
+            text-align: center;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            padding: 0.25rem;
+            font-size: 0.75rem;
+        }
+
+        .discount-label {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .product-total {
+            font-weight: 600;
+            color: var(--primary-600);
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .remove-product {
+            background: var(--error-100);
+            color: var(--error-600);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .remove-product:hover {
+            background: var(--error-200);
+        }
+
+        /* Sale Summary */
+        .sale-summary {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .summary-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .summary-total {
+            border-top: 1px solid var(--gray-300);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 0;
+        }
+
+        .summary-total .summary-value {
+            font-size: 1.25rem;
+            color: var(--primary-600);
+        }
+
+        .summary-divider {
+            height: 1px;
+            background: var(--gray-300);
+            margin: 1rem 0;
+        }
+
+        /* Discount Controls */
+        .discount-row {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+        }
+
+        .discount-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .discount-type-toggle {
+            display: flex;
+            background: var(--gray-100);
+            border-radius: var(--radius-md);
+            padding: 0.25rem;
+        }
+
+        .discount-toggle-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 0.75rem;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-600);
+        }
+
+        .discount-toggle-btn.active {
+            background: var(--primary-600);
+            color: white;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+
+        .discount-toggle-btn:hover:not(.active) {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .discount-input-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .discount-input-container input {
+            width: 100px;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .discount-display {
+            font-weight: 600;
+            color: var(--error-600);
+            font-size: 0.875rem;
+            min-width: 80px;
+        }
+
+        .installment-info {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        /* Autocomplete Styles */
+        .autocomplete-container {
+            position: relative;
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-top: none;
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 1000;
+            scrollbar-width: thin;
+        }
+
+        .autocomplete-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--gray-100);
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.highlighted {
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+
+        .autocomplete-item-main {
+            flex: 1;
+        }
+
+        .autocomplete-item-name {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .autocomplete-item:hover .autocomplete-item-name,
+        .autocomplete-item.highlighted .autocomplete-item-name {
+            color: var(--primary-700);
+        }
+
+        .autocomplete-item-details {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+        }
+
+        .autocomplete-item-price {
+            font-weight: 600;
+            color: var(--primary-600);
+            font-size: 0.875rem;
+        }
+
+        .autocomplete-item-stock {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .autocomplete-empty {
+            padding: 1rem;
+            text-align: center;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+
+        .autocomplete-item.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .autocomplete-item.disabled:hover {
+            background: transparent;
+            color: inherit;
+        }
+
+        .text-error {
+            color: var(--error-600);
+        }
+
+        /* Dark theme support */
+        [data-theme="dark"] .autocomplete-dropdown {
+            background: var(--background-secondary);
+            border-color: var(--border-color);
+        }
+
+        [data-theme="dark"] .autocomplete-item {
+            border-color: var(--border-color);
+        }
+
+        [data-theme="dark"] .autocomplete-item:hover,
+        [data-theme="dark"] .autocomplete-item.highlighted {
+            background: var(--primary-900);
+        }
+
+        [data-theme="dark"] .autocomplete-item-name {
+            color: var(--text-primary);
+        }
+
+        /* Sale View Modal Styles */
+        .display-value {
+            padding: 0.75rem;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            color: var(--gray-800);
+            min-height: 20px;
+        }
+
+        .sale-items-table {
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            /* Remove overflow-x to prevent horizontal scrollbar conflicts */
+        }
+
+        .sale-items-table .modern-table {
+            margin: 0;
+            border: none;
+        }
+
+        .sale-items-table .modern-table th,
+        .sale-items-table .modern-table td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .sale-items-table .modern-table th:last-child,
+        .sale-items-table .modern-table td:last-child {
+            text-align: right;
+        }
+
+        .sale-summary-view {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+        }
+
+        .sale-summary-view .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .sale-summary-view .summary-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .sale-summary-view .summary-value {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .sale-summary-view .summary-total {
+            border-top: 1px solid var(--gray-300);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 0;
+        }
+
+        .sale-summary-view .summary-total .summary-value {
+            font-size: 1.25rem;
+            color: var(--primary-600);
+        }
+
+        /* Dark theme support for view modal */
+        [data-theme="dark"] .display-value {
+            background: var(--background-secondary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .sale-summary-view {
+            background: var(--background-secondary);
+            border-color: var(--border-color);
+        }
+
+        /* Progress Bar */
+        .progress-enhanced {
+            width: 100%;
+            height: 0.5rem;
+            background: var(--gray-200);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-enhanced .progress-bar {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm);
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-enhanced .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Custom Scrollbar Styles */
+        .modal-body-improved::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-body-improved::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: var(--radius-sm);
+        }
+
+        .modal-body-improved::-webkit-scrollbar-thumb {
+            background: var(--gray-400);
+            border-radius: var(--radius-sm);
+        }
+
+        .modal-body-improved::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
+        }
+
+        .selected-products-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .selected-products-container::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: var(--radius-sm);
+        }
+
+        .selected-products-container::-webkit-scrollbar-thumb {
+            background: var(--gray-400);
+            border-radius: var(--radius-sm);
+        }
+
+        .selected-products-container::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
+        }
+
+        .autocomplete-dropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .autocomplete-dropdown::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: var(--radius-sm);
+        }
+
+        .autocomplete-dropdown::-webkit-scrollbar-thumb {
+            background: var(--gray-400);
+            border-radius: var(--radius-sm);
+        }
+
+        .autocomplete-dropdown::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
+        }
+
+        @media (max-width: 768px) {
+            .modal-improved {
+                max-width: 95vw;
+                margin: 1rem;
+                max-height: 95vh;
+            }
+
+            .field-group {
+                grid-template-columns: 1fr;
+            }
+
+            .product-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+            }
+
+            .product-quantity,
+            .product-discount {
+                justify-content: center;
+            }
+
+            .footer-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+
+        .sale-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+        }
+
+        .sale-status.completed {
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .sale-status.pending {
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .sale-status.cancelled {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        /* Dark theme fixes for sales */
+        [data-theme="dark"] .selected-product {
+            background: var(--background-secondary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .product-name {
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .product-price {
+            color: var(--text-secondary);
+        }
+
+        [data-theme="dark"] .quantity-btn {
+            background: var(--background-secondary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .quantity-btn:hover {
+            background: var(--gray-600);
+        }
+
+        [data-theme="dark"] .quantity-input {
+            background: var(--background-secondary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .remove-product {
+            background: var(--error-900);
+            color: var(--error-300);
+        }
+
+        [data-theme="dark"] .remove-product:hover {
+            background: var(--error-800);
+        }
+    </style>
+
+    <script src="js/theme-system.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        let currentSaleItems = [];
+        let availableProducts = [];
+        let customers = [];
+        let filteredProducts = [];
+        let filteredCustomers = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            App.checkAuth();
+            initializeSales();
+            setupSalesEventListeners();
+            loadSalesData();
+        });
+
+        function initializeSales() {
+            document.querySelector('.main-content').classList.add('fade-in');
+            App.updateActiveNavItem('sales');
+        }
+
+        function setupSalesEventListeners() {
+            // Search functionality
+            document.getElementById('searchSales').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                filterSales(searchTerm);
+            });
+
+            // Period filter
+            document.getElementById('periodFilter').addEventListener('change', function() {
+                const period = this.value;
+                filterSalesByPeriod(period);
+            });
+
+            // New sale modal
+            document.getElementById('newSaleBtn').addEventListener('click', showNewSaleModal);
+            document.getElementById('closeNewSaleModal').addEventListener('click', hideNewSaleModal);
+            document.getElementById('cancelNewSaleBtn').addEventListener('click', hideNewSaleModal);
+
+            // Customer search with autocomplete
+            const customerSearch = document.getElementById('customerSearch');
+            const customerDropdown = document.getElementById('customerDropdown');
+
+            customerSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                showCustomerSuggestions(searchTerm);
+            });
+
+            customerSearch.addEventListener('focus', function() {
+                const searchTerm = this.value.toLowerCase();
+                showCustomerSuggestions(searchTerm);
+            });
+
+            customerSearch.addEventListener('keydown', function(e) {
+                handleAutocompleteKeydown(e, 'customerDropdown', 'customer');
+            });
+
+            // Product search with autocomplete
+            const productSearch = document.getElementById('productSearch');
+            const productDropdown = document.getElementById('productDropdown');
+
+            productSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                showProductSuggestions(searchTerm);
+            });
+
+            productSearch.addEventListener('focus', function() {
+                const searchTerm = this.value.toLowerCase();
+                showProductSuggestions(searchTerm);
+            });
+
+            productSearch.addEventListener('keydown', function(e) {
+                handleAutocompleteKeydown(e, 'productDropdown', 'product');
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!customerSearch.contains(e.target) && !customerDropdown.contains(e.target)) {
+                    customerDropdown.style.display = 'none';
+                }
+                if (!productSearch.contains(e.target) && !productDropdown.contains(e.target)) {
+                    productDropdown.style.display = 'none';
+                }
+            });
+
+            // Product addition
+            document.getElementById('addProductBtn').addEventListener('click', addProductToSale);
+
+            // Payment method change
+            document.getElementById('paymentMethod').addEventListener('change', function() {
+                const selectedMethod = this.value;
+                const fiadoDateGroup = document.getElementById('fiadoDateGroup');
+                const installmentGroup = document.getElementById('installmentGroup');
+                const installmentInfo = document.getElementById('installmentInfo');
+
+                // Reset all groups
+                fiadoDateGroup.style.display = 'none';
+                installmentGroup.style.display = 'none';
+                installmentInfo.style.display = 'none';
+                document.getElementById('fiadoDate').required = false;
+
+                if (selectedMethod === 'fiado') {
+                    fiadoDateGroup.style.display = 'block';
+                    document.getElementById('fiadoDate').required = true;
+                } else if (selectedMethod === 'cartao_credito' || selectedMethod === 'boleto') {
+                    installmentGroup.style.display = 'block';
+                    installmentInfo.style.display = 'block';
+                    calculateInstallments();
+                }
+            });
+
+            // Installments change
+            document.getElementById('installments').addEventListener('change', function() {
+                calculateInstallments();
+            });
+
+            // View sale modal
+            document.getElementById('closeViewSaleModal').addEventListener('click', hideViewSaleModal);
+            document.getElementById('closeSaleViewBtn').addEventListener('click', hideViewSaleModal);
+            document.getElementById('printSaleBtn').addEventListener('click', printSale);
+
+            // Close view modal when clicking backdrop
+            document.getElementById('viewSaleModalBackdrop').addEventListener('click', function(e) {
+                if (e.target === this) hideViewSaleModal();
+            });
+
+            // Discount calculation
+            document.getElementById('saleDiscount').addEventListener('input', calculateSaleTotal);
+
+            // Confirm sale
+            document.getElementById('confirmSaleBtn').addEventListener('click', confirmSale);
+
+            // Refresh sales
+            document.getElementById('refreshSales').addEventListener('click', loadSales);
+
+            // Close modal when clicking backdrop
+            document.getElementById('newSaleModalBackdrop').addEventListener('click', function(e) {
+                if (e.target === this) hideNewSaleModal();
+            });
+        }
+
+        async function loadSalesData() {
+            await Promise.all([
+                loadSales(),
+                loadSalesStats(),
+                loadProducts(),
+                loadCustomers()
+            ]);
+        }
+
+        async function loadSales() {
+            const token = localStorage.getItem('token');
+            const tableBody = document.getElementById('salesTable');
+            const salesCount = document.getElementById('salesCount');
+
+            try {
+                const response = await App.apiRequest('/api/sales');
+
+                if (response.ok) {
+                    const sales = await response.json();
+                    renderSales(sales);
+                    salesCount.textContent = `${sales.length} venda${sales.length !== 1 ? 's' : ''}`;
+                } else {
+                    throw new Error('Failed to load sales');
+                }
+            } catch (error) {
+                console.error('Error loading sales:', error);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center" style="padding: 3rem; color: var(--error-500);">
+                            <i data-lucide="alert-circle" style="width: 2rem; height: 2rem;"></i>
+                            <br><br>Erro ao carregar vendas
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        function renderSales(sales) {
+            const tableBody = document.getElementById('salesTable');
+
+            if (sales.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center" style="padding: 3rem; color: var(--gray-500);">
+                            <i data-lucide="shopping-cart" style="width: 2rem; height: 2rem;"></i>
+                            <br><br>Nenhuma venda encontrada
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            tableBody.innerHTML = sales.map(sale => `
+                <tr>
+                    <td>#${sale.id}</td>
+                    <td>${App.formatDateTime(sale.created_at || sale.date)}</td>
+                    <td>${sale.customerName || 'Cliente não informado'}</td>
+                    <td>${sale.itemCount || 0} item${(sale.itemCount || 0) !== 1 ? 's' : ''}</td>
+                    <td>${App.formatCurrency(sale.final_amount || sale.totalAmount || 0)}</td>
+                    <td>
+                        <span class="sale-status completed">
+                            Concluída
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-edit" onclick="viewSale(${sale.id})" title="Ver detalhes">
+                                <i data-lucide="eye" style="width: 1rem; height: 1rem;"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        async function loadSalesStats() {
+            try {
+                const response = await App.apiRequest('/api/sales');
+
+                if (response.ok) {
+                    const sales = await response.json();
+                    calculateStats(sales);
+                }
+            } catch (error) {
+                console.error('Error loading sales stats:', error);
+                // Set fallback values
+                document.getElementById('totalSalesToday').textContent = 'R$ 0,00';
+                document.getElementById('totalSalesMonth').textContent = 'R$ 0,00';
+                document.getElementById('totalTransactions').textContent = '0';
+                document.getElementById('averageTicket').textContent = 'R$ 0,00';
+            }
+        }
+
+        function calculateStats(sales) {
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+
+            // Today's sales
+            const todaySales = sales.filter(sale => {
+                const saleDate = new Date(sale.created_at || sale.date);
+                return saleDate.toDateString() === today.toDateString();
+            });
+
+            const todayTotal = todaySales.reduce((sum, sale) => sum + (sale.final_amount || sale.totalAmount || 0), 0);
+            document.getElementById('totalSalesToday').textContent = App.formatCurrency(todayTotal);
+
+            // Month's sales
+            const monthSales = sales.filter(sale => {
+                const saleDate = new Date(sale.created_at || sale.date);
+                return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear;
+            });
+
+            const monthTotal = monthSales.reduce((sum, sale) => sum + (sale.final_amount || sale.totalAmount || 0), 0);
+            document.getElementById('totalSalesMonth').textContent = App.formatCurrency(monthTotal);
+
+            // Total transactions
+            document.getElementById('totalTransactions').textContent = sales.length;
+
+            // Average ticket
+            const averageTicket = monthSales.length > 0 ? monthTotal / monthSales.length : 0;
+            document.getElementById('averageTicket').textContent = App.formatCurrency(averageTicket || 0);
+        }
+
+        async function loadProducts() {
+            try {
+                const response = await App.apiRequest('/api/inventory/products');
+
+                if (response.ok) {
+                    availableProducts = await response.json();
+                    filteredProducts = [...availableProducts];
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        function populateProductSelect() {
+            // Esta função não é mais necessária pois usamos busca direta por texto
+            // Mantida para compatibilidade, mas não faz nada
+            return;
+        }
+
+        async function loadCustomers() {
+            try {
+                const response = await App.apiRequest('/api/customers');
+
+                if (response.ok) {
+                    customers = await response.json();
+                    filteredCustomers = [...customers];
+                    populateCustomerSelect();
+                }
+            } catch (error) {
+                console.error('Error loading customers:', error);
+            }
+        }
+
+        function populateCustomerSelect() {
+            const select = document.getElementById('saleCustomer');
+            select.innerHTML = '<option value="">Selecione um cliente</option>' +
+                filteredCustomers.map(customer => {
+                    const customerName = customer.name || `${customer.first_name || ''} ${customer.last_name || ''}`.trim() || 'Cliente sem nome';
+                    return `<option value="${customer.id}">${customerName}</option>`;
+                }).join('');
+        }
+
+        function showCustomerSuggestions(searchTerm) {
+            const dropdown = document.getElementById('customerDropdown');
+
+            if (!searchTerm.trim()) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            const filtered = customers.filter(customer => {
+                const customerName = customer.name || customer.first_name || customer.last_name || '';
+                return customerName.toLowerCase().includes(searchTerm);
+            });
+
+            if (filtered.length === 0) {
+                dropdown.innerHTML = '<div class="autocomplete-empty">Nenhum cliente encontrado</div>';
+                dropdown.style.display = 'block';
+                return;
+            }
+
+            dropdown.innerHTML = filtered.slice(0, 8).map(customer => {
+                const customerName = customer.name || `${customer.first_name || ''} ${customer.last_name || ''}`.trim() || 'Cliente sem nome';
+                const customerDetails = customer.email || customer.phone || '';
+
+                return `
+                    <div class="autocomplete-item" onclick="selectCustomer(${customer.id}, '${customerName.replace(/'/g, "\\'")}')">
+                        <div class="autocomplete-item-main">
+                            <div class="autocomplete-item-name">${customerName}</div>
+                            ${customerDetails ? `<div class="autocomplete-item-details">${customerDetails}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            dropdown.style.display = 'block';
+        }
+
+        function showProductSuggestions(searchTerm) {
+            const dropdown = document.getElementById('productDropdown');
+
+            if (!searchTerm.trim()) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            const filtered = availableProducts.filter(product =>
+                product.name.toLowerCase().includes(searchTerm)
+            );
+
+            if (filtered.length === 0) {
+                dropdown.innerHTML = '<div class="autocomplete-empty">Nenhum produto encontrado</div>';
+                dropdown.style.display = 'block';
+                return;
+            }
+
+            dropdown.innerHTML = filtered.slice(0, 8).map(product => {
+                const stockStatus = product.stock_quantity <= 0 ? 'Sem estoque' : `${product.stock_quantity || product.stock || 0} disponível`;
+                const stockClass = (product.stock_quantity || product.stock || 0) <= 0 ? 'text-error' : '';
+                const stock = product.stock_quantity || product.stock || 0;
+
+                return `
+                    <div class="autocomplete-item ${stock <= 0 ? 'disabled' : ''}"
+                         onclick="${stock > 0 ? `selectProduct(${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, ${stock})` : ''}">
+                        <div class="autocomplete-item-main">
+                            <div class="autocomplete-item-name">${product.name}</div>
+                            <div class="autocomplete-item-stock ${stockClass}">${stockStatus}</div>
+                        </div>
+                        <div class="autocomplete-item-price">${App.formatCurrency(product.price)}</div>
+                    </div>
+                `;
+            }).join('');
+
+            dropdown.style.display = 'block';
+        }
+
+        function selectCustomer(customerId, customerName) {
+            document.getElementById('customerSearch').value = customerName;
+            document.getElementById('saleCustomer').value = customerId;
+            document.getElementById('customerDropdown').style.display = 'none';
+
+            // Update the customer select to show the selected customer
+            const customerSelect = document.getElementById('saleCustomer');
+            customerSelect.innerHTML = `<option value="${customerId}" selected>${customerName}</option>`;
+        }
+
+        function selectProduct(productId, productName, price, stock) {
+            if (stock <= 0) return;
+
+            document.getElementById('productSearch').value = productName;
+            document.getElementById('productDropdown').style.display = 'none';
+
+            // Focus on quantity input for quick entry
+            const quantityInput = document.getElementById('productQuantity');
+            quantityInput.focus();
+
+            // Store selected product data for easy access
+            window.selectedProductData = {
+                id: productId,
+                name: productName,
+                price: price,
+                stock: stock
+            };
+        }
+
+        function filterCustomers(searchTerm) {
+            // Keep for compatibility but now handled by showCustomerSuggestions
+            showCustomerSuggestions(searchTerm);
+        }
+
+        function filterProducts(searchTerm) {
+            // Keep for compatibility but now handled by showProductSuggestions
+            showProductSuggestions(searchTerm);
+        }
+
+        let currentHighlightIndex = -1;
+        let discountType = 'percent'; // 'percent' or 'value'
+
+        function handleAutocompleteKeydown(e, dropdownId, type) {
+            const dropdown = document.getElementById(dropdownId);
+            const items = dropdown.querySelectorAll('.autocomplete-item:not(.disabled)');
+
+            if (items.length === 0) return;
+
+            switch (e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    currentHighlightIndex = Math.min(currentHighlightIndex + 1, items.length - 1);
+                    updateHighlight(items);
+                    break;
+
+                case 'ArrowUp':
+                    e.preventDefault();
+                    currentHighlightIndex = Math.max(currentHighlightIndex - 1, 0);
+                    updateHighlight(items);
+                    break;
+
+                case 'Enter':
+                    e.preventDefault();
+                    if (currentHighlightIndex >= 0 && items[currentHighlightIndex]) {
+                        items[currentHighlightIndex].click();
+                        currentHighlightIndex = -1;
+                    }
+                    break;
+
+                case 'Escape':
+                    dropdown.style.display = 'none';
+                    currentHighlightIndex = -1;
+                    break;
+            }
+        }
+
+        function updateHighlight(items) {
+            items.forEach((item, index) => {
+                if (index === currentHighlightIndex) {
+                    item.classList.add('highlighted');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('highlighted');
+                }
+            });
+        }
+
+        function toggleDiscountType(type) {
+            discountType = type;
+            const percentBtn = document.getElementById('discountTypePercent');
+            const valueBtn = document.getElementById('discountTypeValue');
+            const discountInput = document.getElementById('saleDiscount');
+
+            if (type === 'percent') {
+                percentBtn.classList.add('active');
+                valueBtn.classList.remove('active');
+                discountInput.max = '100';
+                discountInput.placeholder = '0';
+            } else {
+                percentBtn.classList.remove('active');
+                valueBtn.classList.add('active');
+                discountInput.removeAttribute('max');
+                discountInput.placeholder = '0,00';
+            }
+
+            // Reset discount value when switching type
+            discountInput.value = '';
+            calculateSaleTotal();
+        }
+
+        function toggleProductDiscountType(index, isPercent) {
+            const item = currentSaleItems[index];
+            item.discountIsPercent = isPercent;
+            item.discount = 0; // Reset discount when changing type
+            renderSelectedProducts();
+            calculateSaleTotal();
+        }
+
+        function calculateInstallments() {
+            const installments = parseInt(document.getElementById('installments').value) || 1;
+            const total = getCurrentTotal();
+            const installmentValue = total / installments;
+
+            document.getElementById('installmentValue').value = App.formatCurrency(installmentValue);
+            document.getElementById('installmentAmount').textContent = App.formatCurrency(installmentValue);
+        }
+
+        function getCurrentTotal() {
+            const subtotal = currentSaleItems.reduce((sum, item) => {
+                const itemSubtotal = item.price * item.quantity;
+                let itemDiscount = item.discount || 0;
+
+                // Apply product discount based on type
+                if (item.discountIsPercent) {
+                    itemDiscount = (itemSubtotal * itemDiscount) / 100;
+                }
+
+                return sum + (itemSubtotal - itemDiscount);
+            }, 0);
+
+            const additionalDiscountInput = parseFloat(document.getElementById('saleDiscount').value) || 0;
+            let additionalDiscount = 0;
+
+            if (discountType === 'percent') {
+                additionalDiscount = (subtotal * additionalDiscountInput) / 100;
+            } else {
+                additionalDiscount = additionalDiscountInput;
+            }
+
+            return Math.max(0, subtotal - additionalDiscount);
+        }
+
+        function showNewSaleModal() {
+            currentSaleItems = [];
+            document.getElementById('newSaleModalBackdrop').style.display = 'flex';
+            document.getElementById('newSaleForm').reset();
+            document.getElementById('fiadoDateGroup').style.display = 'none';
+            document.getElementById('customerSearch').value = '';
+            document.getElementById('productSearch').value = '';
+
+            // Reset filtered lists
+            filteredCustomers = [...customers];
+            filteredProducts = [...availableProducts];
+            populateCustomerSelect();
+
+            // Reset products container
+            renderSelectedProducts();
+            calculateSaleTotal();
+        }
+
+        function hideNewSaleModal() {
+            document.getElementById('newSaleModalBackdrop').style.display = 'none';
+        }
+
+        function addProductToSale() {
+            const productSearch = document.getElementById('productSearch');
+            const quantityInput = document.getElementById('productQuantity');
+
+            // Use selected product data if available, otherwise search
+            let selectedProduct = window.selectedProductData;
+
+            if (!selectedProduct) {
+                const searchTerm = productSearch.value.toLowerCase().trim();
+                if (searchTerm) {
+                    selectedProduct = availableProducts.find(p =>
+                        p.name.toLowerCase().includes(searchTerm)
+                    );
+                }
+            }
+
+            const quantity = parseInt(quantityInput.value);
+
+            if (!selectedProduct) {
+                App.showToast('Selecione um produto da lista de sugestões', 'warning');
+                return;
+            }
+
+            if (!quantity || quantity <= 0) {
+                App.showToast('Digite uma quantidade válida', 'warning');
+                return;
+            }
+
+            if (quantity > selectedProduct.stock) {
+                App.showToast(`Estoque insuficiente. Disponível: ${selectedProduct.stock}`, 'error');
+                return;
+            }
+
+            // Check if product already exists in sale
+            const existingItem = currentSaleItems.find(item => item.productId === selectedProduct.id);
+            if (existingItem) {
+                const newQuantity = existingItem.quantity + quantity;
+                if (newQuantity > selectedProduct.stock) {
+                    App.showToast(`Estoque insuficiente. Máximo: ${selectedProduct.stock}`, 'error');
+                    return;
+                }
+                existingItem.quantity = newQuantity;
+            } else {
+                currentSaleItems.push({
+                    productId: selectedProduct.id,
+                    productName: selectedProduct.name,
+                    price: selectedProduct.price,
+                    quantity: quantity,
+                    discount: 0,
+                    discountIsPercent: false
+                });
+            }
+
+            renderSelectedProducts();
+            calculateSaleTotal();
+
+            // Reset inputs
+            productSearch.value = '';
+            quantityInput.value = '';
+            window.selectedProductData = null; // Clear selected product data
+            document.getElementById('productDropdown').style.display = 'none';
+        }
+
+        function renderSelectedProducts() {
+            const container = document.getElementById('selectedProducts');
+
+            if (currentSaleItems.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-products">
+                        <i data-lucide="package" style="width: 2rem; height: 2rem; opacity: 0.5;"></i>
+                        <p>Nenhum produto selecionado</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            container.innerHTML = currentSaleItems.map((item, index) => `
+                <div class="selected-product">
+                    <div class="product-info">
+                        <div class="product-name">${item.productName}</div>
+                        <div class="product-price">${App.formatCurrency(item.price)} cada</div>
+                    </div>
+                    <div class="product-controls">
+                        <div class="product-quantity">
+                            <button type="button" class="quantity-btn" onclick="updateQuantity(${index}, -1)">
+                                <i data-lucide="minus" style="width: 0.875rem; height: 0.875rem;"></i>
+                            </button>
+                            <input type="number" class="quantity-input" value="${item.quantity}"
+                                   onchange="setQuantity(${index}, this.value)" min="1">
+                            <button type="button" class="quantity-btn" onclick="updateQuantity(${index}, 1)">
+                                <i data-lucide="plus" style="width: 0.875rem; height: 0.875rem;"></i>
+                            </button>
+                        </div>
+                        <div class="product-discount">
+                            <div class="product-discount-toggle">
+                                <button type="button" class="mini-toggle-btn ${!item.discountIsPercent ? 'active' : ''}"
+                                        onclick="toggleProductDiscountType(${index}, false)">R$</button>
+                                <button type="button" class="mini-toggle-btn ${item.discountIsPercent ? 'active' : ''}"
+                                        onclick="toggleProductDiscountType(${index}, true)">%</button>
+                            </div>
+                            <input type="number" class="discount-input-field" value="${item.discount || 0}"
+                                   placeholder="0" step="0.01" min="0" ${item.discountIsPercent ? 'max="100"' : ''}
+                                   onchange="setProductDiscount(${index}, this.value)">
+                        </div>
+                        <div class="product-total">${(() => {
+                            const itemSubtotal = item.price * item.quantity;
+                            let itemDiscount = item.discount || 0;
+                            if (item.discountIsPercent) {
+                                itemDiscount = (itemSubtotal * itemDiscount) / 100;
+                            }
+                            return App.formatCurrency(itemSubtotal - itemDiscount);
+                        })()}</div>
+                        <button type="button" class="remove-product" onclick="removeProduct(${index})" title="Remover produto">
+                            <i data-lucide="trash-2" style="width: 1rem; height: 1rem;"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function updateQuantity(index, change) {
+            const item = currentSaleItems[index];
+            const newQuantity = item.quantity + change;
+
+            if (newQuantity <= 0) {
+                removeProduct(index);
+                return;
+            }
+
+            const product = availableProducts.find(p => p.id === item.productId);
+            if (newQuantity > product.stock) {
+                App.showToast(`Estoque insuficiente. Máximo: ${product.stock}`, 'warning');
+                return;
+            }
+
+            item.quantity = newQuantity;
+            renderSelectedProducts();
+            calculateSaleTotal();
+        }
+
+        function setQuantity(index, newQuantity) {
+            const quantity = parseInt(newQuantity);
+            if (quantity <= 0) {
+                removeProduct(index);
+                return;
+            }
+
+            const item = currentSaleItems[index];
+            const product = availableProducts.find(p => p.id === item.productId);
+
+            if (quantity > product.stock) {
+                App.showToast(`Estoque insuficiente. Máximo: ${product.stock}`, 'warning');
+                renderSelectedProducts();
+                return;
+            }
+
+            item.quantity = quantity;
+            calculateSaleTotal();
+        }
+
+        function setProductDiscount(index, discount) {
+            const item = currentSaleItems[index];
+            const discountValue = parseFloat(discount) || 0;
+            const itemSubtotal = item.price * item.quantity;
+
+            if (item.discountIsPercent) {
+                if (discountValue > 100) {
+                    App.showToast('Desconto não pode ser maior que 100%', 'warning');
+                    renderSelectedProducts();
+                    return;
+                }
+            } else {
+                if (discountValue > itemSubtotal) {
+                    App.showToast(`Desconto não pode ser maior que ${App.formatCurrency(itemSubtotal)}`, 'warning');
+                    renderSelectedProducts();
+                    return;
+                }
+            }
+
+            item.discount = discountValue;
+            calculateSaleTotal();
+        }
+
+        function removeProduct(index) {
+            currentSaleItems.splice(index, 1);
+            renderSelectedProducts();
+            calculateSaleTotal();
+        }
+
+        function calculateSaleTotal() {
+            const subtotal = currentSaleItems.reduce((sum, item) => {
+                const itemSubtotal = item.price * item.quantity;
+                let itemDiscount = item.discount || 0;
+
+                // Apply product discount based on type
+                if (item.discountIsPercent) {
+                    itemDiscount = (itemSubtotal * itemDiscount) / 100;
+                }
+
+                return sum + (itemSubtotal - itemDiscount);
+            }, 0);
+
+            const additionalDiscountInput = parseFloat(document.getElementById('saleDiscount').value) || 0;
+            let additionalDiscount = 0;
+
+            if (discountType === 'percent') {
+                additionalDiscount = (subtotal * additionalDiscountInput) / 100;
+            } else {
+                additionalDiscount = additionalDiscountInput;
+            }
+
+            const total = Math.max(0, subtotal - additionalDiscount);
+
+            document.getElementById('saleSubtotal').textContent = App.formatCurrency(subtotal);
+            document.getElementById('saleTotal').textContent = App.formatCurrency(total);
+            document.getElementById('discountDisplay').textContent = App.formatCurrency(additionalDiscount);
+
+            // Update installment calculation if applicable
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            if (paymentMethod === 'cartao_credito' || paymentMethod === 'boleto') {
+                calculateInstallments();
+            }
+        }
+
+        async function confirmSale() {
+            if (currentSaleItems.length === 0) {
+                App.showToast('Adicione pelo menos um produto à venda', 'warning');
+                return;
+            }
+
+            const customerId = document.getElementById('saleCustomer').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const fiadoDate = document.getElementById('fiadoDate').value;
+            const additionalDiscount = parseFloat(document.getElementById('saleDiscount').value) || 0;
+
+            if (!paymentMethod) {
+                App.showToast('Selecione um meio de pagamento', 'warning');
+                return;
+            }
+
+            if (paymentMethod === 'fiado' && !fiadoDate) {
+                App.showToast('Informe a data prometida para pagamento', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('confirmSaleBtn');
+            const btnText = btn.querySelector('.btn-text');
+            const spinner = btn.querySelector('.spinner');
+
+            // Show loading state
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+
+            try {
+                // Calculate totals
+                const subtotal = currentSaleItems.reduce((sum, item) => {
+                    const itemTotal = (item.price * item.quantity) - (item.discount || 0);
+                    return sum + itemTotal;
+                }, 0);
+
+                const finalTotal = Math.max(0, subtotal - additionalDiscount);
+
+                // Transform items to backend format
+                const transformedItems = currentSaleItems.map(item => ({
+                    product_id: item.productId,
+                    quantity: item.quantity,
+                    unit_price: item.price,
+                    total_price: (item.price * item.quantity) - (item.discount || 0)
+                }));
+
+                const saleData = {
+                    customer_id: customerId || null,
+                    total_amount: subtotal,
+                    discount: additionalDiscount,
+                    tax: 0,
+                    final_amount: finalTotal,
+                    payment_method: paymentMethod,
+                    notes: paymentMethod === 'fiado' && fiadoDate ? `Data prometida: ${fiadoDate}` : null,
+                    items: transformedItems
+                };
+
+                const response = await App.apiRequest('/api/sales', {
+                    method: 'POST',
+                    body: JSON.stringify(saleData)
+                });
+
+                if (response.ok) {
+                    hideNewSaleModal();
+                    await loadSalesData();
+                    App.showToast('Venda registrada com sucesso!', 'success');
+                } else {
+                    let errorMessage = 'Erro ao registrar venda';
+                    try {
+                        const contentType = response.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                            const error = await response.json();
+                            errorMessage = error.message || errorMessage;
+                        }
+                    } catch (parseError) {
+                        console.warn('Could not parse error response:', parseError);
+                    }
+                    throw new Error(errorMessage);
+                }
+            } catch (error) {
+                console.error('Error confirming sale:', error);
+                App.showToast('Erro ao registrar venda: ' + error.message, 'error');
+            } finally {
+                // Reset loading state
+                btn.disabled = false;
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+            }
+        }
+
+        async function viewSale(saleId) {
+            try {
+                const response = await App.apiRequest(`/api/sales/${saleId}`);
+
+                if (response.ok) {
+                    const saleData = await response.json();
+                    showViewSaleModal(saleData);
+                } else {
+                    App.showToast('Erro ao carregar detalhes da venda', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading sale details:', error);
+                App.showToast('Erro ao carregar detalhes da venda', 'error');
+            }
+        }
+
+        function showViewSaleModal(saleData) {
+            // Populate sale information
+            document.getElementById('saleNumber').textContent = `#${saleData.id}`;
+            document.getElementById('saleDateTime').textContent = App.formatDateTime(saleData.created_at);
+
+            // Customer name
+            const customerName = saleData.customer_first_name && saleData.customer_last_name
+                ? `${saleData.customer_first_name} ${saleData.customer_last_name}`.trim()
+                : 'Cliente não informado';
+            document.getElementById('saleCustomerName').textContent = customerName;
+
+            // User name
+            document.getElementById('saleUserName').textContent = saleData.user_name || 'Não informado';
+
+            // Payment method
+            const paymentMethods = {
+                'cartao_credito': '💳 Cartão de Crédito',
+                'cartao_debito': '💳 Cartão de Débito',
+                'pix': '📱 PIX',
+                'boleto': '📄 Boleto',
+                'fiado': '📋 Fiado',
+                'dinheiro': '💵 Dinheiro'
+            };
+            document.getElementById('salePaymentMethod').textContent =
+                paymentMethods[saleData.payment_method] || saleData.payment_method || 'Não informado';
+
+            // Populate items table
+            const tableBody = document.getElementById('saleItemsTableBody');
+            if (saleData.items && saleData.items.length > 0) {
+                tableBody.innerHTML = saleData.items.map(item => `
+                    <tr>
+                        <td><strong>${item.product_name || 'Produto não encontrado'}</strong></td>
+                        <td>${item.quantity}</td>
+                        <td>${App.formatCurrency(item.unit_price)}</td>
+                        <td><strong>${App.formatCurrency(item.total_price)}</strong></td>
+                    </tr>
+                `).join('');
+            } else {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center" style="padding: 2rem; color: var(--gray-500);">
+                            Nenhum item encontrado
+                        </td>
+                    </tr>
+                `;
+            }
+
+            // Financial summary
+            document.getElementById('viewSubtotal').textContent = App.formatCurrency(saleData.total_amount || 0);
+            document.getElementById('viewDiscount').textContent = App.formatCurrency(saleData.discount || 0);
+            document.getElementById('viewTotal').textContent = App.formatCurrency(saleData.final_amount || saleData.total_amount || 0);
+
+            // Notes
+            const notesSection = document.getElementById('notesSection');
+            const notesElement = document.getElementById('saleNotes');
+            if (saleData.notes && saleData.notes.trim()) {
+                notesElement.textContent = saleData.notes;
+                notesSection.style.display = 'block';
+            } else {
+                notesSection.style.display = 'none';
+            }
+
+            // Show modal
+            document.getElementById('viewSaleModalBackdrop').style.display = 'flex';
+        }
+
+        function hideViewSaleModal() {
+            document.getElementById('viewSaleModalBackdrop').style.display = 'none';
+        }
+
+        function printSale() {
+            // Simple print functionality - could be enhanced with better formatting
+            const printContent = document.getElementById('viewSaleModal').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Venda #${document.getElementById('saleNumber').textContent}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                            th { background-color: #f5f5f5; }
+                            .summary { background-color: #f9f9f9; padding: 15px; margin: 20px 0; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Detalhes da Venda</h1>
+                        ${printContent}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function filterSales(searchTerm) {
+            console.log('Searching for:', searchTerm);
+        }
+
+        function filterSalesByPeriod(period) {
+            console.log('Filtering by period:', period);
+        }
+    </script>
+</body>
+</html>
