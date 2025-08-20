@@ -14,6 +14,22 @@ document.addEventListener('DOMContentLoaded', function() {
     loadUsers();
     setupEventListeners();
     initializeEnhancements();
+
+    // Verify global functions are accessible
+    setTimeout(() => {
+        console.log('🔍 Checking global functions:');
+        console.log('- openUserModal:', typeof window.openUserModal);
+        console.log('- closeUserModal:', typeof window.closeUserModal);
+        console.log('- editUser:', typeof window.editUser);
+        console.log('- deleteUser:', typeof window.deleteUser);
+        console.log('- changeUserPassword:', typeof window.changeUserPassword);
+
+        if (typeof window.openUserModal !== 'function') {
+            console.error('❌ openUserModal is not globally accessible!');
+        } else {
+            console.log('✅ openUserModal is globally accessible');
+        }
+    }, 1000);
 });
 
 // Initialize stats with zero values
