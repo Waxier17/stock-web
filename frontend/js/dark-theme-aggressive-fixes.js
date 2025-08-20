@@ -75,6 +75,12 @@
 
         // Fix specific known problematic elements
         fixSpecificElements();
+
+        // Reset fixing flag after a delay
+        setTimeout(() => {
+            isFixing = false;
+            console.log('✅ Dark theme fixes completed');
+        }, 500);
     }
 
     function fixSpecificElements() {
