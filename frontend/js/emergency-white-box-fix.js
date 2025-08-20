@@ -5,11 +5,17 @@ window.emergencyFixWhiteBoxes = function() {
     // Force dark theme data attribute
     document.documentElement.setAttribute('data-theme', 'dark');
     
-    // Get all elements that might have white backgrounds
-    const allElements = document.querySelectorAll('*:not(svg):not(path):not(.lucide)');
-    
+    // Only target specific problematic elements instead of all elements
+    const targetSelectors = [
+        '.modern-card', '.card', '.stat-card',
+        '.modal-content', '.modal-body', '.modal-header',
+        '.form-input', '.form-control', '.alert', '.badge',
+        '.action-section', '#lowStockAlert > div'
+    ];
+
+    const allElements = document.querySelectorAll(targetSelectors.join(','));
     let fixedCount = 0;
-    
+
     allElements.forEach(element => {
         const style = window.getComputedStyle(element);
         const bgColor = style.backgroundColor;
