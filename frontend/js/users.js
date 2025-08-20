@@ -302,6 +302,11 @@ function displayUsers(usersToShow) {
         if (!document.getElementById('searchInput')?.value) {
             tr.style.animationDelay = `${index * 0.05}s`;
             tr.classList.add('slide-in-enhanced');
+
+            // Mark animation as completed to prevent re-triggering
+            setTimeout(() => {
+                tr.classList.add('animation-completed');
+            }, 500 + (index * 50));
         }
         
         tr.innerHTML = `
