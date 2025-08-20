@@ -549,7 +549,7 @@ window.openUserModal = function(user = null) {
 }
 
 // Enhanced close user modal
-function closeUserModal() {
+window.closeUserModal = function() {
     const modal = document.getElementById('userModal');
     modal.style.display = 'none';
     document.getElementById('userForm').reset();
@@ -855,7 +855,7 @@ function changeUserPassword(userId) {
 }
 
 // Enhanced close password modal
-function closePasswordModal() {
+window.closePasswordModal = function() {
     const modal = document.getElementById('passwordModal');
     modal.style.display = 'none';
     document.getElementById('passwordForm').reset();
