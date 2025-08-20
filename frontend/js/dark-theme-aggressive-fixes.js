@@ -168,9 +168,9 @@
         }
     });
 
-    contentObserver.observe(document.body, { 
-        childList: true, 
-        subtree: true 
+    contentObserver.observe(document.body, {
+        childList: true,
+        subtree: false // Reduced scope to prevent excessive triggering
     });
 
     // Expose global function for manual fixes
