@@ -434,10 +434,15 @@ class ThemeSystem {
             [data-theme="dark"] {
                 color-scheme: dark;
             }
-            
+
             [data-theme="dark"] body {
                 background-color: var(--background-secondary);
                 color: var(--text-primary);
+            }
+
+            /* Fix all white backgrounds in dark mode */
+            [data-theme="dark"] *:not(.lucide):not(svg):not(path) {
+                border-color: var(--border-color);
             }
             
             [data-theme="dark"] .modern-header {
@@ -493,11 +498,24 @@ class ThemeSystem {
                 background: rgba(0, 0, 0, 0.8);
                 backdrop-filter: blur(4px);
             }
-            
+
             [data-theme="dark"] .modal-content {
-                background: var(--background-primary);
-                border-color: var(--border-color);
-                box-shadow: 0 20px 25px var(--shadow-color);
+                background: var(--background-primary) !important;
+                border-color: var(--border-color) !important;
+                box-shadow: 0 20px 25px var(--shadow-color) !important;
+            }
+
+            /* Fix modal sections */
+            [data-theme="dark"] .modal-content > *,
+            [data-theme="dark"] .modal-modern,
+            [data-theme="dark"] .modal-modern .modal-content {
+                background: var(--background-primary) !important;
+                color: var(--text-primary) !important;
+            }
+
+            /* Fix modal backdrop */
+            [data-theme="dark"] .modal-backdrop {
+                background: rgba(0, 0, 0, 0.8) !important;
             }
             
             [data-theme="dark"] .modal-header {
@@ -516,10 +534,23 @@ class ThemeSystem {
             
             [data-theme="dark"] .form-field-enhanced input,
             [data-theme="dark"] .form-field-enhanced select,
-            [data-theme="dark"] .form-field-enhanced textarea {
-                background: var(--background-secondary);
-                border-color: var(--border-color);
-                color: var(--text-primary);
+            [data-theme="dark"] .form-field-enhanced textarea,
+            [data-theme="dark"] .form-input,
+            [data-theme="dark"] .form-control,
+            [data-theme="dark"] .form-select,
+            [data-theme="dark"] input,
+            [data-theme="dark"] select,
+            [data-theme="dark"] textarea {
+                background: var(--background-secondary) !important;
+                border-color: var(--border-color) !important;
+                color: var(--text-primary) !important;
+            }
+
+            [data-theme="dark"] .form-field-enhanced input::placeholder,
+            [data-theme="dark"] .form-input::placeholder,
+            [data-theme="dark"] input::placeholder,
+            [data-theme="dark"] textarea::placeholder {
+                color: var(--text-tertiary) !important;
             }
             
             [data-theme="dark"] .form-field-enhanced input::placeholder {
@@ -542,15 +573,18 @@ class ThemeSystem {
                 color: var(--text-tertiary);
             }
             
-            [data-theme="dark"] .btn-secondary-modern {
-                background: var(--background-secondary);
-                color: var(--text-primary);
-                border-color: var(--border-color);
+            [data-theme="dark"] .btn-secondary-modern,
+            [data-theme="dark"] .btn-secondary {
+                background: var(--background-secondary) !important;
+                color: var(--text-primary) !important;
+                border-color: var(--border-color) !important;
             }
-            
-            [data-theme="dark"] .btn-secondary-modern:hover {
-                background: var(--background-tertiary);
-                border-color: var(--border-hover);
+
+            [data-theme="dark"] .btn-secondary-modern:hover,
+            [data-theme="dark"] .btn-secondary:hover {
+                background: var(--background-tertiary) !important;
+                border-color: var(--border-hover) !important;
+                color: var(--text-primary) !important;
             }
             
             [data-theme="dark"] .table-enhanced {
@@ -676,10 +710,41 @@ class ThemeSystem {
             }
             
             /* Badge themes */
-            [data-theme="dark"] .badge-enhanced.primary {
-                background: var(--primary-900);
-                color: var(--primary-300);
-                border-color: var(--primary-700);
+            [data-theme="dark"] .badge-enhanced.primary,
+            [data-theme="dark"] .badge {
+                background: var(--primary-900) !important;
+                color: var(--primary-300) !important;
+                border-color: var(--primary-700) !important;
+            }
+
+            /* Fix progress bars */
+            [data-theme="dark"] .progress,
+            [data-theme="dark"] .progress-bar {
+                background: var(--background-secondary) !important;
+            }
+
+            [data-theme="dark"] .progress .progress-bar {
+                background: var(--primary-600) !important;
+            }
+
+            /* Fix form sections */
+            [data-theme="dark"] .form-section,
+            [data-theme="dark"] .section-header,
+            [data-theme="dark"] .card-section {
+                background: var(--background-primary) !important;
+                border-color: var(--border-color) !important;
+                color: var(--text-primary) !important;
+            }
+
+            /* Fix white sections in modals */
+            [data-theme="dark"] .modal-body > div,
+            [data-theme="dark"] .modal-content div {
+                background-color: transparent !important;
+            }
+
+            [data-theme="dark"] .modal-body > div[style*="background"],
+            [data-theme="dark"] .modal-content div[style*="background"] {
+                background: var(--background-secondary) !important;
             }
             
             [data-theme="dark"] .badge-enhanced.success {
