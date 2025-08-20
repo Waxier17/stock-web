@@ -161,7 +161,7 @@
                                     <i data-lucide="refresh-cw"></i>
                                     Atualizar
                                 </button>
-                                <button class="btn-primary-modern" onclick="if(typeof openUserModal === 'function') { openUserModal(); } else { console.error('openUserModal not defined'); }">
+                                <button class="btn-primary-modern" onclick="openUserModal()">
                                     <i data-lucide="user-plus"></i>
                                     Novo Usuário
                                 </button>
@@ -257,7 +257,7 @@
                         <p class="empty-description">
                             Não há usuários cadastrados no sistema ainda. Comece criando o primeiro usuário clicando no botão "Novo Usuário".
                         </p>
-                        <button class="btn-primary-modern" onclick="if(typeof openUserModal === 'function') { openUserModal(); } else { console.error('openUserModal not defined'); }">
+                        <button class="btn-primary-modern" onclick="openUserModal()">
                             <i data-lucide="user-plus"></i>
                             Criar Primeiro Usuário
                         </button>
