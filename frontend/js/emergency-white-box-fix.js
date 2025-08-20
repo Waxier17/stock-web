@@ -93,28 +93,32 @@ window.emergencyFixWhiteBoxes = function() {
     return fixedCount;
 };
 
-// Auto-run on dark theme
+// Auto-run on dark theme with debouncing
+let emergencyTimeout = null;
+
 document.addEventListener('DOMContentLoaded', function() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     if (isDark) {
-        setTimeout(() => {
+        clearTimeout(emergencyTimeout);
+        emergencyTimeout = setTimeout(() => {
             window.emergencyFixWhiteBoxes();
-        }, 500);
+        }, 1000); // Longer delay to let other systems settle
     }
 });
 
-// Run when theme changes
+// Run when theme changes with debouncing
 const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && 
+        if (mutation.type === 'attributes' &&
             mutation.attributeName === 'data-theme' &&
             mutation.target === document.documentElement) {
-            
+
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             if (isDark) {
-                setTimeout(() => {
+                clearTimeout(emergencyTimeout);
+                emergencyTimeout = setTimeout(() => {
                     window.emergencyFixWhiteBoxes();
-                }, 200);
+                }, 500); // Debounced delay
             }
         }
     });
