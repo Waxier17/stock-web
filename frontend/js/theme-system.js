@@ -889,6 +889,11 @@ class ThemeSystem {
         document.body.style.display = 'none';
         document.body.offsetHeight; // Trigger reflow
         document.body.style.display = '';
+
+        // Force re-apply theme classes
+        setTimeout(() => {
+            this.forceThemeApplication(actualTheme);
+        }, 100);
     }
     
     getCurrentThemeIcon() {
@@ -935,6 +940,31 @@ class ThemeSystem {
         });
     }
     
+    forceThemeApplication(theme) {
+        // Force all elements to respect the theme
+        const elementsToFix = document.querySelectorAll(
+            '.modal-content, .modal-body, .modal-header, .modal-footer, ' +
+            'input, select, textarea, .form-control, .form-select, ' +
+            '.card, .modern-card, .table, .modern-table'
+        );
+
+        elementsToFix.forEach(element => {
+            // Remove any conflicting inline styles
+            if (theme === 'dark') {
+                if (element.style.backgroundColor === 'white' ||
+                    element.style.backgroundColor === '#fff' ||
+                    element.style.backgroundColor === '#ffffff') {
+                    element.style.backgroundColor = '';
+                }
+                if (element.style.color === 'black' ||
+                    element.style.color === '#000' ||
+                    element.style.color === '#000000') {
+                    element.style.color = '';
+                }
+            }
+        });
+    }
+
     // Public API methods
     getTheme() {
         return this.currentTheme;
