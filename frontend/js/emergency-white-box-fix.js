@@ -1,15 +1,29 @@
 // Emergency white box fix - can be run manually
+let isEmergencyFixing = false;
+
 window.emergencyFixWhiteBoxes = function() {
+    if (isEmergencyFixing) {
+        console.log('🚨 Emergency fix already running, skipping...');
+        return 0;
+    }
+
+    isEmergencyFixing = true;
     console.log('🚨 Running emergency white box fixes...');
     
     // Force dark theme data attribute
     document.documentElement.setAttribute('data-theme', 'dark');
     
-    // Get all elements that might have white backgrounds
-    const allElements = document.querySelectorAll('*:not(svg):not(path):not(.lucide)');
-    
+    // Only target specific problematic elements instead of all elements
+    const targetSelectors = [
+        '.modern-card', '.card', '.stat-card',
+        '.modal-content', '.modal-body', '.modal-header',
+        '.form-input', '.form-control', '.alert', '.badge',
+        '.action-section', '#lowStockAlert > div'
+    ];
+
+    const allElements = document.querySelectorAll(targetSelectors.join(','));
     let fixedCount = 0;
-    
+
     allElements.forEach(element => {
         const style = window.getComputedStyle(element);
         const bgColor = style.backgroundColor;
@@ -65,37 +79,46 @@ window.emergencyFixWhiteBoxes = function() {
     });
     
     console.log(`✅ Emergency fix complete! Fixed ${fixedCount} elements.`);
-    
-    // Force a repaint
-    document.body.style.display = 'none';
-    document.body.offsetHeight;
-    document.body.style.display = '';
-    
+
+    // Force a repaint (less aggressive)
+    document.documentElement.style.transform = 'translateZ(0)';
+    document.documentElement.offsetHeight;
+    document.documentElement.style.transform = '';
+
+    // Reset flag
+    setTimeout(() => {
+        isEmergencyFixing = false;
+    }, 1000);
+
     return fixedCount;
 };
 
-// Auto-run on dark theme
+// Auto-run on dark theme with debouncing
+let emergencyTimeout = null;
+
 document.addEventListener('DOMContentLoaded', function() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     if (isDark) {
-        setTimeout(() => {
+        clearTimeout(emergencyTimeout);
+        emergencyTimeout = setTimeout(() => {
             window.emergencyFixWhiteBoxes();
-        }, 500);
+        }, 1000); // Longer delay to let other systems settle
     }
 });
 
-// Run when theme changes
+// Run when theme changes with debouncing
 const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && 
+        if (mutation.type === 'attributes' &&
             mutation.attributeName === 'data-theme' &&
             mutation.target === document.documentElement) {
-            
+
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             if (isDark) {
-                setTimeout(() => {
+                clearTimeout(emergencyTimeout);
+                emergencyTimeout = setTimeout(() => {
                     window.emergencyFixWhiteBoxes();
-                }, 200);
+                }, 500); // Debounced delay
             }
         }
     });

@@ -195,7 +195,12 @@ class ThemeSystem {
         this.createThemeToggle();
         this.applyTheme(this.currentTheme);
         this.listenToSystemChanges();
+
+        // Mark page as theme-ready to prevent FOUC
+        document.documentElement.classList.add('theme-ready');
+
         this.isInitialized = true;
+        console.log('🎨 Theme system fully initialized');
     }
 
     injectDarkThemeFixes() {

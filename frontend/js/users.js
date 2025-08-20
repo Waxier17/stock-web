@@ -1,6 +1,138 @@
 // Enhanced Users management functionality
+console.log('🚀 Users.js loading...');
 let users = [];
 let isEditMode = false;
+
+// Define global functions early to ensure they're available
+window.openUserModal = function(user = null) {
+    console.log('🎯 openUserModal called with:', user);
+    const modal = document.getElementById('userModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const userForm = document.getElementById('userForm');
+    const passwordGroup = document.getElementById('passwordGroup');
+    const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+
+    isEditMode = !!user;
+
+    if (isEditMode) {
+        modalTitle.innerHTML = `
+            <i data-lucide="edit" style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;"></i>
+            Editar Usuário
+        `;
+        document.getElementById('userId').value = user.id;
+        document.getElementById('username').value = user.username;
+        document.getElementById('email').value = user.email;
+        document.getElementById('role').value = user.role;
+
+        // Hide password fields in edit mode
+        passwordGroup.style.display = 'none';
+        confirmPasswordGroup.style.display = 'none';
+        document.getElementById('password').required = false;
+        document.getElementById('confirmPassword').required = false;
+    } else {
+        modalTitle.innerHTML = `
+            <i data-lucide="user-plus" style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem;"></i>
+            Novo Usuário
+        `;
+        userForm.reset();
+        document.getElementById('userId').value = '';
+
+        // Show password fields in create mode
+        passwordGroup.style.display = 'block';
+        confirmPasswordGroup.style.display = 'block';
+        document.getElementById('password').required = true;
+        document.getElementById('confirmPassword').required = true;
+    }
+
+    // Clear any validation errors
+    clearFormErrors();
+
+    modal.style.display = 'flex';
+    modal.classList.add('fade-in-enhanced');
+
+    // Focus on first input
+    setTimeout(() => {
+        document.getElementById('username').focus();
+    }, 300);
+
+    // Re-initialize icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+};
+
+window.closeUserModal = function() {
+    const modal = document.getElementById('userModal');
+    modal.style.display = 'none';
+    document.getElementById('userForm').reset();
+    clearFormErrors();
+};
+
+window.closePasswordModal = function() {
+    const modal = document.getElementById('passwordModal');
+    modal.style.display = 'none';
+    document.getElementById('passwordForm').reset();
+    clearFormErrors();
+};
+
+window.editUser = function(userId) {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+        window.openUserModal(user);
+    }
+};
+
+window.changeUserPassword = function(userId) {
+    const user = users.find(u => u.id === userId);
+    if (user) {
+        document.getElementById('passwordUserId').value = userId;
+        const modal = document.getElementById('passwordModal');
+        modal.style.display = 'flex';
+        modal.classList.add('fade-in-enhanced');
+        document.getElementById('passwordForm').reset();
+        clearFormErrors();
+
+        // Focus on password field
+        setTimeout(() => {
+            document.getElementById('newPassword').focus();
+        }, 300);
+    }
+};
+
+window.deleteUser = async function(userId, username) {
+    // Create custom confirmation dialog
+    const confirmed = await showConfirmDialog(
+        'Confirmar Exclusão',
+        `Tem certeza que deseja excluir o usuário "${username}"?`,
+        'Esta ação não pode ser desfeita.',
+        'error'
+    );
+
+    if (!confirmed) return;
+
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await fetch(`/api/users/${userId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showAlert('Usuário excluído com sucesso!', 'success');
+            loadUsers();
+        } else {
+            showAlert('Erro: ' + (data.error || 'Falha ao excluir usuário'), 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        showAlert('Erro ao excluir usuário: ' + error.message, 'error');
+    }
+};
+
+console.log('✅ Global functions defined early');
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -13,6 +145,22 @@ document.addEventListener('DOMContentLoaded', function() {
     loadUsers();
     setupEventListeners();
     initializeEnhancements();
+
+    // Verify global functions are accessible
+    setTimeout(() => {
+        console.log('🔍 Checking global functions:');
+        console.log('- openUserModal:', typeof window.openUserModal);
+        console.log('- closeUserModal:', typeof window.closeUserModal);
+        console.log('- editUser:', typeof window.editUser);
+        console.log('- deleteUser:', typeof window.deleteUser);
+        console.log('- changeUserPassword:', typeof window.changeUserPassword);
+
+        if (typeof window.openUserModal !== 'function') {
+            console.error('❌ openUserModal is not globally accessible!');
+        } else {
+            console.log('✅ openUserModal is globally accessible');
+        }
+    }, 1000);
 });
 
 // Initialize stats with zero values
@@ -377,7 +525,7 @@ function updateStats() {
     console.log('Stats updated:', { totalUsers, adminUsers, regularUsers });
 }
 
-// Enhanced animate number counting with safer logic
+// Enhanced animate number counting with safer logic and debouncing
 function animateNumber(elementId, targetNumber) {
     const element = document.getElementById(elementId);
     if (!element) return;
@@ -385,6 +533,7 @@ function animateNumber(elementId, targetNumber) {
     // Clear any existing animation
     if (element._animationTimer) {
         clearInterval(element._animationTimer);
+        delete element._animationTimer;
     }
 
     // Get current number, but handle edge cases
@@ -398,6 +547,13 @@ function animateNumber(elementId, targetNumber) {
 
     // If target and current are the same, just set it
     if (currentNumber === targetNumber) {
+        element.textContent = targetNumber;
+        return;
+    }
+
+    // For very large differences, just set directly to prevent excessive animation
+    const difference = Math.abs(targetNumber - currentNumber);
+    if (difference > 100) {
         element.textContent = targetNumber;
         return;
     }
@@ -426,14 +582,14 @@ function animateNumber(elementId, targetNumber) {
         }
     }, speed);
 
-    // Safety timeout to prevent infinite animations
+    // Safety timeout to prevent infinite animations (reduced from 5000ms to 2000ms)
     setTimeout(() => {
         if (element._animationTimer) {
             clearInterval(element._animationTimer);
             delete element._animationTimer;
             element.textContent = targetNumber;
         }
-    }, 5000);
+    }, 2000);
 }
 
 // Enhanced filter users based on search
@@ -476,7 +632,8 @@ function addSearchHighlight() {
 }
 
 // Enhanced open user modal
-function openUserModal(user = null) {
+window.openUserModal = function(user = null) {
+    console.log('🎯 openUserModal called with:', user);
     const modal = document.getElementById('userModal');
     const modalTitle = document.getElementById('modalTitle');
     const userForm = document.getElementById('userForm');
@@ -531,7 +688,7 @@ function openUserModal(user = null) {
 }
 
 // Enhanced close user modal
-function closeUserModal() {
+window.closeUserModal = function() {
     const modal = document.getElementById('userModal');
     modal.style.display = 'none';
     document.getElementById('userForm').reset();
@@ -777,7 +934,7 @@ function clearFormErrors() {
 }
 
 // Enhanced edit user
-function editUser(userId) {
+window.editUser = function(userId) {
     const user = users.find(u => u.id === userId);
     if (user) {
         openUserModal(user);
@@ -785,7 +942,7 @@ function editUser(userId) {
 }
 
 // Enhanced delete user with better confirmation
-async function deleteUser(userId, username) {
+window.deleteUser = async function(userId, username) {
     // Create custom confirmation dialog
     const confirmed = await showConfirmDialog(
         'Confirmar Exclusão',
@@ -819,7 +976,7 @@ async function deleteUser(userId, username) {
 }
 
 // Enhanced change user password
-function changeUserPassword(userId) {
+window.changeUserPassword = function(userId) {
     const user = users.find(u => u.id === userId);
     if (user) {
         document.getElementById('passwordUserId').value = userId;
@@ -837,7 +994,7 @@ function changeUserPassword(userId) {
 }
 
 // Enhanced close password modal
-function closePasswordModal() {
+window.closePasswordModal = function() {
     const modal = document.getElementById('passwordModal');
     modal.style.display = 'none';
     document.getElementById('passwordForm').reset();
