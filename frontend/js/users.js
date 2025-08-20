@@ -215,6 +215,9 @@ async function loadUsers() {
     const tableContainer = document.getElementById('usersTable');
 
     try {
+        // Reset stats before loading
+        resetStats();
+
         if (loadingSpinner) {
             loadingSpinner.style.display = 'flex';
             loadingSpinner.classList.add('fade-in-enhanced');
