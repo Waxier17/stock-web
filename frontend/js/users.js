@@ -229,9 +229,14 @@ async function loadUsers() {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
+        console.log('Users API response status:', response.status);
+
         if (response.ok) {
             const data = await response.json();
+            console.log('Raw users data from API:', data);
+
             users = Array.isArray(data) ? data : [];
+            console.log('Processed users array:', users);
 
             displayUsers(users);
             updateStats();
