@@ -220,7 +220,27 @@ class ThemeSystem {
             document.head.appendChild(link);
         }
 
+        // Also inject the aggressive fixes JavaScript
+        this.injectAggressiveFixesScript();
+
         console.log('Dark theme fixes CSS injected automatically');
+    }
+
+    injectAggressiveFixesScript() {
+        // Check if the script is already loaded
+        if (document.querySelector('script[src*="dark-theme-aggressive-fixes.js"]')) {
+            return;
+        }
+
+        // Create and inject the script
+        const script = document.createElement('script');
+        script.src = 'js/dark-theme-aggressive-fixes.js';
+        script.type = 'text/javascript';
+
+        // Insert before the closing body tag
+        document.head.appendChild(script);
+
+        console.log('Aggressive dark theme fixes script injected');
     }
     
     getStoredTheme() {
