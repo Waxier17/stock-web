@@ -1,0 +1,160 @@
+/* Theme Stability Fixes - Prevents flickering and improves performance */
+
+/* Optimize theme transitions */
+* {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Prevent layout shifts during theme changes */
+html[data-theme] {
+    color-scheme: light dark;
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+html[data-theme="light"] {
+    color-scheme: light;
+}
+
+/* Optimize elements that frequently change */
+.stat-card-enhanced,
+.modern-card,
+.card {
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    will-change: auto;
+}
+
+/* Prevent repaints on hover states */
+.stat-card-enhanced:hover,
+.modern-card:hover,
+.card:hover {
+    transform: translateZ(0) translateY(-4px);
+}
+
+/* Optimize table rendering */
+.table-enhanced,
+.table {
+    contain: layout style;
+}
+
+/* Prevent animation loops */
+.fade-in-enhanced,
+.slide-in-enhanced,
+.scale-in-enhanced {
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+/* Critical dark theme styles that should load immediately */
+[data-theme="dark"] {
+    --background-primary: #111827;
+    --background-secondary: #1f2937;
+    --background-tertiary: #374151;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-tertiary: #9ca3af;
+    --border-color: #374151;
+    --border-hover: #4b5563;
+}
+
+[data-theme="light"] {
+    --background-primary: #ffffff;
+    --background-secondary: #f9fafb;
+    --background-tertiary: #f3f4f6;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    --border-color: #e5e7eb;
+    --border-hover: #d1d5db;
+}
+
+/* Force immediate application for critical elements */
+[data-theme="dark"] body,
+[data-theme="dark"] .modern-card,
+[data-theme="dark"] .card,
+[data-theme="dark"] .stat-card-enhanced {
+    background-color: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .modal-body,
+[data-theme="dark"] .modal-header {
+    background-color: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-control,
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background-color: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .btn-primary-modern,
+[data-theme="dark"] .btn-primary {
+    background-color: var(--primary-600) !important;
+    border-color: var(--primary-600) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .btn-secondary-modern,
+[data-theme="dark"] .btn-secondary {
+    background-color: var(--background-secondary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Override any problematic inline styles */
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background: rgb(255, 255, 255)"],
+[data-theme="dark"] [style*="background-color: rgb(255, 255, 255)"] {
+    background-color: var(--background-primary) !important;
+}
+
+[data-theme="dark"] [style*="color: black"],
+[data-theme="dark"] [style*="color: #000"],
+[data-theme="dark"] [style*="color: rgb(0, 0, 0)"] {
+    color: var(--text-primary) !important;
+}
+
+/* Performance optimizations */
+.loading-enhanced,
+.spinner-enhanced {
+    contain: strict;
+}
+
+/* Smooth theme toggle animations */
+.theme-toggle-btn {
+    transition: all 0.2s ease;
+}
+
+.theme-dropdown {
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+}
+
+/* Prevent FOUC (Flash of Unstyled Content) */
+html {
+    visibility: hidden;
+}
+
+html.theme-ready {
+    visibility: visible;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    * {
+        transition-duration: 0.15s; /* Faster transitions on mobile */
+    }
+}
