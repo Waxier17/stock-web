@@ -250,6 +250,111 @@
     color: var(--text-primary) !important;
 }
 
+/* CORREÇÕES ESPECÍFICAS PARA CAIXAS BRANCAS */
+
+/* Fix stat cards */
+[data-theme="dark"] .stat-card {
+    background: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-theme="dark"] .stat-card .stat-number {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .stat-card .stat-label {
+    color: var(--text-secondary) !important;
+}
+
+/* Fix all cards and containers */
+[data-theme="dark"] .card,
+[data-theme="dark"] .modern-card,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .action-section {
+    background: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Fix card bodies and headers */
+[data-theme="dark"] .card-body,
+[data-theme="dark"] .card-header {
+    background: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Fix alert boxes with inline styles */
+[data-theme="dark"] #lowStockAlert > div,
+[data-theme="dark"] [style*="background: #fffbeb"],
+[data-theme="dark"] [style*="background:#fffbeb"],
+[data-theme="dark"] [style*="background-color: #fffbeb"],
+[data-theme="dark"] [style*="background-color:#fffbeb"] {
+    background: var(--background-secondary) !important;
+    border-color: var(--warning-600) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Fix text colors in alerts */
+[data-theme="dark"] #lowStockAlert strong,
+[data-theme="dark"] [style*="color: var(--gray-900)"] {
+    color: var(--text-primary) !important;
+}
+
+/* Fix any element with white background inline style */
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background: #ffffff"],
+[data-theme="dark"] [style*="background-color: #ffffff"] {
+    background: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Fix any element with black text inline style */
+[data-theme="dark"] [style*="color: black"],
+[data-theme="dark"] [style*="color: #000"],
+[data-theme="dark"] [style*="color: #000000"],
+[data-theme="dark"] [style*="color: var(--gray-900)"] {
+    color: var(--text-primary) !important;
+}
+
+/* Fix sections and containers */
+[data-theme="dark"] .section,
+[data-theme="dark"] .container,
+[data-theme="dark"] .action-buttons,
+[data-theme="dark"] .quick-actions-grid {
+    background: transparent !important;
+}
+
+/* Fix page content */
+[data-theme="dark"] .main-content,
+[data-theme="dark"] .page-header {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+/* Fix titles and labels */
+[data-theme="dark"] .page-title,
+[data-theme="dark"] .card-title,
+[data-theme="dark"] .action-section-title {
+    color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .page-subtitle {
+    color: var(--text-secondary) !important;
+}
+
+/* Fix badges and status elements */
+[data-theme="dark"] .badge-modern,
+[data-theme="dark"] .badge {
+    background: var(--background-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
 /* Ensure icons maintain proper contrast */
 [data-theme="dark"] .icon,
 [data-theme="dark"] i,
@@ -284,4 +389,48 @@
     background: var(--background-primary) !important;
     color: var(--text-primary) !important;
     border: 1px solid var(--border-color) !important;
+}
+
+/* FORÇA TOTAL - Remove todos os fundos brancos */
+[data-theme="dark"] * {
+    /* Remove any white backgrounds aggressively */
+}
+
+[data-theme="dark"] *:not(svg):not(path):not(.lucide) {
+    border-color: var(--border-color) !important;
+}
+
+/* Force all white backgrounds to dark */
+[data-theme="dark"] div:not(.lucide),
+[data-theme="dark"] section:not(.lucide),
+[data-theme="dark"] article:not(.lucide),
+[data-theme="dark"] main:not(.lucide) {
+    background-color: transparent !important;
+}
+
+/* Specific fixes for dashboard elements */
+[data-theme="dark"] .row > div > .stat-card,
+[data-theme="dark"] .row > div > .modern-card,
+[data-theme="dark"] .col-md-3 > .stat-card,
+[data-theme="dark"] .col-md-4 > .modern-card,
+[data-theme="dark"] .col-md-8 > .modern-card {
+    background: var(--background-primary) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Fix specific dashboard sections */
+[data-theme="dark"] .quick-actions-grid .action-section {
+    background: var(--background-primary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: 1rem !important;
+}
+
+/* Override any remaining white elements */
+[data-theme="dark"] [class*="white"],
+[data-theme="dark"] [class*="light"],
+[data-theme="dark"] [class*="bg-white"] {
+    background: var(--background-primary) !important;
+    color: var(--text-primary) !important;
 }
