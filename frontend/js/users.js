@@ -293,8 +293,11 @@ function displayUsers(usersToShow) {
 
     usersToShow.forEach((user, index) => {
         const tr = document.createElement('tr');
-        tr.style.animationDelay = `${index * 0.05}s`;
-        tr.classList.add('slide-in-enhanced');
+        // Only add animation on initial load, not on filter
+        if (!document.getElementById('searchInput')?.value) {
+            tr.style.animationDelay = `${index * 0.05}s`;
+            tr.classList.add('slide-in-enhanced');
+        }
         
         tr.innerHTML = `
             <td>
