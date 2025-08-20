@@ -231,19 +231,32 @@ class UnifiedThemeSystem {
     setupEventListeners() {
         // Event listener para toggle de tema
         document.addEventListener('click', (e) => {
-            if (e.target.closest('#themeToggle, .theme-toggle')) {
+            if (e.target.closest('#themeToggle, .theme-toggle-btn')) {
                 e.preventDefault();
-                this.toggleTheme();
+                e.stopPropagation();
+                this.toggleDropdown();
             }
         });
-        
-        // Listener para opções de tema
-        document.addEventListener('change', (e) => {
-            if (e.target.matches('input[name="theme"]')) {
-                this.setTheme(e.target.value);
+
+        // Event listener para opções do dropdown
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.theme-option')) {
+                e.preventDefault();
+                e.stopPropagation();
+                const option = e.target.closest('.theme-option');
+                const theme = option.dataset.theme;
+                this.setTheme(theme);
+                this.closeDropdown();
             }
         });
-        
+
+        // Fechar dropdown clicando fora
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.theme-toggle-container')) {
+                this.closeDropdown();
+            }
+        });
+
         // Listener para mudanças de conteúdo
         this.setupContentObserver();
     }
